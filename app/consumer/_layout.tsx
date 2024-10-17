@@ -2,7 +2,7 @@ import { View, Text } from 'react-native'
 import React from 'react'
 import {Tabs} from "expo-router"
 import { TabBarIcon } from '@/components/navigation/TabBarIcon'
-import { FontAwesome } from '@expo/vector-icons'
+import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
 
 const ConsumerTabLayout = () => {
   return (
@@ -21,6 +21,11 @@ const ConsumerTabLayout = () => {
             title: "Settings",
             headerShown:false,
             tabBarIcon: ({color}) => <FontAwesome size={20} name="cog" color={color}/>,
+        }}/>
+        <Tabs.Screen name="cart" options={{
+            title: "Cart",
+            headerShown:false,
+            tabBarIcon: ({color}) => <MaterialIcons size={20} name="shopping-cart" color={color}/>,
         }}/>
     </Tabs>
   )

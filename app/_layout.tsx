@@ -6,7 +6,7 @@ const MainLayout = () => {
     <Stack screenOptions={{headerShown:false}}>
         <Stack.Screen name='index' options={{headerShown:false}}/>
         <Stack.Screen name='auth'  options={{headerShown:false}}/>
-        <Stack.Screen name='{consumer}'  options={{headerShown:false}}/>
+        <Stack.Screen name='consumer'  options={{headerShown:false}}/>
     </Stack>
   )
 }
