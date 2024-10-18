@@ -1237,73 +1237,73 @@ const ConsumerCategory = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.main_cat_container}>
         <TouchableOpacity
-          style={styles.cat_button}
+          style={[styles.cat_button, currentView === "electronics" && styles.active_cat]}
           onPress={() => setCurrentView("electronics")}
         >
           <Text style={styles.cat_button_text}>Electronics</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.cat_button}
+          style={[styles.cat_button, currentView === "fashion" && styles.active_cat]}
           onPress={() => setCurrentView("fashion")}
         >
           <Text style={styles.cat_button_text}>Fashion</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.cat_button}
+          style={[styles.cat_button, currentView === "h&K" && styles.active_cat]}
           onPress={() => setCurrentView("h&K")}
         >
           <Text style={styles.cat_button_text}>Home & Kitchen</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.cat_button}
+          style={[styles.cat_button, currentView === "Beauty" && styles.active_cat]}
           onPress={() => setCurrentView("Beauty")}
         >
           <Text style={styles.cat_button_text}>Beauty & Personal Care</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.cat_button}
+          style={[styles.cat_button, currentView === "sports" && styles.active_cat]}
           onPress={() => setCurrentView("sports")}
         >
           <Text style={styles.cat_button_text}>Sports & Outdoor</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.cat_button}
+          style={[styles.cat_button, currentView === "toys" && styles.active_cat]}
           onPress={() => setCurrentView("toys")}
         >
           <Text style={styles.cat_button_text}>Toys & Games</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.cat_button}
+          style={[styles.cat_button, currentView === "books" && styles.active_cat]}
           onPress={() => setCurrentView("books")}
         >
           <Text style={styles.cat_button_text}>Books & Media</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.cat_button}
+          style={[styles.cat_button, currentView === "groceries" && styles.active_cat]}
           onPress={() => setCurrentView("groceries")}
         >
           <Text style={styles.cat_button_text}>Groceries</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.cat_button}
+          style={[styles.cat_button, currentView === "health" && styles.active_cat]}
           onPress={() => setCurrentView("health")}
         >
           <Text style={styles.cat_button_text}>Health & Wellness</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.cat_button}
+          style={[styles.cat_button, currentView === "automotive" && styles.active_cat]}
           onPress={() => setCurrentView("automotive")}
         >
           <Text style={styles.cat_button_text}>Automotive</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.cat_button}
+          style={[styles.cat_button, currentView === "pet" && styles.active_cat]}
           onPress={() => setCurrentView("pet")}
         >
           <Text style={styles.cat_button_text}>Pet Supplies</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.cat_button}
+          style={[styles.cat_button, currentView === "office" && styles.active_cat]}
           onPress={() => setCurrentView("office")}
         >
           <Text style={styles.cat_button_text}>Office Supplies</Text>
@@ -1326,12 +1326,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   cat_button_text: {
+    paddingTop: 17,
     color: "black",
     fontWeight: "bold",
+    justifyContent: "center",
+    alignSelf: "center",
   },
   main_cat_container: {
     flex: 1,
-    paddingLeft: 10,
+    paddingLeft: 3,
     paddingTop: 10,
   },
   cat_listing: {
@@ -1355,4 +1358,9 @@ const styles = StyleSheet.create({
     margin: 5,
     borderRadius: 5,
   },
+  active_cat:{
+    borderLeftWidth:4,
+    backgroundColor: "#e6e1e1",
+    borderColor: "#2196f3",
+  }
 });
