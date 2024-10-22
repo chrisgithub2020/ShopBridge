@@ -11,6 +11,7 @@ import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
+import { router } from "expo-router";
 
 const create_consumer_acc = () => {
   const [image, setImage] = useState<string>("");
@@ -113,7 +114,7 @@ const create_consumer_acc = () => {
           placeholderTextColor={"white"}
           placeholder="Re-type password"
         />
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={()=> router.push("../seller")}>
           <Text style={styles.button_text}>Submit</Text>
         </TouchableOpacity>
       </ScrollView>
