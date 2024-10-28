@@ -1,8 +1,15 @@
 import { router } from "expo-router";
 import { Text, View, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import retreiveToken from "../storage/retrieveToken"
 
+
+const retreiveT = async () => {
+  const token = await retreiveToken("acc");
+  console.log(token);
+}
 const App = () => {
+  retreiveT()
   return (
     <SafeAreaView style={styles.container}>
       <Image style={styles.image} source={require("../resources/icon.png")} />

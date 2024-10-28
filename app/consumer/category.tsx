@@ -135,7 +135,7 @@ const ConsumerCategory = () => {
                     style={{width:"100%", height:"60%", backgroundColor: "#e6e1e1",}}
                     source={require("../../resources/tablet.png")}
                   />
-                  <Text style={styles.cat_text}>Laptops</Text>
+                  <Text style={styles.cat_text}>Tablets</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={{

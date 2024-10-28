@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, TextInput } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import React from 'react'
 
@@ -117,5 +117,5 @@ const styles = StyleSheet.create({
     width: "100%",
     height:35,
     paddingTop:10,
-  }
+  },
 })
