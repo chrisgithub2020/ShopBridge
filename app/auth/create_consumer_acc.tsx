@@ -12,7 +12,9 @@ import {
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import SubmitConsumerDetails from "../../api_calls/consumer"
+import SubmitConsumerDetails from "../../api_calls/auth/consumer"
+import consmerUserData  from "../../api_calls/dataSkeletons"
+import DataSkeletons from "../../api_calls/dataSkeletons";
 let firstName = "";
 let lastName = "";
 let email = "";
@@ -49,28 +51,27 @@ const create_consumer_acc = () => {
 
   };
 
-  const userData = {
-    firstName: firstName,
-    lastName: lastName,
-    email: email,
-    phoneNumber: phoneNumber,
-    address: address,
-    password: password,
-  };
+  DataSkeletons.consumerUserData.firstName = firstName;
+  DataSkeletons.consumerUserData.lastName = lastName;
+  DataSkeletons.consumerUserData.email = email;
+  DataSkeletons.consumerUserData.phoneNumber = phoneNumber;
+  DataSkeletons.consumerUserData.address = address;
+  DataSkeletons.consumerUserData.password = password;
 
+  
   const submitDetails = async () => {
     if (
-      userData.address === "" ||
-      userData.email === "" ||
-      userData.phoneNumber === "" ||
-      userData.firstName === "" ||
-      userData.lastName === "" ||
-      userData.password === ""
+      DataSkeletons.consumerUserData.address === "" ||
+      DataSkeletons.consumerUserData.email === "" ||
+      DataSkeletons.consumerUserData.phoneNumber === "" ||
+      DataSkeletons.consumerUserData.firstName === "" ||
+      DataSkeletons.consumerUserData.lastName === "" ||
+      DataSkeletons.consumerUserData.password === ""
     ) {
       ToastAndroid.show("Every field is required", ToastAndroid.SHORT);
     } else {
       if (verify_pass) {
-        const resp = await SubmitConsumerDetails(userData);
+        const resp = await SubmitConsumerDetails(DataSkeletons.consumerUserData);
 
         if (resp === true) {
           router.push("/consumer");

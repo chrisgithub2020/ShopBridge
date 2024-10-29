@@ -1,4 +1,4 @@
-import saveToken from "../storage/saveToken"
+import saveToken from "../../storage/saveToken"
 
 const SubmitConsumerDetails = async (formData) => {
     const saving_resp = await saveToken(JSON.stringify(formData));

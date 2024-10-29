@@ -1,4 +1,4 @@
-import saveToken from "../storage/saveToken"
+import saveToken from "../../storage/saveToken"
 
 
 const SubmitSellerDetails = async (formData) => {

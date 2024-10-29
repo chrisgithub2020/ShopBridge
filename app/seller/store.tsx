@@ -7,12 +7,20 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
+  ToastAndroid,
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
-import * as ImagePicker from "expo-image-picker"
+import * as ImagePicker from "expo-image-picker";
+import sendData from "../../api_calls/seller/addItemToStore"
+import ProductComponent from "../components/seller/shopItems"
+import DataSkeletons from "@/api_calls/dataSkeletons";
+import RestockModal from "../components/seller/restockModal";
+
+
+let itemImages: Array<String|null|undefined> = [];
 
 interface StoreProduct {
   id: string;
@@ -21,9 +29,8 @@ interface StoreProduct {
   price: string;
 }
 
-interface StoreProductProp {
-  product: StoreProduct;
-}
+DataSkeletons.itemDetails.itemImages = itemImages;
+
 
 const Products: StoreProduct[] = [
   { id: "1", name: "Gold Watch", price: "500", quantity: "23" },
@@ -35,62 +42,55 @@ const Products: StoreProduct[] = [
   { id: "7", name: "Gold Watch", price: "500", quantity: "23" },
 ];
 
-const ProductComponent: React.FC<StoreProductProp> = ({ product }) => {
-  return (
-    <View style={styles.supplies_container}>
-      <View style={{ flexDirection: "row" }}>
-        <View>
-          <Image
-            style={styles.image}
-            source={require("../../resources/file.png")}
-          />
-        </View>
-        <View style={styles.abt_container}>
-          <Text style={{ height: "40%", marginTop: 10 }}>{product.name}</Text>
-          <Text style={{ height: "17%" }}>{product.price}</Text>
-          <Text style={{ height: "17%" }}>{product.quantity}</Text>
-        </View>
-      </View>
-      <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-        <TouchableOpacity style={styles.supplies_button}>
-          <Text style={styles.supplies_button_test}>Take Down</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.supplies_button}>
-          <Text style={styles.supplies_button_test}>Restock</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-};
 
 const store = () => {
   const [currentView, setCurrentView] = useState("inventory");
   const [selectedValue, setCurrentValue] = useState("e");
-  const [subCat, setSubCat] = useState("elect");
+  const [subCat, setSubCat] = useState("cp");
   const [height, setItemDescHeight] = useState(40);
-  const [descText, setItemDescText] = useState("")
-  const [numberOfImages, setNumberOfImages] = useState(0)
+  const [descText, setItemDescText] = useState("");
+  const [numberOfImages, setNumberOfImages] = useState(0);
+  const [itemName, setItemName] = useState("")
+  const [itemQuantity, setItemQuantity] = useState("")
+  const [itemPrice, setItemPrice] = useState("")
+  const [modalVisibility, setModalVisibility] = useState(false);
+
+
+  const submititemDetails = () => {
+    DataSkeletons.itemDetails.itemMainCat = selectedValue;
+    DataSkeletons.itemDetails.itemSubCat = subCat;
+    DataSkeletons.itemDetails.itemDescription = descText;
+    DataSkeletons.itemDetails.itemName = itemName;
+    DataSkeletons.itemDetails.itemPrice = itemPrice;
+    DataSkeletons.itemDetails.itemQuantity = itemQuantity;
+    if (itemImages.length === 0 || itemName == "" || itemQuantity == "" || itemPrice == "" || descText == "") {
+      ToastAndroid.show("All fields are required", ToastAndroid.SHORT)
+    } else {
+      console.log(DataSkeletons.itemDetails);
+      sendData(DataSkeletons.itemDetails)
+    }
+  }
+
+  const chooseItemImagaes = async () => {
+    let imagesObj = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      base64: true,
+      allowsMultipleSelection: true,
+      quality: 1,
+      aspect: [4, 3],
+    });
+
+    if (!imagesObj.canceled) {
+      setNumberOfImages(imagesObj.assets.length);
+      imagesObj.assets.forEach((images) => {
+        itemImages.push(images.base64);
+      });
+    } else {
+      console.log("images canceled");
+    }
+  };
 
   
-const chooseItemImagaes = async () => {
-  let imagesObj = await ImagePicker.launchImageLibraryAsync(
-    {
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      base64:true,
-      allowsMultipleSelection:true,
-      quality: 1,
-      aspect: [4,3]
-    }
-  )
-
-  if (!imagesObj.canceled){
-    console.log(imagesObj)
-    setNumberOfImages(imagesObj.assets.length)
-  } else {
-    console.log("images canceled")
-  }
-}
-
   const changeSubCat = () => {
     switch (selectedValue) {
       case "e":
@@ -298,11 +298,12 @@ const chooseItemImagaes = async () => {
                 />
               </TouchableOpacity>
             </View>
+            <RestockModal visible={modalVisibility} onClose={() => setModalVisibility(false)} onRestock={() => console.log("Restocking..")}/>
             <FlatList
               style={styles.flatContainer}
               data={Products}
               keyExtractor={(item) => item.id}
-              renderItem={({ item }) => <ProductComponent product={item} />}
+              renderItem={({ item }) => <ProductComponent product={item} onRestock={() => setModalVisibility(true)} />}
             />
           </View>
         );
@@ -331,7 +332,7 @@ const chooseItemImagaes = async () => {
               >
                 <MaterialIcons style={{}} size={25} name="arrow-back" />
               </TouchableOpacity>
-              <TouchableOpacity
+              <TouchableOpacity onPress={submititemDetails}
                 style={{
                   backgroundColor: "#2196f3",
                   width: "60%",
@@ -361,7 +362,15 @@ const chooseItemImagaes = async () => {
               }}
             >
               <Text style={styles.add_item_text}>Select Item Photos</Text>
-              <Text style={{justifyContent: "center", alignSelf: "center", padding: 6}}>{numberOfImages} images selected</Text>
+              <Text
+                style={{
+                  justifyContent: "center",
+                  alignSelf: "center",
+                  padding: 6,
+                }}
+              >
+                {numberOfImages} images selected
+              </Text>
               <TouchableOpacity
                 onPress={chooseItemImagaes}
                 style={{
@@ -378,13 +387,14 @@ const chooseItemImagaes = async () => {
               </TouchableOpacity>
               <Text style={styles.add_item_text}>Item Name</Text>
               <TextInput
+                onChangeText={(text) => setItemName(text)}
                 style={styles.add_item_textinput}
                 placeholder="Name of item"
               />
               <Text style={styles.add_item_text}>Item description</Text>
               <TextInput
                 multiline
-                style={[styles.add_item_textinput, { height, maxHeight:600 }]}
+                style={[styles.add_item_textinput, { height, maxHeight: 600 }]}
                 onChangeText={setItemDescText}
                 onContentSizeChange={(event) => {
                   setItemDescHeight(event.nativeEvent.contentSize.height);
@@ -417,11 +427,13 @@ const chooseItemImagaes = async () => {
               </View>
               <Text style={styles.add_item_text}>Quantity:</Text>
               <TextInput
+                onChangeText={(text) => setItemQuantity(text)}
                 style={styles.add_item_textinput}
                 placeholder="Quantity in stock"
               />
               <Text style={styles.add_item_text}>Price of Item</Text>
               <TextInput
+                onChangeText={(text) => setItemPrice(text)}
                 style={styles.add_item_textinput}
                 placeholder="Price of Item"
               />
@@ -439,32 +451,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#e6e1e1",
     flex: 1,
-  },
-  supplies_container: {
-    backgroundColor: "white",
-    borderRadius: 5,
-    padding: 7,
-    height: 200,
-    marginTop: 6,
-  },
-
-  image: {
-    height: 150,
-    width: 150,
-  },
-  abt_container: {
-    flexDirection: "column",
-  },
-  supplies_button: {
-    backgroundColor: "#2196f3",
-    width: "45%",
-    height: 35,
-    borderRadius: 5,
-  },
-  supplies_button_test: {
-    padding: 8,
-    justifyContent: "center",
-    alignSelf: "center",
   },
   searchbar: {
     height: 60,

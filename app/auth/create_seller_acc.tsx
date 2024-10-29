@@ -15,14 +15,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
-import SubmitSellerDetails from "../../api_calls/seller"
+import SubmitSellerDetails from "../../api_calls/auth/seller";
+import DataSkeletons  from "@/api_calls/dataSkeletons";
 let firstName = "";
 let lastName = "";
 let email = "";
 let password = "";
 let phoneNumber = "";
 let address = "";
-let photo: string | undefined;
+let photo: String = "p" ;
 let storeName = "";
 let verify_pass = false;
 
@@ -51,7 +52,7 @@ const create_consumer_acc = () => {
     }
 
   };
-  const [image, setImage] = useState<string>("");
+  const [image, setImage] = useState<String>();
   const pickImage = async () => {
     let image_obj = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -62,31 +63,28 @@ const create_consumer_acc = () => {
     });
 
     if (!image_obj.canceled) {
-      photo = image_obj.assets[0].base64?.toString();
-      console.log(photo)
-      setImage(image_obj.assets[0].uri);
+      DataSkeletons.sellerUserData.store_photo.push(image_obj.assets[0].base64?.toString())
+      setImage(image_obj.assets[0].base64?.toString());
     } else {
       console.log(image);
       setImage(require("../../resources/realicon.jpg"));
     }
   };
 
-  const userData = {
-    firstName: firstName,
-    lastName: lastName,
-    email: email,
-    phoneNumber: phoneNumber,
-    address: address,
-    password: password,
-    store_photo: photo,
-    store_name: storeName,
-  };
+  DataSkeletons.sellerUserData.firstName = firstName;
+  DataSkeletons.sellerUserData.lastName = lastName;
+  DataSkeletons.sellerUserData.email = email;
+  DataSkeletons.sellerUserData.phoneNumber = phoneNumber;
+  DataSkeletons.sellerUserData.password = password;
+  DataSkeletons.sellerUserData.address = address;
+  DataSkeletons.sellerUserData.store_name = storeName
+
 
   const handleSubmit = async () => {
-    if (userData.firstName === "" || userData.lastName === "" || userData.email === "" || userData.phoneNumber === "" || userData.address === "" || userData.password === "" || userData.store_photo === "" || userData.store_name === ""){
+    if ( DataSkeletons.sellerUserData.firstName === "" ||  DataSkeletons.sellerUserData.lastName === "" ||  DataSkeletons.sellerUserData.email === "" ||  DataSkeletons.sellerUserData.phoneNumber === "" ||  DataSkeletons.sellerUserData.address === "" ||  DataSkeletons.sellerUserData.password === "" ||  DataSkeletons.sellerUserData.store_photo.length === 0 ||  DataSkeletons.sellerUserData.store_name === ""){
       ToastAndroid.show("Every field is required", ToastAndroid.SHORT)
     } else {
-      const resp = await SubmitSellerDetails(userData);
+      const resp = await SubmitSellerDetails( DataSkeletons.sellerUserData);
 
       if (resp === true) {
         router.push("./seller")
@@ -101,7 +99,7 @@ const create_consumer_acc = () => {
         <View style={styles.image_container}>
           <Image
             source={
-              image ? { uri: image } : require("../../resources/realicon.jpg")
+              image ? { uri: "data:image/jpeg;base64,"+image } : require("../../resources/realicon.jpg")
             }
             style={styles.image}
           />
