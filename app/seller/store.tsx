@@ -8,19 +8,22 @@ import {
   TextInput,
   ScrollView,
   ToastAndroid,
+  NativeSyntheticEvent,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
-import sendData from "../../api_calls/seller/addItemToStore"
-import ProductComponent from "../components/seller/shopItems"
+import sendData from "../../api_calls/seller/addItemToStore";
+import ProductComponent from "../components/seller/shopItems";
 import DataSkeletons from "@/api_calls/dataSkeletons";
 import RestockModal from "../components/seller/restockModal";
+import AddItemModal from "../components/seller/addItemModal";
+import { Modalize } from "react-native-modalize";
 
+let itemImages: Array<String | null | undefined> = [];
 
-let itemImages: Array<String|null|undefined> = [];
 
 interface StoreProduct {
   id: string;
@@ -30,7 +33,6 @@ interface StoreProduct {
 }
 
 DataSkeletons.itemDetails.itemImages = itemImages;
-
 
 const Products: StoreProduct[] = [
   { id: "1", name: "Gold Watch", price: "500", quantity: "23" },
@@ -42,19 +44,46 @@ const Products: StoreProduct[] = [
   { id: "7", name: "Gold Watch", price: "500", quantity: "23" },
 ];
 
-
 const store = () => {
   const [currentView, setCurrentView] = useState("inventory");
   const [selectedValue, setCurrentValue] = useState("e");
-  const [subCat, setSubCat] = useState("cp");
-  const [height, setItemDescHeight] = useState(40);
+  const [subCat, setSubCat] = useState<string>("cp");
   const [descText, setItemDescText] = useState("");
   const [numberOfImages, setNumberOfImages] = useState(0);
-  const [itemName, setItemName] = useState("")
-  const [itemQuantity, setItemQuantity] = useState("")
-  const [itemPrice, setItemPrice] = useState("")
+  const [itemName, setItemName] = useState("");
+  const [itemQuantity, setItemQuantity] = useState("");
+  const [itemPrice, setItemPrice] = useState("");
   const [modalVisibility, setModalVisibility] = useState(false);
+  const modalRef = useRef<Modalize>(null);
+  const addItemModal = useRef<Modalize>(null);
 
+  const openModal = (event: NativeSyntheticEvent<any>) => {
+    modalRef.current?.open()
+  };
+
+  const closeModal = () => {
+    modalRef.current?.close();
+  };
+
+  const openAddItemModal = () => {
+    addItemModal.current?.open();
+  };
+  const closeAddItemModal = () => {
+    addItemModal.current?.close();
+  };
+
+  const formDetails = {
+    setItemDescText: setItemDescText,
+    setItemName: setItemName,
+    setItemQuantity: setItemQuantity,
+    setItemPrice: setItemPrice,
+    setSubCat: setSubCat,
+    subCat: subCat,
+    itemQuantity: itemQuantity,
+    selectedValue: selectedValue,
+    setCurrentValue: setCurrentValue,
+    numberOfImages: numberOfImages,
+  }
 
   const submititemDetails = () => {
     DataSkeletons.itemDetails.itemMainCat = selectedValue;
@@ -63,13 +92,19 @@ const store = () => {
     DataSkeletons.itemDetails.itemName = itemName;
     DataSkeletons.itemDetails.itemPrice = itemPrice;
     DataSkeletons.itemDetails.itemQuantity = itemQuantity;
-    if (itemImages.length === 0 || itemName == "" || itemQuantity == "" || itemPrice == "" || descText == "") {
-      ToastAndroid.show("All fields are required", ToastAndroid.SHORT)
+    if (
+      itemImages.length === 0 ||
+      itemName == "" ||
+      itemQuantity == "" ||
+      itemPrice == "" ||
+      descText == ""
+    ) {
+      ToastAndroid.show("All fields are required", ToastAndroid.SHORT);
     } else {
       console.log(DataSkeletons.itemDetails);
-      sendData(DataSkeletons.itemDetails)
+      sendData(DataSkeletons.itemDetails);
     }
-  }
+  };
 
   const chooseItemImagaes = async () => {
     let imagesObj = await ImagePicker.launchImageLibraryAsync({
@@ -90,7 +125,6 @@ const store = () => {
     }
   };
 
-  
   const changeSubCat = () => {
     switch (selectedValue) {
       case "e":
@@ -265,184 +299,49 @@ const store = () => {
     }
   };
 
-  const changeView = () => {
-    switch (currentView) {
-      case "inventory":
-        return (
-          <View>
-            <View style={styles.searchbar}>
-              <TextInput
-                style={{
-                  backgroundColor: "#e6e1e1",
-                  height: "100%",
-                  width: "90%",
-                  borderRadius: 5,
-                  padding: 10,
-                  marginRight: 5,
-                }}
-                placeholder="Search here"
-              />
-              <TouchableOpacity
-                onPress={() => setCurrentView("add_item")}
-                style={{
-                  backgroundColor: "white",
-                  width: "10%",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <MaterialIcons
-                  style={{ color: "#e6e1e1" }}
-                  size={30}
-                  name="add"
-                />
-              </TouchableOpacity>
-            </View>
-            <RestockModal visible={modalVisibility} onClose={() => setModalVisibility(false)} onRestock={() => console.log("Restocking..")}/>
-            <FlatList
-              style={styles.flatContainer}
-              data={Products}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => <ProductComponent product={item} onRestock={() => setModalVisibility(true)} />}
-            />
-          </View>
-        );
-
-      case "add_item":
-        return (
-          <View>
-            <View
-              style={{
-                flexDirection: "row",
-                width: "100%",
-                height: 55,
-                justifyContent: "space-between",
-                backgroundColor: "white",
-                padding: 5,
-              }}
-            >
-              <TouchableOpacity
-                onPress={() => setCurrentView("inventory")}
-                style={{
-                  width: "15%",
-                  marginLeft: 10,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <MaterialIcons style={{}} size={25} name="arrow-back" />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={submititemDetails}
-                style={{
-                  backgroundColor: "#2196f3",
-                  width: "60%",
-                  borderRadius: 5,
-                }}
-              >
-                <Text
-                  style={{
-                    justifyContent: "center",
-                    alignSelf: "center",
-                    paddingTop: 13,
-                    fontWeight: "bold",
-                    color: "white",
-                  }}
-                >
-                  Add Item
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <ScrollView
-              style={{
-                backgroundColor: "white",
-                padding: 10,
-                height: "100%",
-                borderTopWidth: 5,
-                borderTopColor: "#e6e1e1",
-              }}
-            >
-              <Text style={styles.add_item_text}>Select Item Photos</Text>
-              <Text
-                style={{
-                  justifyContent: "center",
-                  alignSelf: "center",
-                  padding: 6,
-                }}
-              >
-                {numberOfImages} images selected
-              </Text>
-              <TouchableOpacity
-                onPress={chooseItemImagaes}
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  backgroundColor: "#2196f3",
-                  height: 40,
-                  borderRadius: 5,
-                }}
-              >
-                <MaterialIcons name="photo" size={20} />
-                <Text style={styles.add_item_text}>Select Images</Text>
-              </TouchableOpacity>
-              <Text style={styles.add_item_text}>Item Name</Text>
-              <TextInput
-                onChangeText={(text) => setItemName(text)}
-                style={styles.add_item_textinput}
-                placeholder="Name of item"
-              />
-              <Text style={styles.add_item_text}>Item description</Text>
-              <TextInput
-                multiline
-                style={[styles.add_item_textinput, { height, maxHeight: 600 }]}
-                onChangeText={setItemDescText}
-                onContentSizeChange={(event) => {
-                  setItemDescHeight(event.nativeEvent.contentSize.height);
-                }}
-                value={descText}
-                placeholder="Description of item"
-              />
-              <Text style={styles.add_item_text}>Select main Category</Text>
-              <Picker
-                style={styles.cat_picker}
-                selectedValue={selectedValue}
-                onValueChange={(itemValue) => setCurrentValue(itemValue)}
-              >
-                <Picker.Item label="Electronics" value="e" />
-                <Picker.Item label="Fashion" value="f" />
-                <Picker.Item label="Home & Kitchen" value="h&k" />
-                <Picker.Item label="Beauty" value="b" />
-                <Picker.Item label="Sports" value="sp" />
-                <Picker.Item label="Toys" value="t" />
-                <Picker.Item label="Books" value="bk" />
-                <Picker.Item label="Groceries" value="g" />
-                <Picker.Item label="Health" value="h" />
-                <Picker.Item label="Automotive" value="a" />
-                <Picker.Item label="Pet" value="p" />
-                <Picker.Item label="Office" value="o" />
-              </Picker>
-              <View>
-                <Text style={styles.add_item_text}>Select Sub Category</Text>
-                {changeSubCat()}
-              </View>
-              <Text style={styles.add_item_text}>Quantity:</Text>
-              <TextInput
-                onChangeText={(text) => setItemQuantity(text)}
-                style={styles.add_item_textinput}
-                placeholder="Quantity in stock"
-              />
-              <Text style={styles.add_item_text}>Price of Item</Text>
-              <TextInput
-                onChangeText={(text) => setItemPrice(text)}
-                style={styles.add_item_textinput}
-                placeholder="Price of Item"
-              />
-            </ScrollView>
-          </View>
-        );
-    }
-  };
-  return <SafeAreaView style={styles.container}>{changeView()}</SafeAreaView>;
+  return (
+    <SafeAreaView style={styles.container}>
+      <View>
+        <View style={styles.searchbar}>
+          <TextInput
+            style={{
+              backgroundColor: "#e6e1e1",
+              height: "100%",
+              width: "90%",
+              borderRadius: 5,
+              padding: 10,
+              marginRight: 5,
+            }}
+            placeholder="Search here"
+          />
+          <TouchableOpacity
+            onPress={openAddItemModal}
+            style={{
+              backgroundColor: "white",
+              width: "10%",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <MaterialIcons style={{ color: "#e6e1e1" }} size={30} name="add" />
+          </TouchableOpacity>
+        </View>
+        <RestockModal
+          refObject={modalRef}
+          restock={() => console.log("Restocking..")}
+        />
+        <AddItemModal formDetails={formDetails} refObject={addItemModal} chooseItemImages={chooseItemImagaes} onSubmit={submititemDetails}/>
+        <FlatList
+          style={styles.flatContainer}
+          data={Products}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <ProductComponent product={item} onRestock={openModal} />
+          )}
+        />
+      </View>
+    </SafeAreaView>
+  );
 };
 
 export default store;

@@ -9,12 +9,13 @@ import {
   TextInput,
   ScrollView,
 } from "react-native";
-import React, {useState} from "react";
+import React, {useState, useRef} from "react";
 import {SafeAreaView} from "react-native-safe-area-context"
 import { MaterialIcons } from "@expo/vector-icons"
 import getHomepageProducts from "../../api_calls/consumer/getHompageProducts"
-import { router } from "expo-router";
+import { Modalize } from "react-native-modalize";
 import ProductComponent from "../components/consumer/homePage"
+import ProductDetailsModal from "../components/consumer/productDetailsModal"
 
 interface ProductData {
   id: string;
@@ -54,68 +55,32 @@ const ConsumerHome = () => {
   const screenWidth = Dimensions.get("window").width;
   const numColumns = Math.floor(screenWidth / 170);
   const [currentView, setCurrentView] = useState<string>("products");
+  const modalRef = useRef<Modalize>(null)
+  
+  const openModal = () => {
+    modalRef.current?.open()
+  }
+
+  const closeModal = () => {
+    modalRef.current?.close()
+  }
   
   // getProducts();
 
-  const switchView = () =>{
-    switch (currentView) {
-      case "details":
-        return (
-          <View style={{flex:1, padding:5,}}>
-            <View style={{flexDirection:"row", width: "100%", height: 55, justifyContent:"space-between", backgroundColor:"white", padding: 5}}>
-              <TouchableOpacity onPress={() => setCurrentView("products")} style={{width: "15%", marginLeft:10,justifyContent: "center", alignItems: "center"}}>
-                <MaterialIcons style={{}} size={25} name="arrow-back"/>
-              </TouchableOpacity>
-              <TouchableOpacity style={{backgroundColor: "#2196f3",width:"60%", borderRadius:5,}}>
-                <Text style={{justifyContent: "center", alignSelf:"center", paddingTop: 13, fontWeight:"bold", color: "white"}}>Add to Cart</Text>
-              </TouchableOpacity>
-            </View>
-            <ScrollView style={{marginTop:2,}}>
-              <View style={styles.product_images_container}>
-                <TouchableOpacity style={styles.change_image_button}>
-                  <MaterialIcons name="arrow-back" size={25}/>
-                </TouchableOpacity>
-                <Image source={require("../../resources/file.png")} style={styles.product_images}/>
-                <TouchableOpacity style={styles.change_image_button}>
-                  <MaterialIcons name="arrow-forward" size={25}/>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.product_details}>
-                <Text style={{height: 100, padding:5,}}>ghhhhedcugd</Text>
-                <Text style={{height: 40, padding:5, borderTopWidth: 1,borderBottomWidth:1, borderTopColor: "#e6e1e1", borderBottomColor: "#e6e1e1"}}> Price</Text>
-                <View style={{height: "100%"}}>
-                  <Text style={{padding:3, fontWeight: "bold"}}>Description</Text>
-                  <Text ></Text>
-                </View>
-                <Text></Text>
-              </View>
-            </ScrollView>            
+  return (
+    <SafeAreaView style={styles.container}>
+      <View>
+          <View style={styles.searchbar}>
+            <TextInput style={{backgroundColor: "#e6e1e1", height: "100%",width: "100%", borderRadius: 5, padding: 10, marginRight:5,}} placeholder="Search here"/>
           </View>
-          
-        )
-  
-      case "products":
-        return (
-          <View>
-            <View style={styles.searchbar}>
-          <TextInput style={{backgroundColor: "#e6e1e1", height: "100%",width: "100%", borderRadius: 5, padding: 10, marginRight:5,}} placeholder="Search here"/>
-          </View>
+          <ProductDetailsModal refObject={modalRef} addToCart={() => console.log("adding to cart")}/>
           <FlatList style={styles.flatContainer}
             data={Products}
             keyExtractor={(item) => item.id}
             numColumns={numColumns}
-            renderItem={({ item }) => <ProductComponent product={item} onClick={() => setCurrentView("details")} />}
+            renderItem={({ item }) => <ProductComponent product={item} onClick={openModal} />}
         />
-          </View>
-        )
-    }
-  }
-
-  
-
-  return (
-    <SafeAreaView style={styles.container}>
-      {switchView()}      
+          </View>      
     </SafeAreaView>
   );
 };
@@ -127,21 +92,6 @@ const styles = StyleSheet.create({
     flex: 1,
     display: "flex",
     backgroundColor: "#e6e1e1",
-  },
-  product_details: {
-    borderTopWidth: 2,
-    borderTopColor: "#e6e1e1",
-    backgroundColor: "white",
-    padding:3,
-  },
-  change_image_button: {
-    height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  product_images: {
-    height: 300,
-    width: "85%",
   },
   button: {
     backgroundColor: "#2196f3",
@@ -159,9 +109,4 @@ const styles = StyleSheet.create({
   flatContainer: {
     padding:8,
   },
-  product_images_container: {
-    flexDirection: "row",
-    padding:5,
-    backgroundColor: "white",
-  }
 });

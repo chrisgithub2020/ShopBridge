@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, Image, StyleSheet, NativeSyntheticEvent } from "react-native";
 
 interface StoreProduct {
   id: string;
@@ -9,7 +9,7 @@ interface StoreProduct {
 
 interface StoreProductProp {
   product: StoreProduct;
-  onRestock: () => void;
+  onRestock: (event: NativeSyntheticEvent<any>) => void;
 }
 const ProductComponent: React.FC<StoreProductProp> = ({ product, onRestock }) => {
   return (
