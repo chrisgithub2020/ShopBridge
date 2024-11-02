@@ -151,7 +151,7 @@ const create_consumer_acc = () => {
           placeholderTextColor={"white"}
           placeholder="Re-type password"
         />
-        <TouchableOpacity style={styles.button} onPress={() => router.push("../consumer")}>
+        <TouchableOpacity style={styles.button} onPress={submitDetails}>
           <Text style={styles.button_text}>Submit</Text>
         </TouchableOpacity>
       </ScrollView>

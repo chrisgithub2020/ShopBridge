@@ -1,9 +1,10 @@
 import saveToken from "../../storage/saveToken"
+import Link from "../serverLink"
 
 const SubmitConsumerDetails = async (formData) => {
     const saving_resp = await saveToken(JSON.stringify(formData));
     try {
-        const result = await fetch("https://a9f9-154-161-188-153.ngrok-free.app/sign_up_consumer",{
+        const result = await fetch(`${Link}/sign_up_consumer`,{
             method: "POST",
             headers: {
                 'Content-Type': "application/json"

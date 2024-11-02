@@ -1,6 +1,6 @@
-const restockItemData = async (data) => {
+const restockItem = async (data) => {
     try {
-        const response = await fetch("https://dbff-154-161-4-57.ngrok-free.app/restock_item", {
+        const response = await fetch("https://0d1e-102-176-127-150.ngrok-free.app/restock_item", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -13,4 +13,4 @@ const restockItemData = async (data) => {
     }
 }
 
-export default restockItemData
+export default restockItem

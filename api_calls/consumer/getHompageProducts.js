@@ -1,5 +1,7 @@
+import Link from "../serverLink"
+
 const getHomePageProducts = async () => {
-  fetch("https://a9f9-154-161-188-153.ngrok-free.app/getTodaysProducts")
+  fetch(`${Link}/getTodaysProducts`)
     .then((response) => response.json())
     .then((products) => {
       return products;

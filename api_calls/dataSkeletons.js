@@ -6,6 +6,7 @@ const DataSkeletons = {
     phoneNumber: String(),
     address: String(),
     password: String(),
+    type: "c",
   },
 
   sellerUserData: {
@@ -17,6 +18,7 @@ const DataSkeletons = {
     password: String(),
     store_photo: Array(),
     store_name: String(),
+    type: "s",
   },
 
   restockItemDetails: {

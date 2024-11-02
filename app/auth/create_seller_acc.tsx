@@ -17,6 +17,7 @@ import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import SubmitSellerDetails from "../../api_calls/auth/seller";
 import DataSkeletons  from "@/api_calls/dataSkeletons";
+import retreiveToken from "@/storage/retrieveToken";
 let firstName = "";
 let lastName = "";
 let email = "";
@@ -26,6 +27,9 @@ let address = "";
 let photo: String = "p" ;
 let storeName = "";
 let verify_pass = false;
+
+
+
 
 const create_consumer_acc = () => {
   const handleTextChange = (event: NativeSyntheticEvent<TextInputChangeEventData>) => {
@@ -87,7 +91,7 @@ const create_consumer_acc = () => {
       const resp = await SubmitSellerDetails( DataSkeletons.sellerUserData);
 
       if (resp === true) {
-        router.push("./seller")
+        router.push("../seller")
       }
     }
   }
@@ -158,7 +162,7 @@ const create_consumer_acc = () => {
           placeholder="example@gmail.com"
         />
         <Text style={styles.text}>Phone:</Text>
-        <TextInput
+        <TextInput keyboardType="numeric"
           onChange={handleTextChange}
           onFocus={() => setFocusedInput("4")}
           onBlur={() => setFocusedInput("0")}
@@ -195,7 +199,7 @@ const create_consumer_acc = () => {
         />
         <TouchableOpacity
           style={styles.button}
-          onPress={() => router.push("../seller")}
+          onPress={handleSubmit}
         >
           <Text style={styles.button_text}>Submit</Text>
         </TouchableOpacity>

@@ -9,7 +9,7 @@ interface StoreProduct {
 
 interface StoreProductProp {
   product: StoreProduct;
-  onRestock: (event: NativeSyntheticEvent<any>) => void;
+  onRestock: () => void;
 }
 const ProductComponent: React.FC<StoreProductProp> = ({ product, onRestock }) => {
   return (

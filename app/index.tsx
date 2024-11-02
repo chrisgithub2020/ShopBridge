@@ -2,14 +2,32 @@ import { router } from "expo-router";
 import { Text, View, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import retreiveToken from "../storage/retrieveToken"
+import React, {useContext} from "react";
+import Link from "@/api_calls/serverLink";
+import { MyContext } from "./components/consumer/myContext";
 
+const checkIfAccountExists = async () => {
+  const {value, setState} = useContext(MyContext);
 
-const retreiveT = async () => {
-  const token = await retreiveToken("acc");
-  console.log(token);
+  const result = await retreiveToken("acc")
+  console.log(result);
+  if (result) {
+    console.log("There is an account")
+    const accountJson = JSON.parse(String(result))
+    setState(Object(accountJson));
+    if (accountJson.type === "c") {
+      router.push("./consumer")
+    } else {
+      router.push("./seller")
+    }
+  } else {
+    console.log("there is no account")
+  }
 }
+
 const App = () => {
-  retreiveT()
+  console.log(Link())
+  // checkIfAccountExists()
   return (
     <SafeAreaView style={styles.container}>
       <Image style={styles.image} source={require("../resources/icon.png")} />

@@ -1,12 +1,20 @@
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useState } from "react";
+import { useNavigation } from '@react-navigation/native';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { RootStackParamList } from './types';
+
+
+type ScreenBNavigationProp = BottomTabNavigationProp<RootStackParamList, 'category'>;
+
 
 const ConsumerCategory = () => {
+  const navigation = useNavigation<ScreenBNavigationProp>();
   const [currentView, setCurrentView] = useState<string>("electronics");
   const showCat = () => {
     switch (currentView) {
-      case "electronics":
+      case "e":
         return (
           <ScrollView style={styles.cat_listing}>
             <View style={styles.cat_breakdown_container}>
@@ -26,7 +34,7 @@ const ConsumerCategory = () => {
                 </TouchableOpacity>
               </View>
               <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -40,7 +48,7 @@ const ConsumerCategory = () => {
                   />
                   <Text style={styles.cat_text}>Cell Phones</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -73,7 +81,7 @@ const ConsumerCategory = () => {
                 </TouchableOpacity>
               </View>
               <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -88,7 +96,7 @@ const ConsumerCategory = () => {
                   />
                   <Text style={styles.cat_text}>Laptops</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -122,7 +130,7 @@ const ConsumerCategory = () => {
                 </TouchableOpacity>
               </View>
               <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -137,7 +145,7 @@ const ConsumerCategory = () => {
                   />
                   <Text style={styles.cat_text}>Tablets</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -171,7 +179,7 @@ const ConsumerCategory = () => {
                 </TouchableOpacity>
               </View>
               <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -186,7 +194,7 @@ const ConsumerCategory = () => {
                   />
                   <Text style={styles.cat_text}>Computer Accessories</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -203,7 +211,7 @@ const ConsumerCategory = () => {
                 </TouchableOpacity>                
               </View>
               <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -218,7 +226,7 @@ const ConsumerCategory = () => {
                   />
                   <Text style={styles.cat_text}>Headphones & Headsets</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -238,7 +246,7 @@ const ConsumerCategory = () => {
           </ScrollView>
         );
 
-      case "fashion":
+      case "f":
         return (
           <ScrollView style={styles.cat_listing}>
             <View style={styles.cat_breakdown_container}>
@@ -258,7 +266,7 @@ const ConsumerCategory = () => {
                 </TouchableOpacity>
               </View>
               <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -272,7 +280,7 @@ const ConsumerCategory = () => {
                   />
                   <Text style={styles.cat_text}>Men's Clothing</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -288,7 +296,7 @@ const ConsumerCategory = () => {
                 </TouchableOpacity>
               </View>
               <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -322,7 +330,7 @@ const ConsumerCategory = () => {
                 </TouchableOpacity>
               </View>
               <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -336,7 +344,7 @@ const ConsumerCategory = () => {
                   />
                   <Text style={styles.cat_text}>Men's Shoes</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -352,7 +360,7 @@ const ConsumerCategory = () => {
                 </TouchableOpacity>
               </View>
               <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -367,7 +375,7 @@ const ConsumerCategory = () => {
                   />
                   <Text style={styles.cat_text}>Sneakers</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -406,7 +414,7 @@ const ConsumerCategory = () => {
                 </TouchableOpacity>
               </View>
               <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -421,7 +429,7 @@ const ConsumerCategory = () => {
                   />
                   <Text style={styles.cat_text}>Furniture</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -438,7 +446,7 @@ const ConsumerCategory = () => {
                 </TouchableOpacity>
               </View>
               <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -452,7 +460,7 @@ const ConsumerCategory = () => {
                   />
                   <Text style={styles.cat_text}>Kitchen Appliances</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -471,7 +479,7 @@ const ConsumerCategory = () => {
           </ScrollView>
         );
 
-      case "Beauty":
+      case "b":
         return (
           <ScrollView style={styles.cat_listing}>
             <View style={styles.cat_breakdown_container}>
@@ -491,7 +499,7 @@ const ConsumerCategory = () => {
                 </TouchableOpacity>
               </View>
               <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -506,7 +514,7 @@ const ConsumerCategory = () => {
                   />
                   <Text style={styles.cat_text}>Haircare</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -541,7 +549,7 @@ const ConsumerCategory = () => {
                 </TouchableOpacity>
               </View>
               <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -556,7 +564,7 @@ const ConsumerCategory = () => {
                   />
                   <Text style={styles.cat_text}>MakeUp</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -590,7 +598,7 @@ const ConsumerCategory = () => {
                 </TouchableOpacity>
               </View>
               <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -605,7 +613,7 @@ const ConsumerCategory = () => {
                   />
                   <Text style={styles.cat_text}>Body Care</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -625,7 +633,7 @@ const ConsumerCategory = () => {
           </ScrollView>
         );
 
-      case "sports":
+      case "sp":
         return (
           <ScrollView style={styles.cat_listing}>
             <View style={styles.cat_breakdown_container}>
@@ -645,7 +653,7 @@ const ConsumerCategory = () => {
                 </TouchableOpacity>
               </View>
               <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -660,7 +668,7 @@ const ConsumerCategory = () => {
                   />
                   <Text style={styles.cat_text}>Fitness Equipments</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -694,7 +702,7 @@ const ConsumerCategory = () => {
                 </TouchableOpacity>
               </View>
               <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -709,7 +717,7 @@ const ConsumerCategory = () => {
                   />
                   <Text style={styles.cat_text}>Outdoor Gears</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -729,7 +737,7 @@ const ConsumerCategory = () => {
           </ScrollView>
         );
 
-      case "toys":
+      case "t":
         return (
           <ScrollView style={styles.cat_listing}>
             <View style={styles.cat_breakdown_container}>
@@ -749,7 +757,7 @@ const ConsumerCategory = () => {
                 </TouchableOpacity>
               </View>
               <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -764,7 +772,7 @@ const ConsumerCategory = () => {
                   />
                   <Text style={styles.cat_text}>Figures</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -798,7 +806,7 @@ const ConsumerCategory = () => {
                 </TouchableOpacity>
               </View>
               <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -813,7 +821,7 @@ const ConsumerCategory = () => {
                   />
                   <Text style={styles.cat_text}>Board Games</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -833,7 +841,7 @@ const ConsumerCategory = () => {
           </ScrollView>
         );
 
-      case "books":
+      case "bk":
         return (
           <ScrollView style={styles.cat_listing}>
             <View style={styles.cat_breakdown_container}>
@@ -856,7 +864,7 @@ const ConsumerCategory = () => {
           </ScrollView>
         );
 
-      case "groceries":
+      case "g":
         return (
           <ScrollView style={styles.cat_listing}>
             <View style={styles.cat_breakdown_container}>
@@ -876,7 +884,7 @@ const ConsumerCategory = () => {
                 </TouchableOpacity>
               </View>
               <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -891,7 +899,7 @@ const ConsumerCategory = () => {
                   />
                   <Text style={styles.cat_text}>Fresh Produce</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -908,7 +916,7 @@ const ConsumerCategory = () => {
                 </TouchableOpacity>
               </View>  
               <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -943,7 +951,7 @@ const ConsumerCategory = () => {
                 </TouchableOpacity>
               </View>
               <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -963,7 +971,7 @@ const ConsumerCategory = () => {
           </ScrollView>
         );
 
-      case "health":
+      case "h":
         return (
           <ScrollView style={styles.cat_listing}>
             <View style={styles.cat_breakdown_container}>
@@ -983,7 +991,7 @@ const ConsumerCategory = () => {
                 </TouchableOpacity>
               </View>
               <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -998,7 +1006,7 @@ const ConsumerCategory = () => {
                   />
                   <Text style={styles.cat_text}>Medical Supplies</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -1018,7 +1026,7 @@ const ConsumerCategory = () => {
           </ScrollView>
         );
 
-      case "automotive":
+      case "a":
         return (
           <ScrollView style={styles.cat_listing}>
             <View style={styles.cat_breakdown_container}>
@@ -1038,7 +1046,7 @@ const ConsumerCategory = () => {
                 </TouchableOpacity>
               </View>
               <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -1053,7 +1061,7 @@ const ConsumerCategory = () => {
                   />
                   <Text style={styles.cat_text}>Car Accessories</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -1073,7 +1081,7 @@ const ConsumerCategory = () => {
           </ScrollView>
         );
 
-      case "pet":
+      case "p":
         return (
           <ScrollView style={styles.cat_listing}>
             <View style={styles.cat_breakdown_container}>
@@ -1093,7 +1101,7 @@ const ConsumerCategory = () => {
                 </TouchableOpacity>
               </View>
               <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -1108,7 +1116,7 @@ const ConsumerCategory = () => {
                   />
                   <Text style={styles.cat_text}>Pet Food</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -1142,7 +1150,7 @@ const ConsumerCategory = () => {
                 </TouchableOpacity>
               </View>
               <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -1157,7 +1165,7 @@ const ConsumerCategory = () => {
                   />
                   <Text style={styles.cat_text}>Grooming supplies</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -1177,7 +1185,7 @@ const ConsumerCategory = () => {
           </ScrollView>
         );
 
-      case "office":
+      case "o":
         return (
           <ScrollView style={styles.cat_listing}>
             <View style={styles.cat_breakdown_container}>
@@ -1197,7 +1205,7 @@ const ConsumerCategory = () => {
                 </TouchableOpacity>
               </View>
               <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -1212,7 +1220,7 @@ const ConsumerCategory = () => {
                   />
                   <Text style={styles.cat_text}>Stationery</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => navigation.navigate("index")}
                   style={{
                     flexDirection: "column",
                     height: 150,
@@ -1238,13 +1246,13 @@ const ConsumerCategory = () => {
       <View style={styles.main_cat_container}>
         <TouchableOpacity
           style={[styles.cat_button, currentView === "electronics" && styles.active_cat]}
-          onPress={() => setCurrentView("electronics")}
+          onPress={() => setCurrentView("e")}
         >
           <Text style={styles.cat_button_text}>Electronics</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.cat_button, currentView === "fashion" && styles.active_cat]}
-          onPress={() => setCurrentView("fashion")}
+          onPress={() => setCurrentView("f")}
         >
           <Text style={styles.cat_button_text}>Fashion</Text>
         </TouchableOpacity>
@@ -1256,55 +1264,55 @@ const ConsumerCategory = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.cat_button, currentView === "Beauty" && styles.active_cat]}
-          onPress={() => setCurrentView("Beauty")}
+          onPress={() => setCurrentView("b")}
         >
           <Text style={styles.cat_button_text}>Beauty & Personal Care</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.cat_button, currentView === "sports" && styles.active_cat]}
-          onPress={() => setCurrentView("sports")}
+          onPress={() => setCurrentView("sp")}
         >
           <Text style={styles.cat_button_text}>Sports & Outdoor</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.cat_button, currentView === "toys" && styles.active_cat]}
-          onPress={() => setCurrentView("toys")}
+          onPress={() => setCurrentView("t")}
         >
           <Text style={styles.cat_button_text}>Toys & Games</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.cat_button, currentView === "books" && styles.active_cat]}
-          onPress={() => setCurrentView("books")}
+          onPress={() => setCurrentView("dk")}
         >
           <Text style={styles.cat_button_text}>Books & Media</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.cat_button, currentView === "groceries" && styles.active_cat]}
-          onPress={() => setCurrentView("groceries")}
+          onPress={() => setCurrentView("g")}
         >
           <Text style={styles.cat_button_text}>Groceries</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.cat_button, currentView === "health" && styles.active_cat]}
-          onPress={() => setCurrentView("health")}
+          onPress={() => setCurrentView("h")}
         >
           <Text style={styles.cat_button_text}>Health & Wellness</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.cat_button, currentView === "automotive" && styles.active_cat]}
-          onPress={() => setCurrentView("automotive")}
+          onPress={() => setCurrentView("a")}
         >
           <Text style={styles.cat_button_text}>Automotive</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.cat_button, currentView === "pet" && styles.active_cat]}
-          onPress={() => setCurrentView("pet")}
+          onPress={() => setCurrentView("p")}
         >
           <Text style={styles.cat_button_text}>Pet Supplies</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.cat_button, currentView === "office" && styles.active_cat]}
-          onPress={() => setCurrentView("office")}
+          onPress={() => setCurrentView("o")}
         >
           <Text style={styles.cat_button_text}>Office Supplies</Text>
         </TouchableOpacity>
