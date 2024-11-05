@@ -1,61 +1,52 @@
+import React, { useContext, useEffect, useState } from "react";
 import { router } from "expo-router";
-import { Text, View, Image, StyleSheet, TouchableOpacity } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { StyleSheet } from "react-native";
 import retreiveToken from "../storage/retrieveToken"
-import React, {useContext} from "react";
-import Link from "@/api_calls/serverLink";
-import { MyContext } from "./components/consumer/myContext";
+import { ActivityIndicator } from "react-native";
 
-const checkIfAccountExists = async () => {
-  const {value, setState} = useContext(MyContext);
 
-  const result = await retreiveToken("acc")
-  console.log(result);
-  if (result) {
-    console.log("There is an account")
-    const accountJson = JSON.parse(String(result))
-    setState(Object(accountJson));
-    if (accountJson.type === "c") {
-      router.push("./consumer")
-    } else {
-      router.push("./seller")
+
+const LoadingScreen = ({navigation}: {navigation: any}) => {
+  const [userExist, setUserExist] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const checkIfAccountExists = async () => {
+      const result = await retreiveToken("acc");
+      console.log(result);
+      if (result === null) {
+        console.log("There is an account");
+        const accountJson = JSON.parse(String({}));
+        // setUser(accountJson);
+        // if (accountJson.type === "c") {
+        //   setUserExist("consumer");
+        //   console.log(userExist);
+        // } else {
+        //   setUserExist("seller");
+        //   console.log(userExist);
+        // }
+      } else {
+        console.log("there is no account");
+        // setUserExist("index");
+        setIsLoading(false)
+      }
+    };
+    checkIfAccountExists();
+  }, [isLoading]);
+
+  useEffect(()=>{
+    if (isLoading === false) {
+      navigation.navigate("seller")
     }
-  } else {
-    console.log("there is no account")
-  }
-}
+  },[isLoading])
 
-const App = () => {
-  console.log(Link())
-  // checkIfAccountExists()
-  return (
-    <SafeAreaView style={styles.container}>
-      <Image style={styles.image} source={require("../resources/icon.png")} />
-      <Text style={styles.text_rhetorical}>
-        Want to Shop from ShopBridge or Sell on ShopBridge?
-      </Text>
-      <View style={styles.paragraph}>
-        <Text style={styles.text_support}>
-          Join the ShopBridge community today and unlock endless opportunities!
-          Whether you’re here to discover amazing products or grow your
-          business, we’ve got you covered. Sign up now and start your journey to
-          a seamless shopping and selling experience—all in one place!
-        </Text>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            router.push("./auth");
-          }}
-        >
-          <Text style={styles.text_sign}>Sign Up</Text>
-        </TouchableOpacity>
-      </View>
-      <Text style={{ marginTop: 10, marginBottom: 10 }}></Text>
-    </SafeAreaView>
-  );
+  
+
+  return <ActivityIndicator style={{ flex: 1 }} size="large" color="black" />;
 };
 
-export default App;
+export default LoadingScreen;
 
 const styles = StyleSheet.create({
   image: { height: "50%", width: "100%", marginTop: 20 },

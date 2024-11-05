@@ -56,7 +56,7 @@ const RestockItem = async (id: String, amount: String) => {
   await restockItem(formData)
 }
 
-const store = () => {
+const Store = () => {
   let itemToRestockID = "";
   let amountToRestock: String = "";
   const [selectedValue, setCurrentValue] = useState("e");
@@ -187,7 +187,7 @@ const store = () => {
   );
 };
 
-export default store;
+export default Store;
 
 const styles = StyleSheet.create({
   container: {

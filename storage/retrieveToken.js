@@ -8,7 +8,7 @@ const retreiveToken = async (key) => {
     } catch (err) {
         console.error(err);
     }
-
+    
 }
 
 export default retreiveToken;

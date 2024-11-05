@@ -72,7 +72,7 @@ const OrderComponent: React.FC<OrderProp> = ({order}) => {
       </View>
   )
 }
-const order = () => {
+const Order = () => {
   return (
     <SafeAreaView style={styles.container}>
       <FlatList 
@@ -84,7 +84,7 @@ const order = () => {
   )
 }
 
-export default order
+export default Order
 
 const styles = StyleSheet.create({
   container: {
