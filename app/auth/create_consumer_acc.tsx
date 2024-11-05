@@ -23,7 +23,7 @@ let phoneNumber = "";
 let address = "";
 let verify_pass = false;
 
-const create_consumer_acc = () => {
+const CreateConsumer = () => {
   const [focus, setFocusedInput] = useState("0");
 
   const handleTextChange = (
@@ -159,7 +159,7 @@ const create_consumer_acc = () => {
   );
 };
 
-export default create_consumer_acc;
+export default CreateConsumer;
 
 const styles = StyleSheet.create({
   image: { height: "30%", width: "100%", marginTop: 20 },

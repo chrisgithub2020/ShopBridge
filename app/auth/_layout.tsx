@@ -1,19 +1,25 @@
 import { View, Text } from 'react-native'
 import React, {Suspense} from 'react'
-import { Stack } from 'expo-router'
-const create_consumer = React.lazy(() => import("./create_consumer_acc"))
-const create_seller = React.lazy(() => import("./create_consumer_acc"))
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Index from './choose';
+import About from "./index"
+import CreateConsumer from './create_consumer_acc';
+import CreateSeller from './create_seller_acc';
 
 
-const _layout = () => {
+
+const Stack = createNativeStackNavigator()
+
+
+const AuthLayout = () => {
   return (
-    <Stack>
-      <Stack.Screen name="index" options={{headerShown: false}}/>
-      <Stack.Screen name="create_consumer_acc" options={{headerShown: false}}/>
-      <Stack.Screen name="create_seller_acc" options={{headerShown: false}}/>
-
-    </Stack>
+    <Stack.Navigator>
+      <Stack.Screen component={About} name="index" options={{headerShown: false}}/>
+      <Stack.Screen component={Index} name="choose" options={{headerShown: false}}/>
+      <Stack.Screen component={CreateConsumer} name="create_consumer_acc" options={{headerShown: false}}/>
+      <Stack.Screen component={CreateSeller} name="create_seller_acc" options={{headerShown: false}}/>
+    </Stack.Navigator>
   )
 }
 
-export default _layout
+export default AuthLayout

@@ -31,7 +31,7 @@ let verify_pass = false;
 
 
 
-const create_consumer_acc = () => {
+const CreateSeller = ({navigation}: {navigation: any}) => {
   const handleTextChange = (event: NativeSyntheticEvent<TextInputChangeEventData>) => {
     if (focus === "1") {
       firstName = event.nativeEvent["text"];
@@ -91,7 +91,7 @@ const create_consumer_acc = () => {
       const resp = await SubmitSellerDetails( DataSkeletons.sellerUserData);
 
       if (resp === true) {
-        router.push("../seller")
+        navigation.navigate("seller")
       }
     }
   }
@@ -208,7 +208,7 @@ const create_consumer_acc = () => {
   );
 };
 
-export default create_consumer_acc;
+export default CreateSeller;
 
 const styles = StyleSheet.create({
   image: { height: 250, width: 250, marginTop: 20, borderRadius: 125 },

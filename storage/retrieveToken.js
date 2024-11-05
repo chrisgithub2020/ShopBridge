@@ -4,7 +4,7 @@ import * as SecureStore from "expo-secure-store";
 const retreiveToken = async (key) => {
     try {
         const token = await SecureStore.getItemAsync(key)
-        return String(token);
+        return token;
     } catch (err) {
         console.error(err);
     }

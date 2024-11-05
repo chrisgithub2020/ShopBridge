@@ -10,8 +10,9 @@ interface StoreProduct {
 interface StoreProductProp {
   product: StoreProduct;
   onRestock: () => void;
+  onTakeDown: () => void;
 }
-const ProductComponent: React.FC<StoreProductProp> = ({ product, onRestock }) => {
+const ProductComponent: React.FC<StoreProductProp> = ({ product, onRestock, onTakeDown }) => {
   return (
     <View style={styles.supplies_container}>
       <View style={{ flexDirection: "row" }}>
@@ -28,7 +29,7 @@ const ProductComponent: React.FC<StoreProductProp> = ({ product, onRestock }) =>
         </View>
       </View>
       <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-        <TouchableOpacity style={styles.supplies_button}>
+        <TouchableOpacity style={styles.supplies_button} onPress={onTakeDown}>
           <Text style={styles.supplies_button_test}>Take Down</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.supplies_button} onPress={onRestock}>

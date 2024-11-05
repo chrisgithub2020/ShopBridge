@@ -4,13 +4,13 @@ import { MaterialIcons, Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const index = () => {
+const Index = ({navigation}: {navigation: any}) => {
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
-          router.push("/auth/create_consumer_acc");
+          navigation.navigate("create_consumer_acc")
         }}
       >
         <Ionicons name="cart" size={90} style={styles.button_text} />
@@ -19,7 +19,7 @@ const index = () => {
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
-          router.push("/auth/create_seller_acc");
+          navigation.navigate("create_seller_acc")
         }}
       >
         <MaterialIcons name="store" size={90} style={styles.button_text} />
@@ -29,7 +29,7 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;
 
 const styles = StyleSheet.create({
   container: {

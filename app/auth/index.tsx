@@ -6,7 +6,7 @@ import { ActivityIndicator } from "react-native";
 import Link from "@/api_calls/serverLink";
 
 
-const App = () => {
+const About = ({navigation}: {navigation: any}) => {
 
   return (
     <SafeAreaView style={styles.container}>
@@ -24,7 +24,7 @@ const App = () => {
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
-            router.push("./auth");
+            navigation.navigate("choose")
           }}
         >
           <Text style={styles.text_sign}>Sign Up</Text>
@@ -35,7 +35,7 @@ const App = () => {
   );
 };
 
-export default App;
+export default About;
 
 const styles = StyleSheet.create({
   image: { height: "50%", width: "100%", marginTop: 20 },

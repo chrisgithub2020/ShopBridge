@@ -1,7 +1,7 @@
 import Link from "../serverLink"
-const restockItem = async (data) => {
+const takeItemDown = async (data) => {
     try {
-        const response = await fetch(`${Link()}/restock_item`, {
+        const response = await fetch(`${Link()}/take_down`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -14,4 +14,4 @@ const restockItem = async (data) => {
     }
 }
 
-export default restockItem
+export default takeItemDown

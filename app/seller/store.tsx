@@ -9,6 +9,7 @@ import {
   ScrollView,
   ToastAndroid,
   NativeSyntheticEvent,
+  Modal,
 } from "react-native";
 import React, { useState, useRef, useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -23,6 +24,7 @@ import RestockModal from "../components/seller/restockModal";
 import AddItemModal from "../components/seller/addItemModal";
 import { Modalize } from "react-native-modalize";
 import { MyContext } from "../components/consumer/myContext";
+import TakeDownItemModal from "../components/seller/takeDownItemModal";
 
 let itemImages: Array<String | null | undefined> = [];
 
@@ -59,6 +61,7 @@ const RestockItem = async (id: String, amount: String) => {
 const Store = () => {
   let itemToRestockID = "";
   let amountToRestock: String = "";
+  let storeName: String = "";
   const [selectedValue, setCurrentValue] = useState("e");
   const [subCat, setSubCat] = useState<string>("cp");
   const [descText, setItemDescText] = useState("");
@@ -69,6 +72,7 @@ const Store = () => {
   const {value, setState} = useContext(MyContext);
   const modalRef = useRef<Modalize>(null);
   const addItemModal = useRef<Modalize>(null);
+  const takeDownItemModal = useRef<Modalize>(null)
 
   const openModal = () => {
     modalRef.current?.open()
@@ -77,6 +81,14 @@ const Store = () => {
   const closeModal = () => {
     modalRef.current?.close();
   };
+
+  const openTakeDownItemModal = () => {
+    takeDownItemModal.current?.open()
+  }
+
+  const closeTakeDownItemModal = () => {
+    takeDownItemModal.current?.close()
+  }
 
   const openAddItemModal = () => {
     addItemModal.current?.open();
@@ -165,6 +177,7 @@ const Store = () => {
             <MaterialIcons style={{ color: "#e6e1e1" }} size={30} name="add" />
           </TouchableOpacity>
         </View>
+        <TakeDownItemModal setStoreName={(text: String)=>{storeName = text}} refObject={takeDownItemModal} takeDown={()=>{console.log("taking down")} }/>
         <RestockModal setAmountToRestock={(text: String)=> amountToRestock = text}
           refObject={modalRef}
           restock={()=> RestockItem(itemToRestockID,amountToRestock)}
@@ -175,7 +188,10 @@ const Store = () => {
           data={Products}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <ProductComponent product={item} onRestock={() => {
+            <ProductComponent onTakeDown={() => {
+              itemToRestockID = item.id;
+              openTakeDownItemModal()
+            }} product={item} onRestock={() => {
               itemToRestockID = item.id;
               console.log(itemToRestockID)
               openModal()

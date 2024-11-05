@@ -1,6 +1,8 @@
+import Link from "../serverLink"
+
 const sendData = async (data) => {
     try {
-        const response = await fetch("https://dbff-154-161-4-57.ngrok-free.app/add_item_to_store", {
+        const response = await fetch(`${Link()}/add_item_to_store`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

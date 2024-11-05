@@ -14,32 +14,40 @@ const LoadingScreen = ({navigation}: {navigation: any}) => {
   useEffect(() => {
     const checkIfAccountExists = async () => {
       const result = await retreiveToken("acc");
-      console.log(result);
-      if (result === null) {
-        console.log("There is an account");
-        const accountJson = JSON.parse(String({}));
-        // setUser(accountJson);
-        // if (accountJson.type === "c") {
-        //   setUserExist("consumer");
-        //   console.log(userExist);
-        // } else {
-        //   setUserExist("seller");
-        //   console.log(userExist);
-        // }
+      console.log(typeof result);
+      if (result) {
+        const accountJson = JSON.parse(String(result));
+        
+        setUser(accountJson);
+        if (accountJson.type === "c") {
+
+          setUserExist("consumer");
+          setIsLoading(false)
+        } else {
+
+          setUserExist("seller");
+          setIsLoading(false)
+        }
       } else {
-        console.log("there is no account");
-        // setUserExist("index");
+        
+        setUserExist("index");
         setIsLoading(false)
       }
     };
     checkIfAccountExists();
-  }, [isLoading]);
+  }, []);
 
   useEffect(()=>{
     if (isLoading === false) {
-      navigation.navigate("seller")
+      if (userExist === "consumer"){
+        navigation.navigate("consumer")
+      } else if (userExist === "seller") {
+        navigation.navigate("seller")
+      } else if (userExist === "index") {
+        navigation.navigate("auth")
+      }
     }
-  },[isLoading])
+  },[isLoading, userExist])
 
   
 
