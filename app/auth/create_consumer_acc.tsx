@@ -116,7 +116,7 @@ const CreateConsumer = () => {
           placeholder="example@gmail.com"
         />
         <Text style={styles.text}>Phone:</Text>
-        <TextInput
+        <TextInput keyboardType="numeric"
           onChange={handleTextChange}
           onFocus={() => setFocusedInput("4")}
           onBlur={() => setFocusedInput("0")}

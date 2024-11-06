@@ -10,9 +10,10 @@ interface ProductData {
 interface ComponentProp {
   product: ProductData;
   onClick: () => void;
+  addToCart: () => void;
 }
 
-const ProductComponent: React.FC<ComponentProp> = ({ product, onClick}) => {
+const ProductComponent: React.FC<ComponentProp> = ({ product, onClick, addToCart}) => {
   return (
     <TouchableOpacity style={styles.product_container} onPress={onClick}>
       <View style={styles.product_image_container}>
@@ -28,7 +29,7 @@ const ProductComponent: React.FC<ComponentProp> = ({ product, onClick}) => {
         </Text>
         <Text style={styles.text_price}>GH₵{product.price}</Text>
       </View>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={addToCart}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Text
             style={{

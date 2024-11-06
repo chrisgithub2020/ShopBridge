@@ -1,5 +1,6 @@
 const DataSkeletons = {
   consumerUserData: {
+    id: "",
     firstName: String(),
     lastName: String(),
     email: String(),
@@ -10,6 +11,7 @@ const DataSkeletons = {
   },
 
   sellerUserData: {
+    id: "",
     firstName: String(),
     lastName: String(),
     email: String(),

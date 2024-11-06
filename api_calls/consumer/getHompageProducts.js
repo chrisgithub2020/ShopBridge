@@ -1,11 +1,15 @@
 import Link from "../serverLink"
 
 const getHomePageProducts = async () => {
-  fetch(`${Link}/getTodaysProducts`)
-    .then((response) => response.json())
-    .then((products) => {
-      return products;
-    });
+  try {
+    const response = await fetch(`${Link()}/getTodaysProducts`);
+    if (response.ok){
+      const result = await response.json();
+      return result;
+    }
+  } catch (err) {
+    console.log(err)
+  }
 };
 
 

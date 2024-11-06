@@ -2,9 +2,8 @@ import saveToken from "../../storage/saveToken"
 import Link from "../serverLink"
 
 const SubmitConsumerDetails = async (formData) => {
-    const saving_resp = await saveToken(JSON.stringify(formData));
     try {
-        const result = await fetch(`${Link}/sign_up_consumer`,{
+        const result = await fetch(`${Link()}/sign_up_consumer`,{
             method: "POST",
             headers: {
                 'Content-Type': "application/json"
@@ -13,12 +12,16 @@ const SubmitConsumerDetails = async (formData) => {
     
         })
 
-        if (!result.ok) {
+        const resp = await result.json()
+        if (resp["success"] === true) {
+            delete formData.password
+            formData.id = resp["id"]
+            const token = await saveToken(JSON.stringify(formData));
+            if (token === true) {
+                return resp["success"]
+            }
+        } else {            
             return "Try again"
-        }
-        if (saving_resp === true) {
-            const response = await result.json()
-            return response
         }
 
     } catch (err) {

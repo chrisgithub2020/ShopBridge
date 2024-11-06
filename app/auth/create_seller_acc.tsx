@@ -18,41 +18,41 @@ import { router } from "expo-router";
 import SubmitSellerDetails from "../../api_calls/auth/seller";
 import DataSkeletons  from "@/api_calls/dataSkeletons";
 import retreiveToken from "@/storage/retrieveToken";
-let firstName = "";
-let lastName = "";
-let email = "";
-let password = "";
-let phoneNumber = "";
-let address = "";
-let photo: String = "p" ;
-let storeName = "";
-let verify_pass = false;
+let firstName: string = "";
+let lastName: string = "";
+let email: string = "";
+let password: string = "";
+let phoneNumber: string = "";
+let address: string = "";
+let photo: string = "p" ;
+let storeName: string = "";
+let verify_pass: boolean = false;
 
 
 
 
 const CreateSeller = ({navigation}: {navigation: any}) => {
-  const handleTextChange = (event: NativeSyntheticEvent<TextInputChangeEventData>) => {
+  const handleTextChange = (text: string) => {
     if (focus === "1") {
-      firstName = event.nativeEvent["text"];
+      firstName = text;
     } else if (focus === "2") {
-      lastName = event.nativeEvent["text"];
+      lastName = text;
     } else if (focus === "3") {
-      email = event.nativeEvent["text"];
+      email = text;
     } else if (focus === "4") {
-      phoneNumber = event.nativeEvent["text"];
+      phoneNumber = text
     } else if (focus === "5") {
-      address = event.nativeEvent["text"];
+      address = text;
     } else if (focus === "6") {
-      password = event.nativeEvent["text"];
+      password = text;
     } else if (focus === "7") {
-      if (password === event.nativeEvent["text"]) {
+      if (password === text) {
         verify_pass = true;
       } else {
         verify_pass = false;
       }
     } else if (focus === "8") {
-      storeName = event.nativeEvent["text"];
+      storeName = text;
     }
 
   };
@@ -127,7 +127,7 @@ const CreateSeller = ({navigation}: {navigation: any}) => {
       <ScrollView style={styles.form_container}>
         <Text style={styles.text}>Store Name:</Text>
         <TextInput
-          onChange={handleTextChange}
+          onChangeText={handleTextChange}
           onFocus={() => setFocusedInput("8")}
           onBlur={() => setFocusedInput("0")}
           style={[styles.input, focus === "8" && styles.inputFocus]}
@@ -136,7 +136,7 @@ const CreateSeller = ({navigation}: {navigation: any}) => {
         />
         <Text style={styles.text}>First Name:</Text>
         <TextInput
-          onChange={handleTextChange}
+          onChangeText={handleTextChange}
           onFocus={() => setFocusedInput("1")}
           onBlur={() => setFocusedInput("0")}
           style={[styles.input, focus === "1" && styles.inputFocus]}
@@ -145,7 +145,7 @@ const CreateSeller = ({navigation}: {navigation: any}) => {
         />
         <Text style={styles.text}>Last Name:</Text>
         <TextInput
-          onChange={handleTextChange}
+          onChangeText={handleTextChange}
           onFocus={() => setFocusedInput("2")}
           onBlur={() => setFocusedInput("0")}
           style={[styles.input, focus === "2" && styles.inputFocus]}
@@ -154,7 +154,7 @@ const CreateSeller = ({navigation}: {navigation: any}) => {
         />
         <Text style={styles.text}>Email:</Text>
         <TextInput
-          onChange={handleTextChange}
+          onChangeText={handleTextChange}
           onFocus={() => setFocusedInput("3")}
           onBlur={() => setFocusedInput("0")}
           style={[styles.input, focus === "3" && styles.inputFocus]}
@@ -163,7 +163,7 @@ const CreateSeller = ({navigation}: {navigation: any}) => {
         />
         <Text style={styles.text}>Phone:</Text>
         <TextInput keyboardType="numeric"
-          onChange={handleTextChange}
+          onChangeText={handleTextChange}
           onFocus={() => setFocusedInput("4")}
           onBlur={() => setFocusedInput("0")}
           style={[styles.input, focus === "4" && styles.inputFocus]}
@@ -172,7 +172,7 @@ const CreateSeller = ({navigation}: {navigation: any}) => {
         />
         <Text style={styles.text}>Address:</Text>
         <TextInput
-          onChange={handleTextChange}
+          onChangeText={handleTextChange}
           onFocus={() => setFocusedInput("5")}
           onBlur={() => setFocusedInput("0")}
           style={[styles.input, focus === "5" && styles.inputFocus]}
@@ -181,7 +181,7 @@ const CreateSeller = ({navigation}: {navigation: any}) => {
         />
         <Text style={styles.text}>Password:</Text>
         <TextInput
-          onChange={handleTextChange}
+          onChangeText={handleTextChange}
           onFocus={() => setFocusedInput("6")}
           onBlur={() => setFocusedInput("0")}
           style={[styles.input, focus === "6" && styles.inputFocus]}
@@ -190,7 +190,7 @@ const CreateSeller = ({navigation}: {navigation: any}) => {
         />
         <Text style={styles.text}>Confirm Password:</Text>
         <TextInput
-          onChange={handleTextChange}
+          onChangeText={handleTextChange}
           onFocus={() => setFocusedInput("7")}
           onBlur={() => setFocusedInput("0")}
           style={[styles.input, focus === "7" && styles.inputFocus]}

@@ -7,6 +7,8 @@ interface valueContent {
     lastName: String;
     firstName: String;
     phoneNumber: String;
+    id: String;
+    cart: Array<String>;
 }
 
 interface contextProp {
@@ -14,7 +16,7 @@ interface contextProp {
     setState: React.Dispatch<React.SetStateAction<valueContent>>;
 }
 export const MyContext = createContext<contextProp>({
-    value: {address:"",store_name: "", email: "", lastName:"", firstName:"", phoneNumber:""},
+    value: {cart:[],id:"", address:"",store_name: "", email: "", lastName:"", firstName:"", phoneNumber:""},
     setState: () => {},
 });
 
@@ -23,7 +25,7 @@ interface child {
 }
 
 export const ProvideContext = ({ children }: child) => {
-  const [value, setState] = useState<valueContent>({address:"",store_name: "", email: "", lastName:"", firstName:"", phoneNumber:""});
+  const [value, setState] = useState<valueContent>({id:"",cart:[], address:"",store_name: "", email: "", lastName:"", firstName:"", phoneNumber:""});
 
   return (
     <MyContext.Provider value={{ value, setState }}>

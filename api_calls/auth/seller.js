@@ -12,16 +12,19 @@ const SubmitSellerDetails = async (formData) => {
             body: JSON.stringify(formData),
         })
         
-        if (!result.ok) {
+        if (result.ok) {
+            delete formData.store_photo
+            delete formData.password
+            formData.id = result.body["id"]
+            const token = await saveToken(JSON.stringify(formData));
+            if (token === true) {
+                const response = await result.json()
+                return response
+            }
+        } else {            
             return "Try again"
         }
         
-        delete formData.store_photo
-        const token = await saveToken(JSON.stringify(formData));
-        if (token === true) {
-            const response = await result.json()
-            return response
-        }
 
     } catch (err) {
         console.error(err);

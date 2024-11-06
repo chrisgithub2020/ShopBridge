@@ -3,13 +3,9 @@ import {
   Text,
   FlatList,
   StyleSheet,
-  Image,
   TouchableOpacity,
   TextInput,
-  ScrollView,
   ToastAndroid,
-  NativeSyntheticEvent,
-  Modal,
 } from "react-native";
 import React, { useState, useRef, useContext, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -190,6 +186,8 @@ const Store = () => {
             console.log(takeDown)
           if (takeDown){
             takeItemDown("dsfd")
+          } else {
+            ToastAndroid.show("Store Name does not match!!", ToastAndroid.SHORT)
           }
         }}/>
         <RestockModal setAmountToRestock={(text: String)=> amountToRestock = text}

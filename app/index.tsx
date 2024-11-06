@@ -19,18 +19,25 @@ const LoadingScreen = ({navigation}: {navigation: any}) => {
     const checkIfAccountExists = async () => {
       const result = await retreiveToken("acc");
       if (result) {
-        const accountJson = JSON.parse(String(result)); 
-        setState(accountJson)
+        const accountJson = JSON.parse(String(result));         
         
         if (accountJson.type === "c") {
 
           setUserExist("consumer");
+          const cart = await retreiveToken("cart")
+          if (cart){
+            let cartItems = cart.split(",")
+            accountJson["cart"]= cartItems
+          } else {
+            accountJson["cart"] = [];
+          }
           setIsLoading(false)
         } else {
 
           setUserExist("seller");
           setIsLoading(false)
         }
+        setState(accountJson)
 
         
       } else {

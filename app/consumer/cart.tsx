@@ -6,9 +6,10 @@ import {
   StyleSheet,
   FlatList
 } from "react-native";
-import React from "react";
+import React, {useContext} from "react";
 import {SafeAreaView} from "react-native-safe-area-context"
 import CardItemComponent from "../components/consumer/cartItems"
+import { MyContext } from "../components/consumer/myContext";
 
 const data:CartItem[] = [
     {id: "1", name: "East Moon Minoxidil 60ml x3 bottles plus 0.5mm derma roller system",price: "100",quantity:"3"},
@@ -31,7 +32,8 @@ interface CartItem {
 }
 
 
-const cart = () => {
+const Cart = () => {
+  const {value, setState} = useContext(MyContext)
   return (
     <SafeAreaView style={styles.container}>
       <FlatList style={styles.items_scroll} data={data} keyExtractor={(item) => item.id} renderItem={({ item }) => <CardItemComponent item={item} />}/>
@@ -39,7 +41,7 @@ const cart = () => {
   );
 };
 
-export default cart;
+export default Cart;
 
 const styles = StyleSheet.create({
   container: {
