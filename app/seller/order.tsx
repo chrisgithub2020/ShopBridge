@@ -1,6 +1,8 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, TextInput } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import React from 'react'
+import React, {useContext, useEffect} from 'react'
+import { MyContext } from '../components/consumer/myContext'
+import getStoreOrders from "../../api_calls/seller/getStoreOrders"
 
 interface Order {
   id: string;
@@ -73,6 +75,14 @@ const OrderComponent: React.FC<OrderProp> = ({order}) => {
   )
 }
 const Order = () => {
+  const {value, setState} = useContext(MyContext)
+
+
+  useEffect(()=>{
+    getStoreOrders("dsdsf")
+  },[value])
+
+
   return (
     <SafeAreaView style={styles.container}>
       <FlatList 

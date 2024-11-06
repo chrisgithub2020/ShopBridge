@@ -1,7 +1,12 @@
 import React, { createContext, useState, useContext, ReactNode } from "react";
 
 interface valueContent {
-    acc: Object;
+    address: String;
+    store_name: String;
+    email: String;
+    lastName: String;
+    firstName: String;
+    phoneNumber: String;
 }
 
 interface contextProp {
@@ -9,7 +14,7 @@ interface contextProp {
     setState: React.Dispatch<React.SetStateAction<valueContent>>;
 }
 export const MyContext = createContext<contextProp>({
-    value: {acc: {}},
+    value: {address:"",store_name: "", email: "", lastName:"", firstName:"", phoneNumber:""},
     setState: () => {},
 });
 
@@ -18,7 +23,7 @@ interface child {
 }
 
 export const ProvideContext = ({ children }: child) => {
-  const [value, setState] = useState({"acc": {}});
+  const [value, setState] = useState<valueContent>({address:"",store_name: "", email: "", lastName:"", firstName:"", phoneNumber:""});
 
   return (
     <MyContext.Provider value={{ value, setState }}>

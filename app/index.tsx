@@ -1,24 +1,27 @@
 import React, { useContext, useEffect, useState } from "react";
-import { router } from "expo-router";
 import { StyleSheet } from "react-native";
 import retreiveToken from "../storage/retrieveToken"
 import { ActivityIndicator } from "react-native";
+import { MyContext } from "./components/consumer/myContext";
 
+
+interface valueContent {
+  acc: Object;
+}
 
 
 const LoadingScreen = ({navigation}: {navigation: any}) => {
   const [userExist, setUserExist] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState(null);
+  const {value, setState} = useContext(MyContext)
 
   useEffect(() => {
     const checkIfAccountExists = async () => {
       const result = await retreiveToken("acc");
-      console.log(typeof result);
       if (result) {
-        const accountJson = JSON.parse(String(result));
+        const accountJson = JSON.parse(String(result)); 
+        setState(accountJson)
         
-        setUser(accountJson);
         if (accountJson.type === "c") {
 
           setUserExist("consumer");
@@ -28,6 +31,8 @@ const LoadingScreen = ({navigation}: {navigation: any}) => {
           setUserExist("seller");
           setIsLoading(false)
         }
+
+        
       } else {
         
         setUserExist("index");
@@ -36,6 +41,10 @@ const LoadingScreen = ({navigation}: {navigation: any}) => {
     };
     checkIfAccountExists();
   }, []);
+
+  useEffect(()=>{
+    console.log(value)
+  },[value])
 
   useEffect(()=>{
     if (isLoading === false) {

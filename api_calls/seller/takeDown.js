@@ -1,12 +1,11 @@
 import Link from "../serverLink"
-const takeItemDown = async (data) => {
+const takeItemDown = async (itemID) => {
     try {
-        const response = await fetch(`${Link()}/take_down`, {
-            method: "POST",
+        const response = await fetch(`${Link()}/take_down/${itemID}`, {
+            method: "GET",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(data)
         })
         console.log(response)
     } catch (err) {

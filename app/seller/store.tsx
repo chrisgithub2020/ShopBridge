@@ -11,10 +11,9 @@ import {
   NativeSyntheticEvent,
   Modal,
 } from "react-native";
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useContext, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
 import sendData from "../../api_calls/seller/addItemToStore";
 import restockItem from "../../api_calls/seller/restockItem"
@@ -25,6 +24,8 @@ import AddItemModal from "../components/seller/addItemModal";
 import { Modalize } from "react-native-modalize";
 import { MyContext } from "../components/consumer/myContext";
 import TakeDownItemModal from "../components/seller/takeDownItemModal";
+import getStoreItems from "../../api_calls/seller/getStoreItems";
+import takeItemDown from "../../api_calls/seller/takeDown"
 
 let itemImages: Array<String | null | undefined> = [];
 
@@ -61,7 +62,7 @@ const RestockItem = async (id: String, amount: String) => {
 const Store = () => {
   let itemToRestockID = "";
   let amountToRestock: String = "";
-  let storeName: String = "";
+  let takeDown: boolean = false;
   const [selectedValue, setCurrentValue] = useState("e");
   const [subCat, setSubCat] = useState<string>("cp");
   const [descText, setItemDescText] = useState("");
@@ -73,6 +74,10 @@ const Store = () => {
   const modalRef = useRef<Modalize>(null);
   const addItemModal = useRef<Modalize>(null);
   const takeDownItemModal = useRef<Modalize>(null)
+
+  useEffect(()=>{
+    getStoreItems("sduf")
+  },[value])
 
   const openModal = () => {
     modalRef.current?.open()
@@ -177,7 +182,16 @@ const Store = () => {
             <MaterialIcons style={{ color: "#e6e1e1" }} size={30} name="add" />
           </TouchableOpacity>
         </View>
-        <TakeDownItemModal setStoreName={(text: String)=>{storeName = text}} refObject={takeDownItemModal} takeDown={()=>{console.log("taking down")} }/>
+        <TakeDownItemModal setStoreName={(text: String)=>{
+          if (text === value.store_name){
+            takeDown = true
+          }
+        }} refObject={takeDownItemModal} takeDown={()=>{
+            console.log(takeDown)
+          if (takeDown){
+            takeItemDown("dsfd")
+          }
+        }}/>
         <RestockModal setAmountToRestock={(text: String)=> amountToRestock = text}
           refObject={modalRef}
           restock={()=> RestockItem(itemToRestockID,amountToRestock)}
