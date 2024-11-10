@@ -13,6 +13,7 @@ import ProductComponent from "../components/consumer/homePage"
 import ProductDetailsModal from "../components/consumer/productDetailsModal"
 import { MyContext } from "../components/consumer/myContext";
 import saveCartToken from "../../storage/saveToCart"
+import getProductDetails from "../../api_calls/consumer/getProductDetails"
 
 interface ProductData {
   id: string;
@@ -39,7 +40,6 @@ const Products: ProductData[] = [
 
 const getProducts = async () => {
   const products = await getHomepageProducts()
-  console.log(products);
 }
 
 
@@ -59,7 +59,12 @@ const ConsumerHome = () => {
     modalRef.current?.close()
   }
 
-  // getProducts();
+  const ProductDetails = async (ProductID: String) => {
+    const detail = await getProductDetails(ProductID)
+    openModal()
+  }
+
+  getProducts();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -74,8 +79,12 @@ const ConsumerHome = () => {
           numColumns={numColumns}
           renderItem={({ item }) => <ProductComponent addToCart={() => {
             value.cart.push(item.id)
+            setState(value)
             saveCartToken(value.cart)
-          }} product={item} onClick={openModal} />}
+          }} product={item} onClick={()=>{
+            console.log(item.id)
+            ProductDetails(String(item.id))
+          }} />}
         />
       </View>
     </SafeAreaView>

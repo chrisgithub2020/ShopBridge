@@ -9,7 +9,13 @@ const sendData = async (data) => {
             },
             body: JSON.stringify(data)
         })
-        console.log(response)
+        const result = await response.json();
+        if (response.ok){
+            if (result["success"] === true){
+                return result["data"]
+            }
+        }
+        console.log(result)
     } catch (err) {
         console.error(err)
     }

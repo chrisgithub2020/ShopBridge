@@ -50,7 +50,6 @@ const LoadingScreen = ({navigation}: {navigation: any}) => {
   }, []);
 
   useEffect(()=>{
-    console.log(value)
   },[value])
 
   useEffect(()=>{

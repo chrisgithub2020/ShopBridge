@@ -14,7 +14,7 @@ const TakeDownItemModal = ({takeDown,  refObject, setStoreName}: modalProp) => {
     
     return (
         <Modalize modalStyle={{zIndex: 1000}} overlayStyle={{zIndex: 999}} adjustToContentHeight={true} ref={refObject}>
-            <KeyboardAvoidingView style={{padding: 8, marginBottom: 60,}}>
+            <KeyboardAvoidingView style={{padding: 8,}}>
                 <Text style={styles.modalHeader}>Take Down</Text>
                 <Text style={{padding:7, fontWeight: "condensedBold"}}>Enter Store name to confirm take down:</Text>
                 <TextInput onChangeText={setStoreName} style={styles.modalInput} placeholder="Store name"/>

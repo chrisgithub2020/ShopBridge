@@ -27,22 +27,17 @@ let itemImages: Array<String | null | undefined> = [];
 
 
 interface StoreProduct {
+  photo: string;
   id: string;
   name: string;
   quantity: string;
   price: string;
+  description: string;
 }
 
 DataSkeletons.itemDetails.itemImages = itemImages;
 
 const Products: StoreProduct[] = [
-  { id: "1", name: "Gold Watch", price: "500", quantity: "23" },
-  { id: "2", name: "Gold Watch", price: "500", quantity: "23" },
-  { id: "3", name: "Gold Watch", price: "500", quantity: "23" },
-  { id: "4", name: "Gold Watch", price: "500", quantity: "23" },
-  { id: "5", name: "Gold Watch", price: "500", quantity: "23" },
-  { id: "6", name: "Gold Watch", price: "500", quantity: "23" },
-  { id: "7", name: "Gold Watch", price: "500", quantity: "23" },
 ];
 const RestockItem = async (id: String, amount: String) => {
   const formData = {
@@ -50,7 +45,6 @@ const RestockItem = async (id: String, amount: String) => {
     restockNumber:amount,
   }
 
-  console.log(amount)
 
   await restockItem(formData)
 }
@@ -70,9 +64,19 @@ const Store = () => {
   const modalRef = useRef<Modalize>(null);
   const addItemModal = useRef<Modalize>(null);
   const takeDownItemModal = useRef<Modalize>(null)
+  const [storeProducts, setStoreProducts] = useState<any>();
+  
 
   useEffect(()=>{
-    getStoreItems("sduf")
+    const getStoreIt = async ()=>{
+      const res = await getStoreItems(value.id)
+      res.forEach((item: any)=>{
+        let _i = {"photo":item[1], "name":item[2], "price":item[5], "quantity": item[4], "description":item[3], "id":item[0]}
+        Products.push(_i)
+        setStoreProducts(_i)
+      })
+    }
+    getStoreIt()
   },[value])
 
   const openModal = () => {
@@ -111,7 +115,8 @@ const Store = () => {
     numberOfImages: numberOfImages,
   }
 
-  const submititemDetails = () => {
+  const submititemDetails = async () => {
+    DataSkeletons.itemDetails.itemSeller = String(value.id);
     DataSkeletons.itemDetails.itemMainCat = selectedValue;
     DataSkeletons.itemDetails.itemSubCat = subCat;
     DataSkeletons.itemDetails.itemDescription = descText;
@@ -128,7 +133,12 @@ const Store = () => {
       ToastAndroid.show("All fields are required", ToastAndroid.SHORT);
     } else {
       console.log(DataSkeletons.itemDetails);
-      sendData(DataSkeletons.itemDetails);
+      const _i = await sendData(DataSkeletons.itemDetails);
+      let item: StoreProduct = {"photo": Object(_i)["photo"], "id":Object(_i)["id"], "name":Object(_i)["name"],  "price":Object(_i)["price"], "quantity":Object(_i)["quantity"], "description": Object(_i)["description"]}
+      Products.push(item)
+      console.log("Products ", Products[0]["name"])
+      setStoreProducts(_i)
+      DataSkeletons.itemDetails.itemImages.length = 0
     }
   };
 
@@ -153,7 +163,7 @@ const Store = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View>
+      <View style={{flex: 1}}>
         <View style={styles.searchbar}>
           <TextInput
             style={{
@@ -195,7 +205,7 @@ const Store = () => {
           restock={()=> RestockItem(itemToRestockID,amountToRestock)}
         />
         <AddItemModal formDetails={formDetails} refObject={addItemModal} chooseItemImages={chooseItemImagaes} onSubmit={submititemDetails}/>
-        <FlatList
+        <FlatList extraData={storeProducts}
           style={styles.flatContainer}
           data={Products}
           keyExtractor={(item) => item.id}
@@ -205,7 +215,6 @@ const Store = () => {
               openTakeDownItemModal()
             }} product={item} onRestock={() => {
               itemToRestockID = item.id;
-              console.log(itemToRestockID)
               openModal()
             }} />
           )}

@@ -14,7 +14,7 @@ const RestockModal = ({restock,  refObject, setAmountToRestock}: modalProp) => {
     
     return (
         <Modalize modalStyle={{zIndex: 1000}} overlayStyle={{zIndex: 999}} adjustToContentHeight={true} ref={refObject}>
-            <KeyboardAvoidingView style={{padding: 8, marginBottom: 60,}}>
+            <KeyboardAvoidingView style={{padding: 8,}}>
                 <Text style={styles.modalHeader}>Restock</Text>
                 <Text style={{padding:7, fontWeight: "condensedBold"}}>Enter quantity to restock:</Text>
                 <TextInput onChangeText={setAmountToRestock} keyboardType="numeric" style={styles.modalInput} placeholder="Quantity"/>

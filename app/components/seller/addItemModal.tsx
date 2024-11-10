@@ -216,7 +216,7 @@ const AddItemModal = ({ onSubmit, refObject, chooseItemImages, formDetails }: mo
       adjustToContentHeight={true}
       ref={refObject}
     >
-      <KeyboardAvoidingView style={{ padding: 8, marginBottom: 60, }}>
+      <KeyboardAvoidingView style={{ padding: 8, }}>
         <View>
           <Text style={styles.add_item_text}>Select Item Photos</Text>
           <Text

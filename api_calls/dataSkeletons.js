@@ -29,6 +29,7 @@ const DataSkeletons = {
   },
 
   itemDetails: {
+    itemSeller: String(),
     itemImages: Array(),
     itemName: String(),
     itemDescription: String(),

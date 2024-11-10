@@ -8,9 +8,13 @@ const getStoreItems = async (storeId) => {
                 "Content-Type": "application/json"
             },
         })
-
+        
+        const response = await result.json()
         if (result.ok) {
-            return result;
+            if (response["success"] === true){
+                console.log(response["data"])
+                return response["data"];
+            }
         }
     } catch (err) {
         console.log(err)

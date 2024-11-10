@@ -1,9 +1,15 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "allowSyntheticDefaultImports":true,
+    "allowSyntheticDefaultImports": true,
     "module": "ESNext",
     "target": "ES6",
+    "lib": [
+      "es5",
+      "es6",
+      "dom",
+      "dom.iterable"
+    ],
     "strict": true,
     "paths": {
       "@/*": [

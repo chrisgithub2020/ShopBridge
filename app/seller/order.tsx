@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, TextInput } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import React, {useContext, useEffect} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import { MyContext } from '../components/consumer/myContext'
 import getStoreOrders from "../../api_calls/seller/getStoreOrders"
 
@@ -19,10 +19,6 @@ interface OrderProp {
 }
 
 const Orders: Order[] = [
-  { id: '1', recipient: 'Kwadwo Amoah', quantity:"2", amount:"300", address:"Tabora alhaji", product:"", contacts:"0595831341"},
-  { id: '2', recipient: 'Kwadwo Amoah', quantity:"2", amount:"300", address:"Tabora alhaji", product:"", contacts:"0595831341"},
-  { id: '3', recipient: 'Kwadwo Amoah', quantity:"2", amount:"300", address:"Tabora alhaji", product:"", contacts:"0595831341"},
-  { id: '4', recipient: 'Kwadwo Amoah', quantity:"2", amount:"300", address:"Tabora alhaji", product:"", contacts:"0595831341"},
 ]
 
 
@@ -36,7 +32,6 @@ interface StoreProduct {
 interface StoreProductProp {
   product: StoreProduct
 }
-const Products = {id: "1", name: "Gold Watch", price: "500", quantity:"23"}
 
 
 const ProductComponent: React.FC<StoreProduct> = ({ id,name, quantity,price }) => {
@@ -76,6 +71,7 @@ const OrderComponent: React.FC<OrderProp> = ({order}) => {
 }
 const Order = () => {
   const {value, setState} = useContext(MyContext)
+  const [storeOrders, setStoreOrders] = useState();
 
 
   useEffect(()=>{

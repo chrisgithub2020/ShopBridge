@@ -5,6 +5,8 @@ interface StoreProduct {
   name: string;
   quantity: string;
   price: string;
+  photo: string;
+  description: string;
 }
 
 interface StoreProductProp {
@@ -15,17 +17,18 @@ interface StoreProductProp {
 const ProductComponent: React.FC<StoreProductProp> = ({ product, onRestock, onTakeDown }) => {
   return (
     <View style={styles.supplies_container}>
-      <View style={{ flexDirection: "row" }}>
+      <View style={{ flexDirection: "row", padding: 5}}>
         <View>
           <Image
             style={styles.image}
-            source={require("../../../resources/file.png")}
+            source={{uri:`data:image/png;base64,${product.photo}`}}
           />
         </View>
         <View style={styles.abt_container}>
-          <Text style={{ height: "40%", marginTop: 10 }}>{product.name}</Text>
-          <Text style={{ height: "17%" }}>{product.price}</Text>
-          <Text style={{ height: "17%" }}>{product.quantity}</Text>
+          <Text style={{fontWeight: "bold"}}>{product.name}</Text>
+          <Text numberOfLines={2} ellipsizeMode="tail" style={{fontWeight: "bold"}}>{product.description}</Text>
+          <Text style={{fontWeight: "bold"}}>Price: GH₵{product.price}</Text>
+          <Text style={{fontWeight: "bold"}}>Quantity: {product.quantity}</Text>
         </View>
       </View>
       <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
@@ -48,18 +51,20 @@ const styles = StyleSheet.create({
     width: "45%",
     height: 35,
     borderRadius: 5,
+    justifyContent: "center"
   },
   supplies_button_test: {
-    padding: 8,
-    justifyContent: "center",
     alignSelf: "center",
   },
   image: {
-    height: 150,
+    height: 135,
     width: 150,
+    borderRadius: 5,
   },
   abt_container: {
     flexDirection: "column",
+    paddingLeft: 8,
+    justifyContent: "space-around"
   },
   supplies_container: {
     backgroundColor: "white",
