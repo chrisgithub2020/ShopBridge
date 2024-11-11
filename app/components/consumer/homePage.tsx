@@ -5,6 +5,7 @@ interface ProductData {
   name: string;
   price: string;
   store_name: string;
+  photo: string;
 }
 
 interface ComponentProp {
@@ -19,7 +20,7 @@ const ProductComponent: React.FC<ComponentProp> = ({ product, onClick, addToCart
       <View style={styles.product_image_container}>
         <Image
           style={styles.product_image}
-          source={require("../../../resources/file.png")}
+          source={{uri:`data:image/png;base64,${product.photo}`}}
         />
       </View>
       <View style={styles.product_desc_container}>
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   text_price: {
-    color: "white",
+    color: "black",
     fontWeight: "bold",
   },
   button: {

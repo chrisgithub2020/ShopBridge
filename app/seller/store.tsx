@@ -134,9 +134,8 @@ const Store = () => {
     } else {
       console.log(DataSkeletons.itemDetails);
       const _i = await sendData(DataSkeletons.itemDetails);
-      let item: StoreProduct = {"photo": Object(_i)["photo"], "id":Object(_i)["id"], "name":Object(_i)["name"],  "price":Object(_i)["price"], "quantity":Object(_i)["quantity"], "description": Object(_i)["description"]}
+      let item: StoreProduct = {"photo": Object(_i)["photo"], "id":Object(_i)["id"], "name":Object(_i)["name"],  "price":Object(_i)["price"], "quantity":Object(_i)["quantity"], "description": _i["description"]}
       Products.push(item)
-      console.log("Products ", Products[0]["name"])
       setStoreProducts(_i)
       DataSkeletons.itemDetails.itemImages.length = 0
     }
@@ -240,7 +239,6 @@ const styles = StyleSheet.create({
   flatContainer: {
     paddingLeft: 5,
     paddingRight: 5,
-    marginBottom: 60,
   },
   add_item_textinput: {
     backgroundColor: "#e6e1e1",

@@ -10,11 +10,12 @@ interface CartItem {
 
 interface CardItemComponentProp {
   item: CartItem;
+  openCompleteOrderModal: ()=>void
 }
 
-const CardItemComponent: React.FC<CardItemComponentProp> = ({ item }) => {
+const CardItemComponent: React.FC<CardItemComponentProp> = ({ item, openCompleteOrderModal}) => {
   return (
-    <View style={styles.item_container}>
+    <TouchableOpacity onPress={openCompleteOrderModal} style={styles.item_container}>
       <View style={{ height: "100%" }}>
         <Image
           style={styles.image}
@@ -130,7 +131,7 @@ const CardItemComponent: React.FC<CardItemComponentProp> = ({ item }) => {
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

@@ -5,13 +5,14 @@ import {
   View,
   TextInput,
 } from "react-native";
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useContext, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context"
 import getHomepageProducts from "../../api_calls/consumer/getHompageProducts"
 import { Modalize } from "react-native-modalize";
 import ProductComponent from "../components/consumer/homePage"
 import ProductDetailsModal from "../components/consumer/productDetailsModal"
 import { MyContext } from "../components/consumer/myContext";
+import CompleteOrderModal from "../components/consumer/completeOrderModal"
 import saveCartToken from "../../storage/saveToCart"
 import getProductDetails from "../../api_calls/consumer/getProductDetails"
 
@@ -20,27 +21,16 @@ interface ProductData {
   name: string;
   price: string;
   store_name: string;
+  photo: string;
 }
 
+
+
 const Products: ProductData[] = [
-  { id: "1", store_name: "J.K. Electronics", name: "watch", price: "23" },
-  { id: "2", store_name: "J.K. Electronics", name: "watch", price: "100" },
-  { id: "3", store_name: "J.K. Electronics", name: "watch", price: "100" },
-  { id: "v", store_name: "J.K. Electronics", name: "watch", price: "100" },
-  { id: "d", store_name: "J.K. Electronics", name: "watch", price: "100" },
-  { id: "i", store_name: "J.K. Electronics", name: "watch", price: "100" },
-  { id: "w", store_name: "J.K. Electronics", name: "watch", price: "100" },
-  { id: "p", store_name: "J.K. Electronics", name: "watch", price: "100" },
-  { id: "q", store_name: "J.K. Electronics", name: "watch", price: "100" },
-  { id: "g", store_name: "J.K. Electronics", name: "watch", price: "100" },
-  { id: "r", store_name: "J.K. Electronics", name: "watch", price: "100" },
-  { id: "4", store_name: "J.K. Electronics", name: "watch", price: "100" },
 ];
 
 
-const getProducts = async () => {
-  const products = await getHomepageProducts()
-}
+
 
 
 
@@ -49,7 +39,10 @@ const ConsumerHome = () => {
   const screenWidth = Dimensions.get("window").width;
   const numColumns = Math.floor(screenWidth / 170);
   const modalRef = useRef<Modalize>(null)
+  const completeOrderModal = useRef<Modalize>(null)
   const { value, setState } = useContext(MyContext)
+  const [todayProducts, setTodayProducts] = useState<any>()
+  const [productDetails, setProductDetails] = useState<any>({"name":""})
 
   const openModal = () => {
     modalRef.current?.open()
@@ -59,22 +52,51 @@ const ConsumerHome = () => {
     modalRef.current?.close()
   }
 
-  const ProductDetails = async (ProductID: String) => {
-    const detail = await getProductDetails(ProductID)
-    openModal()
+  const openCompleteOrderModal = () => {
+    completeOrderModal.current?.open()
   }
 
-  getProducts();
+  const closeCompleteOrderModal = () => {
+    completeOrderModal.current?.close()
+  }
+
+  const ProductDetails = async (ProductID: String) => {
+    const detail = await getProductDetails(ProductID)
+    for (let h in detail){
+      let _i = {"name":detail[h][1], "price":detail[h][2], "description":detail[h][3], "photos":Array(detail[h][0])}
+      setProductDetails(_i)
+    }
+  }
+
+  useEffect(()=>{
+    if (productDetails){
+      openModal()
+    }
+  },[productDetails])
+
+  useEffect(()=>{
+    const getStoreIt = async ()=>{
+      const res = await getHomepageProducts()
+      res.forEach((item: any)=>{
+        let _i = {"name":item[1], "price":item[2],"id":item[0], "store_name":item[3], "photo":Array(item[4])[0]}
+        Products.push(_i)
+        setTodayProducts(_i)
+      })
+    }
+    getStoreIt()
+  },[value])
 
   return (
     <SafeAreaView style={styles.container}>
-      <View>
+      <View style={{flex: 1}}>
         <View style={styles.searchbar}>
           <TextInput style={{ backgroundColor: "#e6e1e1", height: "100%", width: "100%", borderRadius: 5, padding: 10, marginRight: 5, }} placeholder="Search here" />
         </View>
-        <ProductDetailsModal refObject={modalRef} addToCart={() => console.log("adding to cart")} />
+        <ProductDetailsModal product={productDetails} refObject={modalRef} addToCart={() => console.log("adding to cart")} />
+        <CompleteOrderModal refObject={completeOrderModal} order={()=>console.log("order complete")}/>
         <FlatList style={styles.flatContainer}
           data={Products}
+          extraData={todayProducts}
           keyExtractor={(item) => item.id}
           numColumns={numColumns}
           renderItem={({ item }) => <ProductComponent addToCart={() => {
@@ -96,7 +118,6 @@ export default ConsumerHome;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    display: "flex",
     backgroundColor: "#e6e1e1",
   },
   button: {
@@ -114,6 +135,5 @@ const styles = StyleSheet.create({
   },
   flatContainer: {
     padding: 8,
-    marginBottom: 60,
   },
 });

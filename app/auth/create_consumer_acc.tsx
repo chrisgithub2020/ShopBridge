@@ -23,7 +23,7 @@ let phoneNumber = "";
 let address = "";
 let verify_pass = false;
 
-const CreateConsumer = () => {
+const CreateConsumer = ({navigation}: {navigation: any}) => {
   const [focus, setFocusedInput] = useState("0");
 
   const handleTextChange = (
@@ -74,7 +74,7 @@ const CreateConsumer = () => {
         const resp = await SubmitConsumerDetails(DataSkeletons.consumerUserData);
 
         if (resp === true) {
-          router.push("/consumer");
+          navigation.navigate("consumer");
         }
       } else {
         ToastAndroid.show("Password does not match", ToastAndroid.SHORT);

@@ -10,14 +10,14 @@ import {
   ToastAndroid,
   TextInputChangeEventData,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import SubmitSellerDetails from "../../api_calls/auth/seller";
 import DataSkeletons  from "@/api_calls/dataSkeletons";
-import retreiveToken from "@/storage/retrieveToken";
+import { MyContext } from "../components/consumer/myContext";
 let firstName: string = "";
 let lastName: string = "";
 let email: string = "";
@@ -32,6 +32,7 @@ let verify_pass: boolean = false;
 
 
 const CreateSeller = ({navigation}: {navigation: any}) => {
+  const {value, setState} = useContext(MyContext)
   const handleTextChange = (text: string) => {
     if (focus === "1") {
       firstName = text;
@@ -88,11 +89,11 @@ const CreateSeller = ({navigation}: {navigation: any}) => {
     if ( DataSkeletons.sellerUserData.firstName === "" ||  DataSkeletons.sellerUserData.lastName === "" ||  DataSkeletons.sellerUserData.email === "" ||  DataSkeletons.sellerUserData.phoneNumber === "" ||  DataSkeletons.sellerUserData.address === "" ||  DataSkeletons.sellerUserData.password === "" ||  DataSkeletons.sellerUserData.store_photo.length === 0 ||  DataSkeletons.sellerUserData.store_name === ""){
       ToastAndroid.show("Every field is required", ToastAndroid.SHORT)
     } else {
-      const resp = await SubmitSellerDetails( DataSkeletons.sellerUserData);
+      const resp = await SubmitSellerDetails(DataSkeletons.sellerUserData);
+      let context_copy: any = {"id":resp, "firstName":DataSkeletons.sellerUserData.firstName, "lastName":DataSkeletons.sellerUserData.lastName, "email":DataSkeletons.sellerUserData.email, "address":DataSkeletons.sellerUserData.address, "phoneNumber":DataSkeletons.sellerUserData.phoneNumber, "store_name":DataSkeletons.sellerUserData.store_name, "type":"s"}
 
-      if (resp === true) {
-        navigation.navigate("seller")
-      }
+      setState(context_copy)
+      navigation.navigate("seller")
     }
   }
 

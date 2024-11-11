@@ -5,7 +5,10 @@ const getProductDetails = async (ProductID) => {
     const response = await fetch(`${Link()}/getProductDetails/${ProductID}`);
     if (response.ok) {
       const result = await response.json();
-      return result;
+
+      if (result["success"] === true){
+        return result["data"]
+      }
     }
   } catch (err) {
     console.log(err)
