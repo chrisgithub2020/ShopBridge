@@ -23,6 +23,11 @@ const DataSkeletons = {
     type: "s",
   },
 
+  signIN: {
+    identifier: String(),
+    password: String(),
+  },
+
   restockItemDetails: {
     itemID: String(),
     additionNumber: String(),

@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, TextInput } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import React, {useContext, useEffect, useState} from 'react'
-import { MyContext } from '../components/consumer/myContext'
+import { MyContext } from '../../context/myContext'
 import getStoreOrders from "../../api_calls/seller/getStoreOrders"
 
 interface Order {

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import retreiveToken from "../storage/retrieveToken"
 import { ActivityIndicator } from "react-native";
-import { MyContext } from "./components/consumer/myContext";
+import { MyContext } from "../context/myContext";
 
 
 interface valueContent {

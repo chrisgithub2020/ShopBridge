@@ -1,5 +1,7 @@
 import { Text, Image, TouchableOpacity, View, StyleSheet } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useState } from "react";
+import React from "react";
 interface ProductData {
   id: string;
   name: string;
@@ -15,6 +17,8 @@ interface ComponentProp {
 }
 
 const ProductComponent: React.FC<ComponentProp> = ({ product, onClick, addToCart}) => {
+  const [cartButtonText, setCartButtonText] = useState<any>({"action":"Add To Cart", "icon":"shopping-cart"})
+  let removeOrAdd = "add"
   return (
     <TouchableOpacity style={styles.product_container} onPress={onClick}>
       <View style={styles.product_image_container}>
@@ -30,7 +34,14 @@ const ProductComponent: React.FC<ComponentProp> = ({ product, onClick, addToCart
         </Text>
         <Text style={styles.text_price}>GH₵{product.price}</Text>
       </View>
-      <TouchableOpacity style={styles.button} onPress={addToCart}>
+      <TouchableOpacity style={styles.button} onPress={()=>{
+        if (cartButtonText["action"] === "Remove"){
+          setCartButtonText({"action":"Add To Cart", "icon":"shopping-cart"})
+        } else {
+          setCartButtonText({"action":"Remove", "icon":"delete"})
+        }
+        addToCart()
+      }}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Text
             style={{
@@ -42,11 +53,11 @@ const ProductComponent: React.FC<ComponentProp> = ({ product, onClick, addToCart
               fontWeight: "bold",
             }}
           >
-            Add to Cart
+            {cartButtonText["action"]}
           </Text>
           <MaterialIcons
             style={{ color: "white", fontWeight: "bold", marginLeft: 5 }}
-            name="shopping-cart"
+            name={cartButtonText["icon"]}
             size={20}
           />
         </View>

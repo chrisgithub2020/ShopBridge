@@ -4,6 +4,7 @@ import {
   Dimensions,
   View,
   TextInput,
+  ToastAndroid,
 } from "react-native";
 import React, { useState, useRef, useContext, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context"
@@ -11,8 +12,7 @@ import getHomepageProducts from "../../api_calls/consumer/getHompageProducts"
 import { Modalize } from "react-native-modalize";
 import ProductComponent from "../components/consumer/homePage"
 import ProductDetailsModal from "../components/consumer/productDetailsModal"
-import { MyContext } from "../components/consumer/myContext";
-import CompleteOrderModal from "../components/consumer/completeOrderModal"
+import { MyContext } from "../../context/myContext";
 import saveCartToken from "../../storage/saveToCart"
 import getProductDetails from "../../api_calls/consumer/getProductDetails"
 
@@ -39,7 +39,7 @@ const ConsumerHome = () => {
   const screenWidth = Dimensions.get("window").width;
   const numColumns = Math.floor(screenWidth / 170);
   const modalRef = useRef<Modalize>(null)
-  const completeOrderModal = useRef<Modalize>(null)
+  
   const { value, setState } = useContext(MyContext)
   const [todayProducts, setTodayProducts] = useState<any>()
   const [productDetails, setProductDetails] = useState<any>({"name":""})
@@ -52,13 +52,7 @@ const ConsumerHome = () => {
     modalRef.current?.close()
   }
 
-  const openCompleteOrderModal = () => {
-    completeOrderModal.current?.open()
-  }
-
-  const closeCompleteOrderModal = () => {
-    completeOrderModal.current?.close()
-  }
+  
 
   const ProductDetails = async (ProductID: String) => {
     const detail = await getProductDetails(ProductID)
@@ -75,7 +69,8 @@ const ConsumerHome = () => {
   },[productDetails])
 
   useEffect(()=>{
-    const getStoreIt = async ()=>{
+    const getStoreIt = async ()=>{    
+      console.log(value.cart)
       const res = await getHomepageProducts()
       res.forEach((item: any)=>{
         let _i = {"name":item[1], "price":item[2],"id":item[0], "store_name":item[3], "photo":Array(item[4])[0]}
@@ -93,20 +88,30 @@ const ConsumerHome = () => {
           <TextInput style={{ backgroundColor: "#e6e1e1", height: "100%", width: "100%", borderRadius: 5, padding: 10, marginRight: 5, }} placeholder="Search here" />
         </View>
         <ProductDetailsModal product={productDetails} refObject={modalRef} addToCart={() => console.log("adding to cart")} />
-        <CompleteOrderModal refObject={completeOrderModal} order={()=>console.log("order complete")}/>
+        
         <FlatList style={styles.flatContainer}
           data={Products}
           extraData={todayProducts}
           keyExtractor={(item) => item.id}
           numColumns={numColumns}
-          renderItem={({ item }) => <ProductComponent addToCart={() => {
-            value.cart.push(item.id)
-            setState(value)
-            saveCartToken(value.cart)
-          }} product={item} onClick={()=>{
-            console.log(item.id)
-            ProductDetails(String(item.id))
-          }} />}
+          renderItem={({ item }) => <ProductComponent  addToCart={() => {
+            if (!value.cart.includes(item.id)) {
+              value.cart.push(item.id);
+              setState(value);
+              saveCartToken(value.cart);
+              ToastAndroid.show("Item Addedd to Cart", ToastAndroid.SHORT);
+            } else {
+              const index = value.cart.indexOf(item.id)
+              value.cart.splice(index, 1)
+              setState(value)
+              saveCartToken(value.cart)
+              ToastAndroid.show("Item Removed From Cart", ToastAndroid.SHORT)
+              console.log("Cart updated")
+            }
+          } } product={item} onClick={() => {
+            console.log(item.id);
+            ProductDetails(String(item.id));
+          } }/>}
         />
       </View>
     </SafeAreaView>

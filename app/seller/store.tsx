@@ -18,7 +18,7 @@ import DataSkeletons from "@/api_calls/dataSkeletons";
 import RestockModal from "../components/seller/restockModal";
 import AddItemModal from "../components/seller/addItemModal";
 import { Modalize } from "react-native-modalize";
-import { MyContext } from "../components/consumer/myContext";
+import { MyContext } from "../../context/myContext";
 import TakeDownItemModal from "../components/seller/takeDownItemModal";
 import getStoreItems from "../../api_calls/seller/getStoreItems";
 import takeItemDown from "../../api_calls/seller/takeDown"

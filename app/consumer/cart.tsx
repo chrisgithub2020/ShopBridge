@@ -6,46 +6,139 @@ import {
   StyleSheet,
   FlatList
 } from "react-native";
-import React, {useContext, useEffect} from "react";
-import {SafeAreaView} from "react-native-safe-area-context"
+import React, { useState, useRef, useContext, useEffect, useCallback,} from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { SafeAreaView } from "react-native-safe-area-context"
 import CardItemComponent from "../components/consumer/cartItems"
-import { MyContext } from "../components/consumer/myContext";
+import { MyContext } from "../../context/myContext";
+import { Modalize } from "react-native-modalize";
+import { Paystack, paystackProps,  } from "react-native-paystack-webview"
+import CompleteOrderModal from "../components/consumer/completeOrderModal"
 import getCartContent from "../../api_calls/consumer/getCartContent"
+import saveCartToken from "@/storage/saveToCart";
 
-const data:CartItem[] = [
-    {id: "1", name: "East Moon Minoxidil 60ml x3 bottles plus 0.5mm derma roller system",price: "100",quantity:"3"},
-    {id: "3", name: "East Moon Minoxidil 60ml x3 bottles plus 0.5mm derma roller system",price: "100",quantity:"3"},
-    {id: "2", name: "East Moon Minoxidil 60ml x3 bottles plus 0.5mm derma roller system",price: "100",quantity:"3"},
-    {id: "6", name: "East Moon Minoxidil 60ml x3 bottles plus 0.5mm derma roller system",price: "100",quantity:"3"},
-    {id: "5", name: "East Moon Minoxidil 60ml x3 bottles plus 0.5mm derma roller system",price: "100",quantity:"3"},
-    {id: "4", name: "East Moon Minoxidil 60ml x3 bottles plus 0.5mm derma roller system",price: "100",quantity:"3"},
-    {id: "7", name: "East Moon Minoxidil 60ml x3 bottles plus 0.5mm derma roller system",price: "100",quantity:"3"},
-    {id: "8", name: "East Moon Minoxidil 60ml x3 bottles plus 0.5mm derma roller system",price: "100",quantity:"3"},
-    {id: "9", name: "East Moon Minoxidil 60ml x3 bottles plus 0.5mm derma roller system",price: "100",quantity:"3"},
-    {id: "a", name: "East Moon Minoxidil 60ml x3 bottles plus 0.5mm derma roller system",price: "100",quantity:"3"},
+let CartItemsData: CartItem[] = [
 ];
 
+interface orderObj {
+  ProductName: string;
+  quantity: string;
+  address: string;
+  price: string;
+  deliveryFees: string;
+  photo: string;
+}
 interface CartItem {
-    id: string;
-    name: string;
-    price: string;
-    quantity: string;
+  photo: string;
+  id: string;
+  name: string;
+  price: string;
+  quantity: string;
 }
 
 
+
+
 const Cart = () => {
-  const {value, setState} = useContext(MyContext)
-  useEffect(()=>{
-    if (value){
-      getCartContent(value.cart.toString())
+  const { value, setState } = useContext(MyContext)
+  const completeOrderModal = useRef<Modalize>(null)
+  const [cartExtraData, setCartExtraData] = useState<any>()
+  const [orderToCompleteDetails, setOrderToCompleteDetails] = useState<orderObj>({ "ProductName": "sdfjasdf", "quantity": "3", "address": "Tabora", "price": "78", "deliveryFees": "9.5", "photo":""});
+  const payStackRef = useRef<paystackProps.PayStackRef>(null)
+  const removeItemFromFlatlist = (id: string) => {
+    const newData = CartItemsData.filter(item => item.id !== id)
+    CartItemsData = newData
+    setCartExtraData(CartItemsData)
+  }
+
+
+  const getCartCont = async () => {
+    if (value) {
+      if (value.cart.length > 0) {
+        let content = await getCartContent(value.cart.toString())
+        console.log(content.length)
+        for (let _t in content) {
+          if (CartItemsData.includes(content[_t][2])){
+            console.log("item is in cart")
+          }
+          console.log("item", value.cart)
+          let _i = { "id": content[_t][2], "name": content[_t][1], "price": content[_t][3], "quantity": "1", "photo":Array(content[_t][0])[0]}
+        
+          CartItemsData.push(_i)
+          setCartExtraData(_i)
+        }
+      }
     }
-  },[value])
+  }
+
+  useFocusEffect(React.useCallback(()=>{
+    console.log("I have returned", CartItemsData.length)
+    if (CartItemsData.length != value.cart.length){
+      if (CartItemsData.length > 0){
+        if(Number(CartItemsData.length) > Number(value.cart.length)){
+          console.log("Not same content")
+          for (let index in CartItemsData) {
+            if (!value.cart.includes(CartItemsData[index]["id"])){
+              CartItemsData.splice(Number(index), 1)
+              setCartExtraData(CartItemsData)
+            }
+          }
+        }
+      } else if (CartItemsData.length === 0){
+        if (value.cart.length > CartItemsData.length){
+          getCartCont()
+        }
+      }
+    }
+      
+  },[]))
+
+  const openCompleteOrderModal = () => {
+    completeOrderModal.current?.open()
+  }
+
+  const closeCompleteOrderModal = () => {
+    completeOrderModal.current?.close()
+  }
+
+  const completingOrder = (id: string) => {
+    let details: orderObj = { "ProductName": "sdfjasdf", "quantity": "3", "address": "Tabora", "price": "78", "deliveryFees": "9.5", "photo":""}
+    for (let orderItemIndex in CartItemsData){
+      if (CartItemsData[orderItemIndex]["id"] === id){
+        details = {"ProductName":CartItemsData[orderItemIndex]["name"], "photo":CartItemsData[orderItemIndex]["photo"], "price":CartItemsData[orderItemIndex]["price"], "address":String(value.address), "quantity":CartItemsData[orderItemIndex]["quantity"], "deliveryFees":"9.5"}
+      }
+      setOrderToCompleteDetails(details)
+    }
+    openCompleteOrderModal()
+  }
+
+  const oh: orderObj = { "ProductName": "sdfjasdf", "quantity": "3", "address": "Tabora", "price": "78", "deliveryFees": "9.5", "photo":""}
   return (
     <SafeAreaView style={styles.container}>
-      <FlatList style={styles.items_scroll} data={data} keyExtractor={(item) => item.id} renderItem={({ item }) => <CardItemComponent item={item} />}/>
+      <Paystack currency="GHS" ref={payStackRef} activityIndicatorColor="green" onSuccess={()=>{
+        console.log("Paid!!")
+
+      }} onCancel={(e)=>{
+        console.log("Payment cancelled")
+
+      }} billingEmail="agyemanchris0@gmail.com" billingName="ShopBridge" paystackKey="pk_test_55e1a483b287f499f8820701f9a7844a8c607d84" amount={(Number(orderToCompleteDetails.price)*Number(orderToCompleteDetails.quantity)) + Number(orderToCompleteDetails.deliveryFees)}/>
+      <CompleteOrderModal orderObject={orderToCompleteDetails} refObject={completeOrderModal} order={() => payStackRef.current?.startTransaction()} />
+      <FlatList extraData={cartExtraData} style={styles.items_scroll} data={CartItemsData} keyExtractor={(item) => item.id} renderItem={({ item }) => <CardItemComponent removeFromCart={()=>{
+        if (value.cart.includes(item.id)){
+          let index = value.cart.indexOf(item.id)
+          value.cart.splice(index,1)
+          removeItemFromFlatlist(item.id)          
+          setState(value)
+          saveCartToken(value.cart)
+        }
+      }} item={item} openCompleteOrderModal={()=>{
+        completingOrder(item.id)
+        
+        }} />} />
     </SafeAreaView>
   );
 };
+
 
 export default Cart;
 
@@ -64,12 +157,12 @@ const styles = StyleSheet.create({
   },
   item_container: {
     backgroundColor: "white",
-    width:"100%",
+    width: "100%",
     height: 160,
     flexDirection: "row",
     borderRadius: 10,
     marginBottom: 10,
-    padding:5,
+    padding: 5,
   },
   quantity_button: {
     backgroundColor: "#2196f3",
@@ -86,8 +179,8 @@ const styles = StyleSheet.create({
     width: 40,
     marginLeft: 4,
     marginRight: 4,
-    marginBottom:6,
-    paddingTop:12,
+    marginBottom: 6,
+    paddingTop: 12,
     color: "black",
     fontWeight: "bold",
     justifyContent: "center",

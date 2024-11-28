@@ -17,7 +17,7 @@ import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import SubmitSellerDetails from "../../api_calls/auth/seller";
 import DataSkeletons  from "@/api_calls/dataSkeletons";
-import { MyContext } from "../components/consumer/myContext";
+import { MyContext } from "../../context/myContext";
 let firstName: string = "";
 let lastName: string = "";
 let email: string = "";
