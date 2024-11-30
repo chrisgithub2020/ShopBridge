@@ -13,7 +13,7 @@ interface valueContent {
 
 interface filterContent {
   mainCat: string;
-  subCat: string;
+  subCat: Array<string>;
 }
 
 interface contextProp {
@@ -25,7 +25,7 @@ interface contextProp {
 export const MyContext = createContext<contextProp>({
     value: {cart:[],id:"", address:"",store_name: "", email: "", lastName:"", firstName:"", phoneNumber:""},
     setState: () => {},
-    filter: {mainCat: "", subCat: ""},
+    filter: {mainCat: "", subCat: []},
     setFilter: ()=>{}
 });
 
@@ -34,7 +34,7 @@ interface child {
 }
 
 export const ProvideContext = ({ children }: child) => {
-  const [filter, setFilter] = useState<filterContent>({mainCat: "", subCat: ""})
+  const [filter, setFilter] = useState<filterContent>({mainCat: "", subCat: []})
   const [value, setState] = useState<valueContent>({id:"",cart:[], address:"",store_name: "", email: "", lastName:"", firstName:"", phoneNumber:""});
 
   return (

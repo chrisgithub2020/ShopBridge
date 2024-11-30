@@ -79,7 +79,10 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
   },[productDetails, checkProductDetails])
 
   useEffect(()=> {
-    console.log(filter, "filter")
+    if (filter.mainCat != "" && filter.subCat.length != 0){
+      setShowCat("false")
+      console.log(filter, "filter")
+    }
   },[filter])
 
   useEffect(()=>{
@@ -106,6 +109,7 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
           <Text style={{width: "92%"}}>Hii</Text>
           <TouchableOpacity onPress={()=>{
             setShowCat("hide")
+            setFilter({mainCat: "", subCat: []})
           }}>
             <MaterialIcons name="close" size={20}/>
           </TouchableOpacity>
