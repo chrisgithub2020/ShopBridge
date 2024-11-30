@@ -42,6 +42,13 @@ const DataSkeletons = {
     itemPrice: String(),
     itemMainCat: String(),
     itemSubCat: String(),
+  },
+
+  orderDetails: {
+    consumer: String(),
+    product: String(),
+    amountPaid: Number(),
+    address: String(),
   }
 };
 

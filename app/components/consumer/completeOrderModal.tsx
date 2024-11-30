@@ -10,6 +10,7 @@ interface orderObj {
   price: string;
   deliveryFees: string;
   photo: string;
+  id: string;
 }
 interface modalProp {
   order: () => void;

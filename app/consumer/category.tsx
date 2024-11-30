@@ -1,13 +1,20 @@
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigation } from '@react-navigation/native';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { MyContext } from "@/context/myContext";
 
 
 
-const ConsumerCategory = () => {
+const ConsumerCategory = ({navigation}: {navigation: any}) => {
+  const {filter, setFilter} = useContext(MyContext)
   const [currentView, setCurrentView] = useState<string>("e");
+
+  const viewCategory = () => {
+    setFilter({mainCat: currentView, subCat: ""})
+    navigation.navigate("index")
+  }
   const showCat = () => {
     switch (currentView) {
       case "e":
@@ -25,7 +32,7 @@ const ConsumerCategory = () => {
                 }}
               >
                 <Text style={{ width: "77%" }}>Mobile Phones</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={viewCategory}>
                   <Text style={{ color: "#2196f3" }}>See all</Text>
                 </TouchableOpacity>
               </View>
@@ -1241,13 +1248,13 @@ const ConsumerCategory = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.main_cat_container}>
         <TouchableOpacity
-          style={[styles.cat_button, currentView === "electronics" && styles.active_cat]}
+          style={[styles.cat_button, currentView === "e" && styles.active_cat]}
           onPress={() => setCurrentView("e")}
         >
           <Text style={styles.cat_button_text}>Electronics</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.cat_button, currentView === "fashion" && styles.active_cat]}
+          style={[styles.cat_button, currentView === "f" && styles.active_cat]}
           onPress={() => setCurrentView("f")}
         >
           <Text style={styles.cat_button_text}>Fashion</Text>
@@ -1259,55 +1266,55 @@ const ConsumerCategory = () => {
           <Text style={styles.cat_button_text}>Home & Kitchen</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.cat_button, currentView === "Beauty" && styles.active_cat]}
+          style={[styles.cat_button, currentView === "b" && styles.active_cat]}
           onPress={() => setCurrentView("b")}
         >
           <Text style={styles.cat_button_text}>Beauty & Personal Care</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.cat_button, currentView === "sports" && styles.active_cat]}
+          style={[styles.cat_button, currentView === "sp" && styles.active_cat]}
           onPress={() => setCurrentView("sp")}
         >
           <Text style={styles.cat_button_text}>Sports & Outdoor</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.cat_button, currentView === "toys" && styles.active_cat]}
+          style={[styles.cat_button, currentView === "t" && styles.active_cat]}
           onPress={() => setCurrentView("t")}
         >
           <Text style={styles.cat_button_text}>Toys & Games</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.cat_button, currentView === "books" && styles.active_cat]}
+          style={[styles.cat_button, currentView === "bk" && styles.active_cat]}
           onPress={() => setCurrentView("bk")}
         >
           <Text style={styles.cat_button_text}>Books & Media</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.cat_button, currentView === "groceries" && styles.active_cat]}
+          style={[styles.cat_button, currentView === "g" && styles.active_cat]}
           onPress={() => setCurrentView("g")}
         >
           <Text style={styles.cat_button_text}>Groceries</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.cat_button, currentView === "health" && styles.active_cat]}
+          style={[styles.cat_button, currentView === "h" && styles.active_cat]}
           onPress={() => setCurrentView("h")}
         >
           <Text style={styles.cat_button_text}>Health & Wellness</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.cat_button, currentView === "automotive" && styles.active_cat]}
+          style={[styles.cat_button, currentView === "a" && styles.active_cat]}
           onPress={() => setCurrentView("a")}
         >
           <Text style={styles.cat_button_text}>Automotive</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.cat_button, currentView === "pet" && styles.active_cat]}
+          style={[styles.cat_button, currentView === "p" && styles.active_cat]}
           onPress={() => setCurrentView("p")}
         >
           <Text style={styles.cat_button_text}>Pet Supplies</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.cat_button, currentView === "office" && styles.active_cat]}
+          style={[styles.cat_button, currentView === "o" && styles.active_cat]}
           onPress={() => setCurrentView("o")}
         >
           <Text style={styles.cat_button_text}>Office Supplies</Text>

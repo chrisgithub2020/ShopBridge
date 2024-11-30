@@ -69,7 +69,7 @@ const OrderComponent: React.FC<OrderProp> = ({order}) => {
       </View>
   )
 }
-const Order = () => {
+const Order = ({navigation}: {navigation: any}) => {
   const {value, setState} = useContext(MyContext)
   const [storeOrders, setStoreOrders] = useState();
 

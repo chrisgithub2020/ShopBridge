@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const ConsumerSettings = () => {
+const ConsumerSettings = ({navigation}: {navigation: any}) => {
   return (
     <View>
       <Text>ConsumerSettings</Text>

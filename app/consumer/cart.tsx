@@ -16,6 +16,8 @@ import { Paystack, paystackProps,  } from "react-native-paystack-webview"
 import CompleteOrderModal from "../components/consumer/completeOrderModal"
 import getCartContent from "../../api_calls/consumer/getCartContent"
 import saveCartToken from "@/storage/saveToCart";
+import DataSkeletons from "@/api_calls/dataSkeletons";
+import CompleteOrder from "../../api_calls/consumer/CompleteOrder"
 
 let CartItemsData: CartItem[] = [
 ];
@@ -27,6 +29,7 @@ interface orderObj {
   price: string;
   deliveryFees: string;
   photo: string;
+  id: string;
 }
 interface CartItem {
   photo: string;
@@ -39,11 +42,11 @@ interface CartItem {
 
 
 
-const Cart = () => {
+const Cart = ({navigation}: {navigation: any}) => {
   const { value, setState } = useContext(MyContext)
   const completeOrderModal = useRef<Modalize>(null)
   const [cartExtraData, setCartExtraData] = useState<any>()
-  const [orderToCompleteDetails, setOrderToCompleteDetails] = useState<orderObj>({ "ProductName": "sdfjasdf", "quantity": "3", "address": "Tabora", "price": "78", "deliveryFees": "9.5", "photo":""});
+  const [orderToCompleteDetails, setOrderToCompleteDetails] = useState<orderObj>({"id":"", "ProductName": "sdfjasdf", "quantity": "3", "address": "Tabora", "price": "78", "deliveryFees": "9.5", "photo":""});
   const payStackRef = useRef<paystackProps.PayStackRef>(null)
   const removeItemFromFlatlist = (id: string) => {
     const newData = CartItemsData.filter(item => item.id !== id)
@@ -101,23 +104,33 @@ const Cart = () => {
     completeOrderModal.current?.close()
   }
 
-  const completingOrder = (id: string) => {
-    let details: orderObj = { "ProductName": "sdfjasdf", "quantity": "3", "address": "Tabora", "price": "78", "deliveryFees": "9.5", "photo":""}
+  const completeOrder = async () => {
+    DataSkeletons.orderDetails.address = value.address
+    DataSkeletons.orderDetails.consumer = value.id
+    DataSkeletons.orderDetails.product = orderToCompleteDetails.id
+    DataSkeletons.orderDetails.amountPaid = (Number(orderToCompleteDetails.price)*Number(orderToCompleteDetails.quantity)) + Number(orderToCompleteDetails.deliveryFees)
+    const response = await CompleteOrder(DataSkeletons.orderDetails)
+    console.log(response)
+  }
+
+  const checkOut = (id: string) => {
+    let details: orderObj = {"id":"", "ProductName": "sdfjasdf", "quantity": "3", "address": "Tabora", "price": "78", "deliveryFees": "9.5", "photo":""}
     for (let orderItemIndex in CartItemsData){
       if (CartItemsData[orderItemIndex]["id"] === id){
-        details = {"ProductName":CartItemsData[orderItemIndex]["name"], "photo":CartItemsData[orderItemIndex]["photo"], "price":CartItemsData[orderItemIndex]["price"], "address":String(value.address), "quantity":CartItemsData[orderItemIndex]["quantity"], "deliveryFees":"9.5"}
+        details = {"id":id, "ProductName":CartItemsData[orderItemIndex]["name"], "photo":CartItemsData[orderItemIndex]["photo"], "price":CartItemsData[orderItemIndex]["price"], "address":String(value.address), "quantity":CartItemsData[orderItemIndex]["quantity"], "deliveryFees":"9.5"}
       }
       setOrderToCompleteDetails(details)
     }
     openCompleteOrderModal()
   }
 
-  const oh: orderObj = { "ProductName": "sdfjasdf", "quantity": "3", "address": "Tabora", "price": "78", "deliveryFees": "9.5", "photo":""}
+  const oh: orderObj = {"id":"", "ProductName": "sdfjasdf", "quantity": "3", "address": "Tabora", "price": "78", "deliveryFees": "9.5", "photo":""}
   return (
     <SafeAreaView style={styles.container}>
       <Paystack currency="GHS" ref={payStackRef} activityIndicatorColor="green" onSuccess={()=>{
         console.log("Paid!!")
-
+        console.log(DataSkeletons.orderDetails)
+        completeOrder();
       }} onCancel={(e)=>{
         console.log("Payment cancelled")
 
@@ -132,7 +145,7 @@ const Cart = () => {
           saveCartToken(value.cart)
         }
       }} item={item} openCompleteOrderModal={()=>{
-        completingOrder(item.id)
+        checkOut(item.id)
         
         }} />} />
     </SafeAreaView>

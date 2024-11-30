@@ -5,6 +5,8 @@ import {
   View,
   TextInput,
   ToastAndroid,
+   Text,
+   TouchableOpacity,
 } from "react-native";
 import React, { useState, useRef, useContext, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context"
@@ -15,6 +17,7 @@ import ProductDetailsModal from "../components/consumer/productDetailsModal"
 import { MyContext } from "../../context/myContext";
 import saveCartToken from "../../storage/saveToCart"
 import getProductDetails from "../../api_calls/consumer/getProductDetails"
+import { MaterialIcons } from "@expo/vector-icons";
 
 interface ProductData {
   id: string;
@@ -35,14 +38,19 @@ const Products: ProductData[] = [
 
 
 
-const ConsumerHome = () => {
+const ConsumerHome = ({navigation}: {navigation: any}) => {
   const screenWidth = Dimensions.get("window").width;
   const numColumns = Math.floor(screenWidth / 170);
   const modalRef = useRef<Modalize>(null)
   
-  const { value, setState } = useContext(MyContext)
+  const { value, setState, filter, setFilter } = useContext(MyContext)
   const [todayProducts, setTodayProducts] = useState<any>()
-  const [productDetails, setProductDetails] = useState<any>({"name":""})
+  const [productDetails, setProductDetails] = useState<any>({"name":"","photos":""})
+  const [checkProductDetails, setCheckProductDetails] = useState<boolean>(false)
+  const [showCat, setShowCat] = useState<string>("hide")
+
+
+
 
   const openModal = () => {
     modalRef.current?.open()
@@ -63,10 +71,16 @@ const ConsumerHome = () => {
   }
 
   useEffect(()=>{
-    if (productDetails){
-      openModal()
+    if (checkProductDetails) {
+      if (productDetails){
+        openModal()
+      }
     }
-  },[productDetails])
+  },[productDetails, checkProductDetails])
+
+  useEffect(()=> {
+    console.log(filter, "filter")
+  },[filter])
 
   useEffect(()=>{
     const getStoreIt = async ()=>{    
@@ -80,6 +94,7 @@ const ConsumerHome = () => {
     }
     getStoreIt()
   },[value])
+  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -87,7 +102,15 @@ const ConsumerHome = () => {
         <View style={styles.searchbar}>
           <TextInput style={{ backgroundColor: "#e6e1e1", height: "100%", width: "100%", borderRadius: 5, padding: 10, marginRight: 5, }} placeholder="Search here" />
         </View>
-        <ProductDetailsModal product={productDetails} refObject={modalRef} addToCart={() => console.log("adding to cart")} />
+        <View style={[styles.catFilter, showCat === "hide" && styles.hideCatFilter]}>
+          <Text style={{width: "92%"}}>Hii</Text>
+          <TouchableOpacity onPress={()=>{
+            setShowCat("hide")
+          }}>
+            <MaterialIcons name="close" size={20}/>
+          </TouchableOpacity>
+        </View>
+        <ProductDetailsModal onClose={()=>{setCheckProductDetails(false)}} product={productDetails} refObject={modalRef} addToCart={() => console.log("adding to cart")} />
         
         <FlatList style={styles.flatContainer}
           data={Products}
@@ -110,6 +133,7 @@ const ConsumerHome = () => {
             }
           } } product={item} onClick={() => {
             console.log(item.id);
+            setCheckProductDetails(true)
             ProductDetails(String(item.id));
           } }/>}
         />
@@ -141,4 +165,17 @@ const styles = StyleSheet.create({
   flatContainer: {
     padding: 8,
   },
+  catFilter: {
+    height: 40,
+    flexDirection: "row",
+    padding: 4,
+    backgroundColor: "white",
+    borderTopColor: "#e6e1e1",
+    borderTopWidth: 2,
+    justifyContent: "center", 
+    alignItems: "center",
+  },
+  hideCatFilter: {
+    display: "none"
+  }
 });

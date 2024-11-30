@@ -49,7 +49,7 @@ const RestockItem = async (id: String, amount: String) => {
   await restockItem(formData)
 }
 
-const Store = () => {
+const Store = ({navigation}: {navigation: any}) => {
   let itemToRestockID = "";
   let amountToRestock: String = "";
   let takeDown: boolean = false;
