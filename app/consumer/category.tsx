@@ -12,6 +12,7 @@ const ConsumerCategory = ({navigation}: {navigation: any}) => {
   const [currentView, setCurrentView] = useState<string>("e");
 
   const viewCategory = (subCategory: string[]=[]) => {
+    setFilter({mainCat: "", subCat: []})
     setFilter({mainCat: currentView, subCat: subCategory})
     navigation.navigate("index")
   }

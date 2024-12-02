@@ -1,9 +1,17 @@
 import Link from "../serverLink"
+const getCategoryProducts = async (mainCat, subCat) => {
+  try {
+    const response = await fetch(`${Link()}/category/${mainCat}/${subCat.toString()}`)
+    if (response.ok){
+      const data = await response.json()
+      if (data["success"]) {
+        return data["data"]
+      }
+    }
 
-const getCategoryProducts = (url) => {
-  fetch(`${Link}`)
-    .then((items) => items.json())
-    .then((items) => {
-      return items;
-    });
+  } catch (err) {
+    console.log(err)
+  }
 };
+
+export default getCategoryProducts

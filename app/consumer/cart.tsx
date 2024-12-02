@@ -4,7 +4,8 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  FlatList
+  FlatList,
+  ToastAndroid
 } from "react-native";
 import React, { useState, useRef, useContext, useEffect, useCallback,} from "react";
 import { useFocusEffect } from "@react-navigation/native";
@@ -75,11 +76,9 @@ const Cart = ({navigation}: {navigation: any}) => {
   }
 
   useFocusEffect(React.useCallback(()=>{
-    console.log("I have returned", CartItemsData.length)
     if (CartItemsData.length != value.cart.length){
       if (CartItemsData.length > 0){
         if(Number(CartItemsData.length) > Number(value.cart.length)){
-          console.log("Not same content")
           for (let index in CartItemsData) {
             if (!value.cart.includes(CartItemsData[index]["id"])){
               CartItemsData.splice(Number(index), 1)
@@ -110,6 +109,14 @@ const Cart = ({navigation}: {navigation: any}) => {
     DataSkeletons.orderDetails.product = orderToCompleteDetails.id
     DataSkeletons.orderDetails.amountPaid = (Number(orderToCompleteDetails.price)*Number(orderToCompleteDetails.quantity)) + Number(orderToCompleteDetails.deliveryFees)
     const response = await CompleteOrder(DataSkeletons.orderDetails)
+    if (response){
+      ToastAndroid.show("Order Completed", ToastAndroid.SHORT)
+      let itemIndex = value.cart.indexOf(orderToCompleteDetails.id)
+      value.cart.splice(itemIndex,1)
+      removeItemFromFlatlist(orderToCompleteDetails.id)
+      closeCompleteOrderModal()
+      saveCartToken(value.cart)
+    }
     console.log(response)
   }
 
@@ -128,8 +135,6 @@ const Cart = ({navigation}: {navigation: any}) => {
   return (
     <SafeAreaView style={styles.container}>
       <Paystack currency="GHS" ref={payStackRef} activityIndicatorColor="green" onSuccess={()=>{
-        console.log("Paid!!")
-        console.log(DataSkeletons.orderDetails)
         completeOrder();
       }} onCancel={(e)=>{
         console.log("Payment cancelled")

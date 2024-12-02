@@ -17,6 +17,7 @@ import ProductDetailsModal from "../components/consumer/productDetailsModal"
 import { MyContext } from "../../context/myContext";
 import saveCartToken from "../../storage/saveToCart"
 import getProductDetails from "../../api_calls/consumer/getProductDetails"
+import getCategoryProducts from "../../api_calls/consumer/category"
 import { MaterialIcons } from "@expo/vector-icons";
 
 interface ProductData {
@@ -49,6 +50,15 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
   const [checkProductDetails, setCheckProductDetails] = useState<boolean>(false)
   const [showCat, setShowCat] = useState<string>("hide")
 
+  const getTodayProducts = async ()=>{    
+    const res = await getHomepageProducts()
+    res.forEach((item: any)=>{
+      let _i = {"name":item[1], "price":item[2],"id":item[0], "store_name":item[3], "photo":Array(item[4])[0]}
+      Products.push(_i)
+      setTodayProducts(_i)
+    })
+  }
+
 
 
 
@@ -79,23 +89,23 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
   },[productDetails, checkProductDetails])
 
   useEffect(()=> {
-    if (filter.mainCat != "" && filter.subCat.length != 0){
+    const getCatItems = async () => {
       setShowCat("false")
-      console.log(filter, "filter")
-    }
-  },[filter])
-
-  useEffect(()=>{
-    const getStoreIt = async ()=>{    
-      console.log(value.cart)
-      const res = await getHomepageProducts()
-      res.forEach((item: any)=>{
+      const result =  await getCategoryProducts(filter.mainCat, filter.subCat)
+      result.forEach((item: any)=>{
         let _i = {"name":item[1], "price":item[2],"id":item[0], "store_name":item[3], "photo":Array(item[4])[0]}
+        Products.length = 0
         Products.push(_i)
         setTodayProducts(_i)
       })
     }
-    getStoreIt()
+    if (filter.mainCat != "" && filter.subCat.length != 0){
+      getCatItems()
+    }
+  },[filter])
+
+  useEffect(()=>{
+    getTodayProducts()
   },[value])
   
 
@@ -110,6 +120,8 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
           <TouchableOpacity onPress={()=>{
             setShowCat("hide")
             setFilter({mainCat: "", subCat: []})
+            Products.length = 0
+            getTodayProducts()
           }}>
             <MaterialIcons name="close" size={20}/>
           </TouchableOpacity>
