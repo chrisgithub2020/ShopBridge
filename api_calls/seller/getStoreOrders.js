@@ -9,8 +9,12 @@ const getStoreOrders = async (storeId) => {
             },
         })
 
+        
+        const response = await result.json()
         if (result.ok) {
-            return result;
+            if (response["success"] === true){
+                return response["data"]
+            }
         }
     } catch (err) {
         console.log(err)

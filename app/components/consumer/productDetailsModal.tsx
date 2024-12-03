@@ -58,18 +58,13 @@ const ProductDetailsModal = ({addToCart,  refObject, product, onClose}: modalPro
                         </TouchableOpacity>
                     </View>
                     <View style={styles.product_details}>
-                        <Text style={{height: 100, padding:5,}}>{product.name}</Text>
-                        <Text style={{height: 40, padding:5, borderTopWidth: 1,borderBottomWidth:1, borderTopColor: "#e6e1e1", borderBottomColor: "#e6e1e1"}}>{product.price}</Text>
-                        <View style={{height: "100%"}}>
-                            <Text style={{padding:3, fontWeight: "bold"}}>{product.description}</Text>
-                            <Text ></Text>
-                        </View>
-                        <Text></Text>
+                        <Text adjustsFontSizeToFit style={{elevation: 4, padding:5, fontWeight:"bold", fontSize:18}}>{product.name}</Text>
+                        <Text style={{height: 40,fontWeight:"bold", padding:5,fontSize:15, borderTopWidth: 1,borderBottomWidth:1, borderTopColor: "#e6e1e1", borderBottomColor: "#e6e1e1"}}>GH₵ {product.price}</Text>
+                        <Text adjustsFontSizeToFit style={{padding:3, fontSize: 16}}>{product.description}</Text>
+                        
+                
                     </View>
                 </View>
-                <TouchableOpacity style={styles.modalButton}>
-                    <Text style={{alignSelf:"center", fontWeight:"bold", color: "white"}}>Add to Cart</Text>
-                </TouchableOpacity>       
             </KeyboardAvoidingView>
         </Modalize>
     )

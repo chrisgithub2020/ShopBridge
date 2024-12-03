@@ -1044,7 +1044,7 @@ const ConsumerCategory = ({navigation}: {navigation: any}) => {
                   borderBottomColor: "#e6e1e1"
                 }}
               >
-                <Text style={{ width: "77%" }}>Health Care</Text>
+                <Text style={{ width: "77%" }}>Automobile</Text>
                 <TouchableOpacity onPress={()=>{viewCategory(["ca", "t&e"])}}>
                   <Text style={{ color: "#2196f3" }}>See all</Text>
                 </TouchableOpacity>

@@ -72,9 +72,11 @@ const Store = ({navigation}: {navigation: any}) => {
       const res = await getStoreItems(value.id)
       res.forEach((item: any)=>{
         let _i = {"photo":item[1], "name":item[2], "price":item[5], "quantity": item[4], "description":item[3], "id":item[0]}
-        Products.push(_i)
-        setStoreProducts(_i)
+        if (!Products.includes(_i)){
+          Products.push(_i)
+        }
       })
+      setStoreProducts(Products)
     }
     getStoreIt()
   },[value])

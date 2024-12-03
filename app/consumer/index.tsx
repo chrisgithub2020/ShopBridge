@@ -19,6 +19,8 @@ import saveCartToken from "../../storage/saveToCart"
 import getProductDetails from "../../api_calls/consumer/getProductDetails"
 import getCategoryProducts from "../../api_calls/consumer/category"
 import { MaterialIcons } from "@expo/vector-icons";
+import CatDict from "../../api_calls/Categories"
+import searchProductInDB from "../../api_calls/consumer/searchProduct"
 
 interface ProductData {
   id: string;
@@ -30,7 +32,7 @@ interface ProductData {
 
 
 
-const Products: ProductData[] = [
+let Products: ProductData[] = [
 ];
 
 
@@ -59,6 +61,26 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
     })
   }
 
+  const searchProduct = async (text: string) => {
+    console.log(text)
+    if (text.length === 0){
+      Products.length = 0
+      getTodayProducts()
+    }
+    let newData = Products.filter(item => item.name.includes(text))
+    if (newData.length === 0 && text.length > 0){
+      let result = await searchProductInDB(text)
+      if (result.length > 0){
+
+      } else {
+        ToastAndroid.show("We have no such product. Will get one soon", ToastAndroid.SHORT)
+      }
+    } else {
+      Products = newData
+      setTodayProducts(Products)
+    }
+
+  }
 
 
 
@@ -90,8 +112,12 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
 
   useEffect(()=> {
     const getCatItems = async () => {
-      setShowCat("false")
       const result =  await getCategoryProducts(filter.mainCat, filter.subCat)
+      if (result.length === 0){
+        ToastAndroid.show("We have no Products in this category", ToastAndroid.SHORT)
+        return false
+      }
+      setShowCat(CatDict[filter.subCat.toString()])
       result.forEach((item: any)=>{
         let _i = {"name":item[1], "price":item[2],"id":item[0], "store_name":item[3], "photo":Array(item[4])[0]}
         Products.length = 0
@@ -113,10 +139,10 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
     <SafeAreaView style={styles.container}>
       <View style={{flex: 1}}>
         <View style={styles.searchbar}>
-          <TextInput style={{ backgroundColor: "#e6e1e1", height: "100%", width: "100%", borderRadius: 5, padding: 10, marginRight: 5, }} placeholder="Search here" />
+          <TextInput onChangeText={(text: string)=> {searchProduct(text)}} style={{ backgroundColor: "#e6e1e1", height: "100%", width: "100%", borderRadius: 5, padding: 10, marginRight: 5, }} placeholder="Search here" />
         </View>
         <View style={[styles.catFilter, showCat === "hide" && styles.hideCatFilter]}>
-          <Text style={{width: "92%"}}>Hii</Text>
+          <Text style={{width: "92%"}}>Filter: {showCat}</Text>
           <TouchableOpacity onPress={()=>{
             setShowCat("hide")
             setFilter({mainCat: "", subCat: []})
@@ -179,7 +205,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   flatContainer: {
-    padding: 8,
+    paddingTop: 8,
   },
   catFilter: {
     height: 40,

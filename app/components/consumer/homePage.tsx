@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     backgroundColor: "white",
     width: 170,
+    elevation: 3,
   },
   product_image_container: {
     justifyContent: "center",
@@ -84,6 +85,7 @@ const styles = StyleSheet.create({
   product_image: {
     width: 150,
     height: 130,
+    borderRadius: 5,
   },
   product_desc_container: {
     padding: 3,
