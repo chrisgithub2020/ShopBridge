@@ -4,7 +4,7 @@
     "slug": "e_commerce",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./resources/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -17,10 +17,13 @@
     },
     "android": {
       "adaptiveIcon": {
-        "permissions": ["INTERNET"],
+        "permissions": [
+          "INTERNET"
+        ],
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.lewishall.e_commerce"
     },
     "web": {
       "bundler": "metro",
@@ -34,6 +37,14 @@
     "experiments": {
       "typedRoutes": true
     },
-    "newArchEnabled":true
+    "newArchEnabled": true,
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "ea06ee77-3e1d-4628-94a8-e6272ba0fbe4"
+      }
+    }
   }
 }
