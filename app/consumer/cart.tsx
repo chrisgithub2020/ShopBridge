@@ -107,6 +107,7 @@ const Cart = ({navigation}: {navigation: any}) => {
     DataSkeletons.orderDetails.address = value.address
     DataSkeletons.orderDetails.consumer = value.id
     DataSkeletons.orderDetails.product = orderToCompleteDetails.id
+    DataSkeletons.orderDetails.quantity = orderToCompleteDetails.quantity
     DataSkeletons.orderDetails.amountPaid = (Number(orderToCompleteDetails.price)*Number(orderToCompleteDetails.quantity)) + Number(orderToCompleteDetails.deliveryFees)
     const response = await CompleteOrder(DataSkeletons.orderDetails)
     if (response){

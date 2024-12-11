@@ -1,3 +1,4 @@
+import React from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet, NativeSyntheticEvent } from "react-native";
 
 interface StoreProduct {
@@ -26,7 +27,7 @@ const ProductComponent: React.FC<StoreProductProp> = ({ product, onRestock, onTa
         </View>
         <View style={styles.abt_container}>
           <Text style={{fontWeight: "bold"}}>{product.name}</Text>
-          <Text numberOfLines={2} ellipsizeMode="tail" style={{fontWeight: "bold"}}>{product.description}</Text>
+          <Text adjustsFontSizeToFit numberOfLines={3} ellipsizeMode="tail" style={{fontSize:12, width:120}}>{product.description}</Text>
           <Text style={{fontWeight: "bold"}}>Price: GH₵{product.price}</Text>
           <Text style={{fontWeight: "bold"}}>Quantity: {product.quantity}</Text>
         </View>
@@ -51,7 +52,8 @@ const styles = StyleSheet.create({
     width: "45%",
     height: 35,
     borderRadius: 5,
-    justifyContent: "center"
+    justifyContent: "center",
+    elevation: 5
   },
   supplies_button_test: {
     alignSelf: "center",

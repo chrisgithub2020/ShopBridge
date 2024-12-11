@@ -49,6 +49,7 @@ const DataSkeletons = {
     product: String(),
     amountPaid: Number(),
     address: String(),
+    quantity: String(),
   }
 };
 

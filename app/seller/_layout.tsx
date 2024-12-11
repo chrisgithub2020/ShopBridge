@@ -10,11 +10,12 @@ const Tabs = createBottomTabNavigator()
 
 const SellerTabLayout = () => {                                 
   return (
-    <Tabs.Navigator>        
+    <Tabs.Navigator screenOptions={{}}>        
         <Tabs.Screen component={Store} name="Store" options={{
             title: "Inventory",
             headerShown:false,
             tabBarIcon: ({color}) => <FontAwesome size={20} name="archive" color={color}/>,
+          
         }}/>
         <Tabs.Screen component={Order} name="Order" options={{
             title: "Orders",

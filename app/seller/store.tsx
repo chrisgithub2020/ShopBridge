@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
   ToastAndroid,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useRef, useContext, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -37,7 +38,7 @@ interface StoreProduct {
 
 DataSkeletons.itemDetails.itemImages = itemImages;
 
-const Products: StoreProduct[] = [
+let Products: StoreProduct[] = [
 ];
 const RestockItem = async (id: String, amount: String) => {
   const formData = {
@@ -54,17 +55,17 @@ const Store = ({navigation}: {navigation: any}) => {
   let amountToRestock: String = "";
   let takeDown: boolean = false;
   const [selectedValue, setCurrentValue] = useState("e");
+  const [storeProductsSearch, setStoreProductsSearch] = useState<any>();
   const [subCat, setSubCat] = useState<string>("cp");
   const [descText, setItemDescText] = useState("");
   const [numberOfImages, setNumberOfImages] = useState(0);
   const [itemName, setItemName] = useState("");
   const [itemQuantity, setItemQuantity] = useState("");
   const [itemPrice, setItemPrice] = useState("");
-  const {value, setState} = useContext(MyContext);
+  const {value, setState, setStoreProducts, storeProducts} = useContext(MyContext);
   const modalRef = useRef<Modalize>(null);
   const addItemModal = useRef<Modalize>(null);
   const takeDownItemModal = useRef<Modalize>(null)
-  const [storeProducts, setStoreProducts] = useState<any>();
   
 
   useEffect(()=>{
@@ -77,6 +78,7 @@ const Store = ({navigation}: {navigation: any}) => {
         }
       })
       setStoreProducts(Products)
+      setStoreProductsSearch(Products)
     }
     getStoreIt()
   },[value])
@@ -162,11 +164,24 @@ const Store = ({navigation}: {navigation: any}) => {
     }
   };
 
+  const searchStore = (text: string) => {
+    if (text === ""){
+      getStoreItems()
+      return 0
+    }
+    const newData = Products.filter(item => item.name.includes("text"))
+    Products = newData;
+    setStoreProductsSearch(Products)
+    if (newData.length === 0){
+      ToastAndroid.show("You have no such item in your store", ToastAndroid.SHORT)
+    }
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={{flex: 1}}>
         <View style={styles.searchbar}>
-          <TextInput
+          <TextInput onChangeText={searchStore}
             style={{
               backgroundColor: "#e6e1e1",
               height: "100%",
@@ -206,7 +221,7 @@ const Store = ({navigation}: {navigation: any}) => {
           restock={()=> RestockItem(itemToRestockID,amountToRestock)}
         />
         <AddItemModal formDetails={formDetails} refObject={addItemModal} chooseItemImages={chooseItemImagaes} onSubmit={submititemDetails}/>
-        <FlatList extraData={storeProducts}
+        <FlatList extraData={storeProductsSearch}
           style={styles.flatContainer}
           data={Products}
           keyExtractor={(item) => item.id}
@@ -260,4 +275,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 10,
   },
+  loader: {
+    flex: 1,
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    top: 0,
+    opacity: 0.5,
+    zIndex: 1000
+  }
 });

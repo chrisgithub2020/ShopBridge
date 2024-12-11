@@ -1,8 +1,8 @@
 import Link from "../serverLink";
 
-const getStoreItems = async (storeId) => {
+const checkOrderStatus = async (storeId) => {
     try {
-        const result = await fetch(`${Link()}/store_items/${storeId}`,{
+        const result = await fetch(`${Link()}/order_status/${storeId}`,{
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -11,8 +11,8 @@ const getStoreItems = async (storeId) => {
         
         const response = await result.json()
         if (result.ok) {
-            if (response["success"] === true){
-                return response["data"];
+            if (response["success"]){
+                return response["success"];
             }
         }
     } catch (err) {
@@ -20,4 +20,4 @@ const getStoreItems = async (storeId) => {
     }
 }
 
-export default getStoreItems
+export default checkOrderStatus
