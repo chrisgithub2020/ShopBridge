@@ -4,11 +4,11 @@
     "slug": "e_commerce",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./resources/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./resources/realicon.jpg",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -16,16 +16,20 @@
       "supportsTablet": true
     },
     "android": {
+      "permissions": [
+        "INTERNET",
+        "ACCESS_NETWORK_STATE"
+      ],
       "adaptiveIcon": {
-        "permissions": ["INTERNET"],
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./resources/icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.lewishall.e_commerce"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon":"./resources/icon.png"
     },
     "plugins": [
       "expo-router",
@@ -34,6 +38,14 @@
     "experiments": {
       "typedRoutes": true
     },
-    "newArchEnabled":true
+    "newArchEnabled": true,
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "ea06ee77-3e1d-4628-94a8-e6272ba0fbe4"
+      }
+    }
   }
 }
