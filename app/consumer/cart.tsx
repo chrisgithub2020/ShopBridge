@@ -140,7 +140,7 @@ const Cart = ({navigation}: {navigation: any}) => {
       }} onCancel={(e)=>{
         console.log("Payment cancelled")
 
-      }} billingEmail="agyemanchris0@gmail.com" billingName="ShopBridge" paystackKey="pk_test_55e1a483b287f499f8820701f9a7844a8c607d84" amount={(Number(orderToCompleteDetails.price)*Number(orderToCompleteDetails.quantity)) + Number(orderToCompleteDetails.deliveryFees)}/>
+      }} billingEmail="agyemanchris0@gmail.com" billingName="ShopBridge" paystackKey="pk_live_e82e70c0d2a21a737336f1e6161c41b7eaf9751f" amount={(Number(orderToCompleteDetails.price)*Number(orderToCompleteDetails.quantity)) + Number(orderToCompleteDetails.deliveryFees)}/>
       <CompleteOrderModal orderObject={orderToCompleteDetails} refObject={completeOrderModal} order={() => payStackRef.current?.startTransaction()} />
       <FlatList extraData={cartExtraData} style={styles.items_scroll} data={CartItemsData} keyExtractor={(item) => item.id} renderItem={({ item }) => <CardItemComponent removeFromCart={()=>{
         if (value.cart.includes(item.id)){
