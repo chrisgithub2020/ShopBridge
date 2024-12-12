@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, TextInput, ToastAndroid, RefreshControl} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import React, {useContext, useEffect, useState, useRef, act} from 'react'
+import React, {useContext, useEffect, useState, useRef,} from 'react'
 import { MyContext } from '../../context/myContext'
 import getStoreOrders from "../../api_calls/seller/getStoreOrders"
 import { useFocusEffect } from 'expo-router'

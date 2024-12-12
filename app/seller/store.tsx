@@ -169,7 +169,7 @@ const Store = ({navigation}: {navigation: any}) => {
       getStoreItems()
       return 0
     }
-    const newData = Products.filter(item => item.name.includes("text"))
+    const newData = Products.filter(item => item.name.includes(text))
     Products = newData;
     setStoreProductsSearch(Products)
     if (newData.length === 0){
@@ -181,7 +181,9 @@ const Store = ({navigation}: {navigation: any}) => {
     <SafeAreaView style={styles.container}>
       <View style={{flex: 1}}>
         <View style={styles.searchbar}>
-          <TextInput onChangeText={searchStore}
+          <TextInput onChangeText={(text: string) => { 
+            searchStore(text);
+          }}
             style={{
               backgroundColor: "#e6e1e1",
               height: "100%",

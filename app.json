@@ -4,7 +4,7 @@
     "slug": "e_commerce",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./resources/icon.png",
+    "icon": "./resources/realicon.jpg",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -21,7 +21,7 @@
         "ACCESS_NETWORK_STATE"
       ],
       "adaptiveIcon": {
-        "foregroundImage": "./resources/icon.png",
+        "foregroundImage": "./resources/realicon.jpg",
         "backgroundColor": "#ffffff"
       },
       "package": "com.lewishall.e_commerce"
