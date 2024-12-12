@@ -66,20 +66,21 @@ const Store = ({navigation}: {navigation: any}) => {
   const modalRef = useRef<Modalize>(null);
   const addItemModal = useRef<Modalize>(null);
   const takeDownItemModal = useRef<Modalize>(null)
+
+  const getStoreIt = async ()=>{
+    const res = await getStoreItems(value.id)
+    res.forEach((item: any)=>{
+      let _i = {"photo":item[1], "name":item[2], "price":item[5], "quantity": item[4], "description":item[3], "id":item[0]}
+      if (!Products.includes(_i)){
+        Products.push(_i)
+      }
+    })
+    setStoreProducts(Products)
+    setStoreProductsSearch(Products)
+  }
   
 
   useEffect(()=>{
-    const getStoreIt = async ()=>{
-      const res = await getStoreItems(value.id)
-      res.forEach((item: any)=>{
-        let _i = {"photo":item[1], "name":item[2], "price":item[5], "quantity": item[4], "description":item[3], "id":item[0]}
-        if (!Products.includes(_i)){
-          Products.push(_i)
-        }
-      })
-      setStoreProducts(Products)
-      setStoreProductsSearch(Products)
-    }
     getStoreIt()
   },[value])
 
@@ -166,7 +167,8 @@ const Store = ({navigation}: {navigation: any}) => {
 
   const searchStore = (text: string) => {
     if (text === ""){
-      getStoreItems()
+      Products.length = 0
+      getStoreIt()
       return 0
     }
     const newData = Products.filter(item => item.name.includes(text))
@@ -226,7 +228,7 @@ const Store = ({navigation}: {navigation: any}) => {
         <FlatList extraData={storeProductsSearch}
           style={styles.flatContainer}
           data={Products}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <ProductComponent onTakeDown={() => {
               itemToRestockID = item.id;

@@ -74,7 +74,7 @@ const CreateConsumer = ({navigation}: {navigation: any}) => {
         const resp = await SubmitConsumerDetails(DataSkeletons.consumerUserData);
 
         if (resp === true) {
-          navigation.navigate("consumer");
+          navigation.replace("consumer");
         }
       } else {
         ToastAndroid.show("Password does not match", ToastAndroid.SHORT);

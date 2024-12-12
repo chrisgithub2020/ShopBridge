@@ -93,7 +93,7 @@ const CreateSeller = ({navigation}: {navigation: any}) => {
       let context_copy: any = {"id":resp, "firstName":DataSkeletons.sellerUserData.firstName, "lastName":DataSkeletons.sellerUserData.lastName, "email":DataSkeletons.sellerUserData.email, "address":DataSkeletons.sellerUserData.address, "phoneNumber":DataSkeletons.sellerUserData.phoneNumber, "store_name":DataSkeletons.sellerUserData.store_name, "type":"s"}
 
       setState(context_copy)
-      navigation.navigate("seller")
+      navigation.replace("seller")
     }
   }
 

@@ -159,7 +159,7 @@ const Order = ({navigation}: {navigation: any}) => {
       <FlatList 
         data={Orders}
         extraData={storeOrders}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => <OrderComponent onClick={()=>{
           setActionID(item.id)
           orderStatus(item.id)

@@ -55,11 +55,11 @@ const LoadingScreen = ({navigation}: {navigation: any}) => {
   useEffect(()=>{
     if (isLoading === false) {
       if (userExist === "consumer"){
-        navigation.navigate("consumer")
+        navigation.replace("consumer")
       } else if (userExist === "seller") {
-        navigation.navigate("seller")
+        navigation.replace("seller")
       } else if (userExist === "index") {
-        navigation.navigate("auth")
+        navigation.replace("auth")
       }
     }
   },[isLoading, userExist])
