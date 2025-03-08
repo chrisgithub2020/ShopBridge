@@ -29,6 +29,17 @@ git clone https://github.com/chrisgithub2020/ShopBridge
 cd shopbridge
 ```
 
+#### *You must have a paystack key to for payment gateway to work*
+
+```
+## Navigate to this directory to change paystackKey
+C:\Users\{username}\{path-to-shopbridge-folder}/api_calls
+
+## open Keys.js and replace the paystack key with yours
+```
+
+     
+
 Install dependencies:
 
 ```sh
@@ -41,7 +52,30 @@ Run the app:
 npm start
 ```
 
+
+
 ## 📸 Screenshots and Videos
+
+<div>
+ <img src="./repo/welcome.jpg" height="200px" width="100px"/>
+ <img src="./repo/consumer_signup.jpg" height="200px" width="100px"/>
+ <img src="./repo/seller_signup.jpg" height="200px" width="100px"/>
+ <img src="./repo/signin.jpg" height="200px" width="100px"/>
+ <img src="./repo/seller_home.jpg" height="200px" width="100px"/>
+ <img src="./repo/seller_orders.jpg" height="200px" width="100px"/>
+ <img src="./repo/consumer_home.jpg" height="200px" width="100px"/>
+ <img src="./repo/consumer_categories.jpg" height="200px" width="100px"/>
+ <img src="./repo/consumer_cart.jpg" height="200px" width="100px"/>
+ <img src="./repo/checkout.jpg" height="200px" width="100px"/>
+</div>
+
+<div>
+ <video height="200" width="100" controls>
+    <source src="./repo/payment.mp4" type="video/mp4">
+ </video>
+</div>
+
+
 
 ## 📌 Roadmap
 
