@@ -73,8 +73,15 @@ const CreateConsumer = ({navigation}: {navigation: any}) => {
       if (verify_pass) {
         const resp = await SubmitConsumerDetails(DataSkeletons.consumerUserData);
 
+        if (resp === "!issue"){
+          ToastAndroid.show("Network issue", ToastAndroid.SHORT)
+          return
+        }
+
         if (resp === true) {
           navigation.replace("consumer");
+        } else {
+          ToastAndroid.show("Error! Please try again later", ToastAndroid.SHORT)
         }
       } else {
         ToastAndroid.show("Password does not match", ToastAndroid.SHORT);

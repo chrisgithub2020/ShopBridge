@@ -54,6 +54,7 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
 
   const getTodayProducts = async ()=>{    
     const res = await getHomepageProducts()
+    Products.length = 0
     res.forEach((item: any)=>{
       let _i = {"name":item[1], "price":item[2],"id":item[0], "store_name":item[3], "photo":Array(item[4])[0]}
       Products.push(_i)

@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   TextInput,
   ToastAndroid,
-  ActivityIndicator,
+  BackHandler,
+  RefreshControl
 } from "react-native";
 import React, { useState, useRef, useContext, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -26,6 +27,10 @@ import takeItemDown from "../../api_calls/seller/takeDown"
 
 let itemImages: Array<String | null | undefined> = [];
 
+BackHandler.addEventListener("hardwareBackPress", ()=>{
+  BackHandler.exitApp()
+  return true
+})
 
 interface StoreProduct {
   photo: string;
@@ -62,6 +67,7 @@ const Store = ({navigation}: {navigation: any}) => {
   const [itemName, setItemName] = useState("");
   const [itemQuantity, setItemQuantity] = useState("");
   const [itemPrice, setItemPrice] = useState("");
+  const [refreshing, serRefreshing] = useState<boolean>(false)
   const {value, setState, setStoreProducts, storeProducts} = useContext(MyContext);
   const modalRef = useRef<Modalize>(null);
   const addItemModal = useRef<Modalize>(null);
@@ -69,11 +75,10 @@ const Store = ({navigation}: {navigation: any}) => {
 
   const getStoreIt = async ()=>{
     const res = await getStoreItems(value.id)
+    Products.length = 0
     res.forEach((item: any)=>{
       let _i = {"photo":item[1], "name":item[2], "price":item[5], "quantity": item[4], "description":item[3], "id":item[0]}
-      if (!Products.includes(_i)){
-        Products.push(_i)
-      }
+      Products.push(_i)
     })
     setStoreProducts(Products)
     setStoreProductsSearch(Products)
@@ -228,6 +233,7 @@ const Store = ({navigation}: {navigation: any}) => {
         <FlatList extraData={storeProductsSearch}
           style={styles.flatContainer}
           data={Products}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={getStoreIt} />}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <ProductComponent onTakeDown={() => {

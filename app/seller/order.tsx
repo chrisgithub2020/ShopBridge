@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, TextInput, ToastAndroid, RefreshControl} from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, TextInput, ToastAndroid, RefreshControl, BackHandler} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import React, {useContext, useEffect, useState, useRef,} from 'react'
 import { MyContext } from '../../context/myContext'
@@ -77,6 +77,12 @@ const OrderComponent: React.FC<OrderProp> = ({order, storeProducts, onClick}) =>
       </TouchableOpacity >
   )
 }
+
+BackHandler.addEventListener("hardwareBackPress", ()=>{
+  BackHandler.exitApp()
+  return true
+})
+
 const Order = ({navigation}: {navigation: any}) => {
   const {value, setState, storeProducts} = useContext(MyContext)
   const [storeOrders, setStoreOrders] = useState<any>();
@@ -134,23 +140,19 @@ const Order = ({navigation}: {navigation: any}) => {
 
   const getStoreOrd = async () => {
     let result = await getStoreOrders(value.id)
+    Orders.length = 0
     result.forEach((element: any) => {
       let _i = {"id":element[0],"product":element[3], "recipient":(element[1]+" " +element[2]), "contacts":element[4], "address":element[5], "amount":element[6], "quantity":element[7] }      
-      if (!Orders.includes(_i)){
-        Orders.push(_i)
-      }
+      Orders.push(_i)
       setStoreOrders(Orders)
       
     });
 
   }
 
-
-  useFocusEffect(React.useCallback(()=>{
-    if(storeProducts){
-      getStoreOrd()
-    }
-  },[storeProducts]))
+  useEffect(()=>{
+    getStoreOrd()
+  },[])
 
 
   return (

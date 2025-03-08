@@ -90,10 +90,18 @@ const CreateSeller = ({navigation}: {navigation: any}) => {
       ToastAndroid.show("Every field is required", ToastAndroid.SHORT)
     } else {
       const resp = await SubmitSellerDetails(DataSkeletons.sellerUserData);
-      let context_copy: any = {"id":resp, "firstName":DataSkeletons.sellerUserData.firstName, "lastName":DataSkeletons.sellerUserData.lastName, "email":DataSkeletons.sellerUserData.email, "address":DataSkeletons.sellerUserData.address, "phoneNumber":DataSkeletons.sellerUserData.phoneNumber, "store_name":DataSkeletons.sellerUserData.store_name, "type":"s"}
-
-      setState(context_copy)
-      navigation.replace("seller")
+      if (resp == "!issue") {
+        ToastAndroid.show("Check your internet connections", ToastAndroid.SHORT)
+        return
+      }
+      if (resp) {        
+        let context_copy: any = {"id":resp, "firstName":DataSkeletons.sellerUserData.firstName, "lastName":DataSkeletons.sellerUserData.lastName, "email":DataSkeletons.sellerUserData.email, "address":DataSkeletons.sellerUserData.address, "phoneNumber":DataSkeletons.sellerUserData.phoneNumber, "store_name":DataSkeletons.sellerUserData.store_name, "type":"s"}
+  
+        setState(context_copy)
+        navigation.replace("seller")
+      } else {
+        ToastAndroid.show("enter the right details", ToastAndroid.SHORT)
+      }
     }
   }
 

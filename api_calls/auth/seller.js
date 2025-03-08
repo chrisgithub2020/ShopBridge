@@ -24,12 +24,12 @@ const SubmitSellerDetails = async (formData) => {
                 }
             }
         } else {            
-            return "Try again"
+            return false
         }
         
 
     } catch (err) {
-        console.error(err);
+        return "!issue"
     }
 }
 

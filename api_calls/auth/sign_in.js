@@ -13,11 +13,10 @@ const SubmitSignINDetails = async (formData) => {
         })
         
         const resp = await result.json()
-        console.log(resp)
         if (resp["success"] === true) {
             const token = await saveToken(JSON.stringify(resp["data"]));
             if (token === true) {
-                return resp["data"]
+                return resp
             }
         } else {            
             return "Try again"
@@ -25,7 +24,7 @@ const SubmitSignINDetails = async (formData) => {
         
 
     } catch (err) {
-        console.error(err);
+        return "!issue"
     }
 }
 

@@ -21,11 +21,11 @@ const SubmitConsumerDetails = async (formData) => {
                 return resp["success"]
             }
         } else {            
-            return "Try again"
+            return false
         }
 
     } catch (err) {
-        console.log(err);
+        return "!issue"
     }
 
     

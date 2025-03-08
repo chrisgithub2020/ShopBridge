@@ -5,7 +5,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   FlatList,
-  ToastAndroid
+  ToastAndroid,
+  RefreshControl
 } from "react-native";
 import React, { useState, useRef, useContext, useEffect, useCallback,} from "react";
 import { useFocusEffect } from "@react-navigation/native";
@@ -18,11 +19,13 @@ import CompleteOrderModal from "../components/consumer/completeOrderModal"
 import getCartContent from "../../api_calls/consumer/getCartContent"
 import saveCartToken from "@/storage/saveToCart";
 import DataSkeletons from "@/api_calls/dataSkeletons";
-import CompleteOrder from "../../api_calls/consumer/CompleteOrder"
+import CompleteOrder from "../../api_calls/consumer/CompleteOrder";
 
-let CartItemsData: CartItem[] = [
-];
+import KEYS from "../../api_calls/Keys"
+const constants = KEYS()
 
+let CartItemsData: CartItem[] = [];
+const paystackKey = constants.PAYSTACK_KEY
 interface orderObj {
   ProductName: string;
   quantity: string;
@@ -42,13 +45,14 @@ interface CartItem {
 
 
 
-
 const Cart = ({navigation}: {navigation: any}) => {
   const { value, setState } = useContext(MyContext)
   const completeOrderModal = useRef<Modalize>(null)
   const [cartExtraData, setCartExtraData] = useState<any>()
   const [orderToCompleteDetails, setOrderToCompleteDetails] = useState<orderObj>({"id":"", "ProductName": "sdfjasdf", "quantity": "3", "address": "Tabora", "price": "78", "deliveryFees": "9.5", "photo":""});
   const payStackRef = useRef<paystackProps.PayStackRef>(null)
+  const [refresh, setRefresh] = useState<boolean>(false)
+
   const removeItemFromFlatlist = (id: string) => {
     const newData = CartItemsData.filter(item => item.id !== id)
     CartItemsData = newData
@@ -60,12 +64,9 @@ const Cart = ({navigation}: {navigation: any}) => {
     if (value) {
       if (value.cart.length > 0) {
         let content = await getCartContent(value.cart.toString())
-        console.log(content.length)
+        CartItemsData.length = 0
+        console.log(content)
         for (let _t in content) {
-          if (CartItemsData.includes(content[_t][2])){
-            console.log("item is in cart")
-          }
-          console.log("item", value.cart)
           let _i = { "id": content[_t][2], "name": content[_t][1], "price": content[_t][3], "quantity": "1", "photo":Array(content[_t][0])[0]}
         
           CartItemsData.push(_i)
@@ -75,25 +76,11 @@ const Cart = ({navigation}: {navigation: any}) => {
     }
   }
 
-  useFocusEffect(React.useCallback(()=>{
-    if (CartItemsData.length != value.cart.length){
-      if (CartItemsData.length > 0){
-        if(Number(CartItemsData.length) > Number(value.cart.length)){
-          for (let index in CartItemsData) {
-            if (!value.cart.includes(CartItemsData[index]["id"])){
-              CartItemsData.splice(Number(index), 1)
-              setCartExtraData(CartItemsData)
-            }
-          }
-        }
-      } else if (CartItemsData.length === 0){
-        if (value.cart.length > CartItemsData.length){
-          getCartCont()
-        }
-      }
-    }
-      
-  },[]))
+  useEffect(()=>{
+    getCartCont()
+  },[])
+
+
 
   const openCompleteOrderModal = () => {
     completeOrderModal.current?.open()
@@ -135,14 +122,14 @@ const Cart = ({navigation}: {navigation: any}) => {
   const oh: orderObj = {"id":"", "ProductName": "sdfjasdf", "quantity": "3", "address": "Tabora", "price": "78", "deliveryFees": "9.5", "photo":""}
   return (
     <SafeAreaView style={styles.container}>
-      <Paystack currency="GHS" ref={payStackRef} activityIndicatorColor="green" onSuccess={()=>{
+      <Paystack channels={['mobile_money']} currency="GHS" ref={payStackRef} activityIndicatorColor="green" onSuccess={()=>{
         completeOrder();
       }} onCancel={(e)=>{
         console.log("Payment cancelled")
 
-      }} billingEmail="agyemanchris0@gmail.com" billingName="ShopBridge" paystackKey="pk_live_e82e70c0d2a21a737336f1e6161c41b7eaf9751f" amount={(Number(orderToCompleteDetails.price)*Number(orderToCompleteDetails.quantity)) + Number(orderToCompleteDetails.deliveryFees)}/>
+      }} billingEmail="agyemanchris0@gmail.com" billingName="ShopBridge" paystackKey={paystackKey} amount={(Number(orderToCompleteDetails.price)*Number(orderToCompleteDetails.quantity)) + Number(orderToCompleteDetails.deliveryFees)}/>
       <CompleteOrderModal orderObject={orderToCompleteDetails} refObject={completeOrderModal} order={() => payStackRef.current?.startTransaction()} />
-      <FlatList extraData={cartExtraData} style={styles.items_scroll} data={CartItemsData} keyExtractor={(item) => item.id} renderItem={({ item }) => <CardItemComponent removeFromCart={()=>{
+      <FlatList extraData={cartExtraData} refreshControl={<RefreshControl refreshing={refresh} onRefresh={getCartCont}/>} style={styles.items_scroll} data={CartItemsData} keyExtractor={(item) => item.id} renderItem={({ item }) => <CardItemComponent removeFromCart={()=>{
         if (value.cart.includes(item.id)){
           let index = value.cart.indexOf(item.id)
           value.cart.splice(index,1)

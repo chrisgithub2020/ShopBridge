@@ -23,14 +23,20 @@ const SignIn = ({ navigation }: { navigation: any }) => {
   const sendSignInDetails = async () => {
     if (DataSkeletons.signIN.identifier != "" && DataSkeletons.signIN.password != "") {
         const resp = await SubmitSignINDetails(DataSkeletons.signIN)
-        if (resp["type"] === "c") {
-          navigation.navigate("consumer")
-        } else {
-          navigation.navigate("seller")
+        if (resp == "!issue") {
+          ToastAndroid.show("An issue was encountered", ToastAndroid.SHORT)
+          return
         }
-        setState(resp)
-        // DataSkeletons.signIN.identifier = ""
-        // DataSkeletons.signIN.password = ""
+        if (resp["success"] == true) {
+          if (resp["type"] === "c") {
+            navigation.replace("consumer")
+          } else {
+            navigation.replace("seller")
+          }
+          setState(resp)
+        } else {
+          ToastAndroid.show("User does not exist. Make sure detail are correct.", ToastAndroid.SHORT)
+        }
     } else {
         ToastAndroid.show("Every Field is required", ToastAndroid.SHORT)
     }
