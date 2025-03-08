@@ -70,8 +70,7 @@ npm start
 </div>
 
 <div>
- <video height="200" width="100" controls>
-    <source src="./repo/payment.mp4" type="video/mp4">
+ <video src="./repo/payment.mp4" width="100" controls>
  </video>
 </div>
 
