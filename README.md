@@ -69,10 +69,11 @@ npm start
  <img src="./repo/checkout.jpg" height="200px" width="100px"/>
 </div>
 
-<div>
- <video src="./repo/payment.mp4" width="100" controls>
- </video>
-</div>
+
+
+https://github.com/user-attachments/assets/ec92d7c8-71f3-4843-b572-1e8524c03649
+
+
 
 
 
