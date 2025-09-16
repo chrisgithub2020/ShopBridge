@@ -1,8 +1,10 @@
-import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Text} from "react-native";
 import React from "react";
 import { MaterialIcons, Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
+
+
 
 const Index = ({navigation}: {navigation: any}) => {
   return (
@@ -30,7 +32,7 @@ const Index = ({navigation}: {navigation: any}) => {
             <Text style={styles.button_text}>Seller</Text>
           </TouchableOpacity>
         </View>
-        <View style={{flexDirection: "row", justifyContent:"center", paddingBottom: 100}}>
+        <View style={{flexDirection: "row", justifyContent:"center"}}>
           <Text style={{color:"white", fontWeight: "bold"}}>Already have an account?  </Text>
           <TouchableOpacity style={styles.signIn} onPress={()=> {
             navigation.navigate("sign_in")
@@ -47,12 +49,11 @@ export default Index;
 
 const styles = StyleSheet.create({
   buttons_container: {
-    height: "96%",
+    height: "95%",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingLeft: 20,
-    paddingRight: 20,
+    paddingHorizontal: 20
   },
   container: {
     flex: 1,
@@ -62,8 +63,8 @@ const styles = StyleSheet.create({
     
   },
   button: {
-    width: "20%",
-    height: "15%",
+    width: "auto",
+    height: "auto",
     flex: 1,
     marginHorizontal: 5,
     backgroundColor: "#2196f3",

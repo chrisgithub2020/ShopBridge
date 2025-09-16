@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Text, StyleSheet, Image, TextInput, TouchableOpacity, ToastAndroid } from "react-native";
+import { Text, StyleSheet, Image, TextInput, TouchableOpacity, ToastAndroid, View } from "react-native";
 import DataSkeletons from "../../api_calls/dataSkeletons";
 import SubmitSignINDetails from "../../api_calls/auth/sign_in"
 import { MyContext } from "../../context/myContext";
@@ -44,10 +44,12 @@ const SignIn = ({ navigation }: { navigation: any }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Image
-        style={styles.image}
-        source={require("../../resources/icon.png")}
-      />
+      <View style={{height: "40%", width: "auto"}}>
+        <Image
+          style={styles.image}
+          source={require("../../resources/icon.png")}
+        />
+      </View>
       <Text style={{color: "white", fontWeight: "bold", margin: 5}}>Phone or Email: </Text>
       <TextInput onChangeText={setDetails}
         onFocus={() => setFocusedInput("1")}
@@ -78,7 +80,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#23263a",
-    padding: 7,
+    padding: 10,
   },
   inputFocus: {
     borderColor: "#2196f3",
@@ -90,10 +92,9 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     borderColor: "#343645",
     marginBottom: 15,
-    marginRight: 20,
     color: "white",
   },
-  image: { height: "30%", width: "100%", marginTop: 20 },
+  image: { height: "100%", width: "100%", marginTop: 20, resizeMode: "contain" },
   button: {
     backgroundColor: "#2196f3",
     height: 40,

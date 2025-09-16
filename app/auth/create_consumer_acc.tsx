@@ -8,6 +8,8 @@ import {
   ToastAndroid,
   NativeSyntheticEvent,
   TextInputChangeEventData,
+  Dimensions,
+  View
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -22,6 +24,8 @@ let password = "";
 let phoneNumber = "";
 let address = "";
 let verify_pass = false;
+
+const appHeight = Dimensions.get("window").height
 
 const CreateConsumer = ({navigation}: {navigation: any}) => {
   const [focus, setFocusedInput] = useState("0");
@@ -90,78 +94,96 @@ const CreateConsumer = ({navigation}: {navigation: any}) => {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <Image
+      <View style={{height: "30%"}}>
+        <Image
         style={styles.image}
         source={require("../../resources/icon.png")}
       />
-      <ScrollView style={styles.form_container}>
-        <Text style={styles.text}>First Name:</Text>
-        <TextInput
-          onChange={handleTextChange}
-          onFocus={() => setFocusedInput("1")}
-          onBlur={() => setFocusedInput("0")}
-          style={[styles.input, focus === "1" && styles.inputFocus]}
-          placeholderTextColor={"white"}
-          placeholder="First Name"
-        />
-        <Text style={styles.text}>Last Name:</Text>
-        <TextInput
-          onChange={handleTextChange}
-          onFocus={() => setFocusedInput("2")}
-          onBlur={() => setFocusedInput("0")}
-          style={[styles.input, focus === "2" && styles.inputFocus]}
-          placeholderTextColor={"white"}
-          placeholder="Last Name"
-        />
-        <Text style={styles.text}>Email:</Text>
-        <TextInput
-          onChange={handleTextChange}
-          onFocus={() => setFocusedInput("3")}
-          onBlur={() => setFocusedInput("0")}
-          style={[styles.input, focus === "3" && styles.inputFocus]}
-          placeholderTextColor={"white"}
-          placeholder="example@gmail.com"
-        />
-        <Text style={styles.text}>Phone:</Text>
-        <TextInput keyboardType="numeric"
-          onChange={handleTextChange}
-          onFocus={() => setFocusedInput("4")}
-          onBlur={() => setFocusedInput("0")}
-          style={[styles.input, focus === "4" && styles.inputFocus]}
-          placeholderTextColor={"white"}
-          placeholder="054XXXXXXX"
-        />
-        <Text style={styles.text}>Address:</Text>
-        <TextInput
-          onChange={handleTextChange}
-          onFocus={() => setFocusedInput("5")}
-          onBlur={() => setFocusedInput("0")}
-          style={[styles.input, focus === "5" && styles.inputFocus]}
-          placeholderTextColor={"white"}
-          placeholder="Address"
-        />
-        <Text style={styles.text}>Password:</Text>
-        <TextInput
-          onChange={handleTextChange}
-          onFocus={() => setFocusedInput("6")}
-          onBlur={() => setFocusedInput("0")}
-          style={[styles.input, focus === "6" && styles.inputFocus]}
-          placeholderTextColor={"white"}
-          placeholder="Password"
-        />
-        <Text style={styles.text}>Confirm Password:</Text>
-        <TextInput
-          onChange={handleTextChange}
-          onFocus={() => setFocusedInput("7")}
-          onBlur={() => setFocusedInput("0")}
-          style={[styles.input, focus === "7" && styles.inputFocus]}
-          placeholderTextColor={"white"}
-          placeholder="Re-type password"
-        />
+      </View>
+      <ScrollView style={{paddingHorizontal: 5,}} showsVerticalScrollIndicator={false} contentContainerStyle={styles.form_container}>
+        <View style={styles.inputContainer}>
+          <Text style={styles.text}>First Name:</Text>
+          <TextInput
+            onChange={handleTextChange}
+            onFocus={() => setFocusedInput("1")}
+            onBlur={() => setFocusedInput("0")}
+            style={[styles.input, focus === "1" && styles.inputFocus]}
+            placeholderTextColor={"white"}
+            placeholder="First Name"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.text}>Last Name:</Text>
+          <TextInput
+            onChange={handleTextChange}
+            onFocus={() => setFocusedInput("2")}
+            onBlur={() => setFocusedInput("0")}
+            style={[styles.input, focus === "2" && styles.inputFocus]}
+            placeholderTextColor={"white"}
+            placeholder="Last Name"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.text}>Email:</Text>
+          <TextInput
+            onChange={handleTextChange}
+            onFocus={() => setFocusedInput("3")}
+            onBlur={() => setFocusedInput("0")}
+            style={[styles.input, focus === "3" && styles.inputFocus]}
+            placeholderTextColor={"white"}
+            placeholder="example@gmail.com"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.text}>Phone:</Text>
+          <TextInput keyboardType="numeric"
+            onChange={handleTextChange}
+            onFocus={() => setFocusedInput("4")}
+            onBlur={() => setFocusedInput("0")}
+            style={[styles.input, focus === "4" && styles.inputFocus]}
+            placeholderTextColor={"white"}
+            placeholder="054XXXXXXX"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.text}>Address:</Text>
+          <TextInput
+            onChange={handleTextChange}
+            onFocus={() => setFocusedInput("5")}
+            onBlur={() => setFocusedInput("0")}
+            style={[styles.input, focus === "5" && styles.inputFocus]}
+            placeholderTextColor={"white"}
+            placeholder="Address"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.text}>Password:</Text>
+          <TextInput
+            onChange={handleTextChange}
+            onFocus={() => setFocusedInput("6")}
+            onBlur={() => setFocusedInput("0")}
+            style={[styles.input, focus === "6" && styles.inputFocus]}
+            placeholderTextColor={"white"}
+            placeholder="Password"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.text}>Confirm Password:</Text>
+          <TextInput
+            onChange={handleTextChange}
+            onFocus={() => setFocusedInput("7")}
+            onBlur={() => setFocusedInput("0")}
+            style={[styles.input, focus === "7" && styles.inputFocus]}
+            placeholderTextColor={"white"}
+            placeholder="Re-type password"
+          />
+        </View>
+      </ScrollView>
+      <View style={styles.inputContainer}>
         <TouchableOpacity style={styles.button} onPress={submitDetails}>
           <Text style={styles.button_text}>Submit</Text>
         </TouchableOpacity>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
@@ -169,7 +191,7 @@ const CreateConsumer = ({navigation}: {navigation: any}) => {
 export default CreateConsumer;
 
 const styles = StyleSheet.create({
-  image: { height: "30%", width: "100%", marginTop: 20 },
+  image: { height: "100%", width: "auto", marginTop: 20, resizeMode: "contain" },
   container: {
     flex: 1,
     backgroundColor: "#23263a",
@@ -180,33 +202,32 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   form_container: {
-    margin: 15,
-    color: "white",
+    justifyContent: "space-evenly"
+  },
+  inputContainer: {
+    padding: 4,
   },
   inputFocus: {
     borderColor: "#2196f3",
   },
   input: {
-    height: 50,
+    height: 45,
     borderWidth: 3,
     borderRadius: 10,
     paddingLeft: 15,
     borderColor: "#343645",
-    marginBottom: 15,
-    marginRight: 20,
     color: "white",
+    justifyContent: "center",
   },
   button: {
     height: 40,
-    paddingTop: 10,
-    marginTop: 10,
+    justifyContent: "center",
     backgroundColor: "#2196f3",
     borderRadius: 5,
   },
   button_text: {
     color: "white",
     alignSelf: "center",
-    justifyContent: "center",
     fontWeight: "bold",
   },
 

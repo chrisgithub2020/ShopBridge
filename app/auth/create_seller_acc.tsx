@@ -71,8 +71,7 @@ const CreateSeller = ({navigation}: {navigation: any}) => {
       DataSkeletons.sellerUserData.store_photo.push(image_obj.assets[0].base64?.toString())
       setImage(image_obj.assets[0].base64?.toString());
     } else {
-      console.log(image);
-      setImage(require("../../resources/realicon.jpg"));
+      setImage("");
     }
   };
 
@@ -108,7 +107,6 @@ const CreateSeller = ({navigation}: {navigation: any}) => {
   const [focus, setFocusedInput] = useState("0");
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ justifyContent: "center", alignItems: "center" }}>
         <View style={styles.image_container}>
           <Image
             source={
@@ -131,88 +129,105 @@ const CreateSeller = ({navigation}: {navigation: any}) => {
             ></MaterialIcons>
           </TouchableOpacity>
         </View>
-      </View>
 
-      <ScrollView style={styles.form_container}>
-        <Text style={styles.text}>Store Name:</Text>
-        <TextInput
-          onChangeText={handleTextChange}
-          onFocus={() => setFocusedInput("8")}
-          onBlur={() => setFocusedInput("0")}
-          style={[styles.input, focus === "8" && styles.inputFocus]}
-          placeholderTextColor={"white"}
-          placeholder="Store Name"
-        />
-        <Text style={styles.text}>First Name:</Text>
-        <TextInput
-          onChangeText={handleTextChange}
-          onFocus={() => setFocusedInput("1")}
-          onBlur={() => setFocusedInput("0")}
-          style={[styles.input, focus === "1" && styles.inputFocus]}
-          placeholderTextColor={"white"}
-          placeholder="First Name"
-        />
-        <Text style={styles.text}>Last Name:</Text>
-        <TextInput
-          onChangeText={handleTextChange}
-          onFocus={() => setFocusedInput("2")}
-          onBlur={() => setFocusedInput("0")}
-          style={[styles.input, focus === "2" && styles.inputFocus]}
-          placeholderTextColor={"white"}
-          placeholder="Last Name"
-        />
-        <Text style={styles.text}>Email:</Text>
-        <TextInput
-          onChangeText={handleTextChange}
-          onFocus={() => setFocusedInput("3")}
-          onBlur={() => setFocusedInput("0")}
-          style={[styles.input, focus === "3" && styles.inputFocus]}
-          placeholderTextColor={"white"}
-          placeholder="example@gmail.com"
-        />
-        <Text style={styles.text}>Phone:</Text>
-        <TextInput keyboardType="numeric"
-          onChangeText={handleTextChange}
-          onFocus={() => setFocusedInput("4")}
-          onBlur={() => setFocusedInput("0")}
-          style={[styles.input, focus === "4" && styles.inputFocus]}
-          placeholderTextColor={"white"}
-          placeholder="054XXXXXXX"
-        />
-        <Text style={styles.text}>Address:</Text>
-        <TextInput
-          onChangeText={handleTextChange}
-          onFocus={() => setFocusedInput("5")}
-          onBlur={() => setFocusedInput("0")}
-          style={[styles.input, focus === "5" && styles.inputFocus]}
-          placeholderTextColor={"white"}
-          placeholder="Address"
-        />
-        <Text style={styles.text}>Password:</Text>
-        <TextInput
-          onChangeText={handleTextChange}
-          onFocus={() => setFocusedInput("6")}
-          onBlur={() => setFocusedInput("0")}
-          style={[styles.input, focus === "6" && styles.inputFocus]}
-          placeholderTextColor={"white"}
-          placeholder="Password"
-        />
-        <Text style={styles.text}>Confirm Password:</Text>
-        <TextInput
-          onChangeText={handleTextChange}
-          onFocus={() => setFocusedInput("7")}
-          onBlur={() => setFocusedInput("0")}
-          style={[styles.input, focus === "7" && styles.inputFocus]}
-          placeholderTextColor={"white"}
-          placeholder="Re-type password"
-        />
+      <ScrollView contentContainerStyle={styles.form_container} showsVerticalScrollIndicator={false}>
+        <View style={styles.inputContainer}>
+          <Text style={styles.text}>Store Name:</Text>
+          <TextInput
+            onChangeText={handleTextChange}
+            onFocus={() => setFocusedInput("8")}
+            onBlur={() => setFocusedInput("0")}
+            style={[styles.input, focus === "8" && styles.inputFocus]}
+            placeholderTextColor={"white"}
+            placeholder="Store Name"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.text}>First Name:</Text>
+          <TextInput
+            onChangeText={handleTextChange}
+            onFocus={() => setFocusedInput("1")}
+            onBlur={() => setFocusedInput("0")}
+            style={[styles.input, focus === "1" && styles.inputFocus]}
+            placeholderTextColor={"white"}
+            placeholder="First Name"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.text}>Last Name:</Text>
+          <TextInput
+            onChangeText={handleTextChange}
+            onFocus={() => setFocusedInput("2")}
+            onBlur={() => setFocusedInput("0")}
+            style={[styles.input, focus === "2" && styles.inputFocus]}
+            placeholderTextColor={"white"}
+            placeholder="Last Name"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.text}>Email:</Text>
+          <TextInput
+            onChangeText={handleTextChange}
+            onFocus={() => setFocusedInput("3")}
+            onBlur={() => setFocusedInput("0")}
+            style={[styles.input, focus === "3" && styles.inputFocus]}
+            placeholderTextColor={"white"}
+            placeholder="example@gmail.com"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.text}>Phone:</Text>
+          <TextInput keyboardType="numeric"
+            onChangeText={handleTextChange}
+            onFocus={() => setFocusedInput("4")}
+            onBlur={() => setFocusedInput("0")}
+            style={[styles.input, focus === "4" && styles.inputFocus]}
+            placeholderTextColor={"white"}
+            placeholder="054XXXXXXX"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.text}>Address:</Text>
+          <TextInput
+            onChangeText={handleTextChange}
+            onFocus={() => setFocusedInput("5")}
+            onBlur={() => setFocusedInput("0")}
+            style={[styles.input, focus === "5" && styles.inputFocus]}
+            placeholderTextColor={"white"}
+            placeholder="Address"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.text}>Password:</Text>
+          <TextInput
+            onChangeText={handleTextChange}
+            onFocus={() => setFocusedInput("6")}
+            onBlur={() => setFocusedInput("0")}
+            style={[styles.input, focus === "6" && styles.inputFocus]}
+            placeholderTextColor={"white"}
+            placeholder="Password"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.text}>Confirm Password:</Text>
+          <TextInput
+            onChangeText={handleTextChange}
+            onFocus={() => setFocusedInput("7")}
+            onBlur={() => setFocusedInput("0")}
+            style={[styles.input, focus === "7" && styles.inputFocus]}
+            placeholderTextColor={"white"}
+            placeholder="Re-type password"
+          />
+        </View>
+      </ScrollView>
+      <View style={styles.inputContainer}>
         <TouchableOpacity
           style={styles.button}
           onPress={handleSubmit}
         >
           <Text style={styles.button_text}>Submit</Text>
         </TouchableOpacity>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
@@ -227,6 +242,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     position: "relative",
+    alignSelf: "center"
   },
   container: {
     flex: 1,
@@ -238,28 +254,27 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   form_container: {
-    margin: 15,
-    color: "white",
+    justifyContent: "space-evenly",
+  },
+  inputContainer: {
+    padding: 4,
   },
   inputFocus: {
     borderColor: "#2196f3",
   },
   input: {
-    height: 50,
+    height: 45,
     borderWidth: 3,
     borderRadius: 10,
     paddingLeft: 15,
     borderColor: "#343645",
-    marginBottom: 15,
-    marginRight: 20,
     color: "white",
   },
   button: {
     height: 40,
-    paddingTop: 10,
-    marginTop: 10,
     backgroundColor: "#2196f3",
     borderRadius: 5,
+    justifyContent: "center",
   },
   button_text: {
     color: "white",
