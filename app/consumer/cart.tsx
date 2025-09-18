@@ -20,6 +20,7 @@ import getCartContent from "../../api_calls/consumer/getCartContent"
 import saveCartToken from "@/storage/saveToCart";
 import DataSkeletons from "@/api_calls/dataSkeletons";
 import CompleteOrder from "../../api_calls/consumer/CompleteOrder";
+import { CartItem } from "@/constants/types";
 
 import KEYS from "../../api_calls/Keys"
 const constants = KEYS()
@@ -35,17 +36,9 @@ interface orderObj {
   photo: string;
   id: string;
 }
-interface CartItem {
-  photo: string;
-  id: string;
-  name: string;
-  price: string;
-  quantity: string;
-}
 
 
-
-const Cart = ({navigation}: {navigation: any}) => {
+const Cart = () => {
   const { value, setState } = useContext(MyContext)
   const completeOrderModal = useRef<Modalize>(null)
   const [cartExtraData, setCartExtraData] = useState<any>()
@@ -129,7 +122,7 @@ const Cart = ({navigation}: {navigation: any}) => {
 
       }} billingEmail="agyemanchris0@gmail.com" billingName="ShopBridge" paystackKey={paystackKey} amount={(Number(orderToCompleteDetails.price)*Number(orderToCompleteDetails.quantity)) + Number(orderToCompleteDetails.deliveryFees)}/>
       <CompleteOrderModal orderObject={orderToCompleteDetails} refObject={completeOrderModal} order={() => payStackRef.current?.startTransaction()} />
-      <FlatList extraData={cartExtraData} refreshControl={<RefreshControl refreshing={refresh} onRefresh={getCartCont}/>} style={styles.items_scroll} data={CartItemsData} keyExtractor={(item) => item.id} renderItem={({ item }) => <CardItemComponent removeFromCart={()=>{
+      <FlatList extraData={cartExtraData} refreshControl={<RefreshControl refreshing={refresh} onRefresh={getCartCont}/>} contentContainerStyle={styles.items_scroll} data={CartItemsData} keyExtractor={(item) => item.id} renderItem={({ item }) => <CardItemComponent removeFromCart={()=>{
         if (value.cart.includes(item.id)){
           let index = value.cart.indexOf(item.id)
           value.cart.splice(index,1)
@@ -158,8 +151,8 @@ const styles = StyleSheet.create({
     height: 120,
   },
   items_scroll: {
-    paddingLeft: 10,
-    paddingRight: 9,
+    paddingHorizontal: 4,
+    paddingVertical: 2,
   },
   item_container: {
     backgroundColor: "white",

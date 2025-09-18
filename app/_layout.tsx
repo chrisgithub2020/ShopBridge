@@ -7,10 +7,25 @@ import SellerTabLayout from "./seller/_layout"
 import ConsumerTabLayout from "./consumer/_layout"
 import AuthLayout from "./auth/_layout"
 import LoadingScreen from "./index"
+import NoInternet from "./components/noInternetPage";
+import NetInfo from "@react-native-community/netinfo"
 
 const Stack = createNativeStackNavigator();
 
 const MainLayout = () => {
+  const [isConnected, setIsConnected] = useState<boolean>(true)
+
+  useEffect(()=>{
+        NetInfo.addEventListener((state)=>{
+            setIsConnected(state.isConnected!)
+        })
+
+        return ()=>{
+            NetInfo.addEventListener((state)=>{
+                setIsConnected(state.isConnected!)
+            })
+        }
+  })
   
 
   
@@ -18,9 +33,9 @@ const MainLayout = () => {
     <ProvideContext>
       <GestureHandlerRootView>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="index" component={LoadingScreen} options={{ headerShown: false }} />
-          <Stack.Screen component={SellerTabLayout} name="seller" options={{ headerShown: false }} />
-          <Stack.Screen component={ConsumerTabLayout} name="consumer" options={{ headerShown: false }} />
+          <Stack.Screen name="index" component={isConnected ? LoadingScreen: NoInternet} options={{ headerShown: false }} />
+          <Stack.Screen component={isConnected ? SellerTabLayout: NoInternet} name="seller" options={{ headerShown: false }} />
+          <Stack.Screen component={isConnected ? ConsumerTabLayout: NoInternet} name="consumer" options={{ headerShown: false }} />
           <Stack.Screen component={AuthLayout} name="auth" options={{ headerShown: false }} />
         </Stack.Navigator>
       </GestureHandlerRootView>

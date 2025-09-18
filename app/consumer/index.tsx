@@ -21,25 +21,10 @@ import getCategoryProducts from "../../api_calls/consumer/category"
 import { MaterialIcons } from "@expo/vector-icons";
 import CatDict from "../../api_calls/Categories"
 import searchProductInDB from "../../api_calls/consumer/searchProduct"
-
-interface ProductData {
-  id: string;
-  name: string;
-  price: string;
-  store_name: string;
-  photo: string;
-}
+import { ProductData } from "@/constants/types";
 
 
-
-let Products: ProductData[] = [
-];
-
-
-
-
-
-
+let Products: ProductData[] = [];
 
 const ConsumerHome = ({navigation}: {navigation: any}) => {
   const screenWidth = Dimensions.get("window").width;
@@ -143,14 +128,17 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
           <TextInput onChangeText={(text: string)=> {searchProduct(text)}} style={{ backgroundColor: "#e6e1e1", height: "100%", width: "100%", borderRadius: 5, padding: 10, marginRight: 5, }} placeholder="Search here" />
         </View>
         <View style={[styles.catFilter, showCat === "hide" && styles.hideCatFilter]}>
-          <Text style={{width: "92%"}}>Filter: {showCat}</Text>
-          <TouchableOpacity onPress={()=>{
+          <View style={{flexDirection: "row", flex: 10}}>
+            <MaterialIcons style={{fontWeight: "bold", color: "white"}} name="filter-list" size={20}/>
+            <Text style={{color: "white", fontWeight: "bold", fontSize: 15, textAlign: "center"}}>  {showCat}</Text>
+          </View>
+          <TouchableOpacity style={{flex: 1.5, borderLeftWidth:1.5, borderLeftColor: "white"}} onPress={()=>{
             setShowCat("hide")
             setFilter({mainCat: "", subCat: []})
             Products.length = 0
             getTodayProducts()
           }}>
-            <MaterialIcons name="close" size={20}/>
+            <MaterialIcons style={{color: "white", fontWeight: "bold", marginLeft: 5}} name="close" size={20}/>
           </TouchableOpacity>
         </View>
         <ProductDetailsModal onClose={()=>{setCheckProductDetails(false)}} product={productDetails} refObject={modalRef} addToCart={() => console.log("adding to cart")} />
@@ -160,6 +148,7 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
           extraData={todayProducts}
           keyExtractor={(item) => item.id}
           numColumns={numColumns}
+          contentContainerStyle={styles.productsContainer}
           renderItem={({ item }) => <ProductComponent  addToCart={() => {
             if (!value.cart.includes(item.id)) {
               value.cart.push(item.id);
@@ -209,16 +198,22 @@ const styles = StyleSheet.create({
     paddingTop: 8,
   },
   catFilter: {
-    height: 40,
+    height: "6%",
+    width: "60%",
+    position: "absolute",
+    left: "20%",
+    top: "91%",
     flexDirection: "row",
-    padding: 4,
-    backgroundColor: "white",
-    borderTopColor: "#e6e1e1",
-    borderTopWidth: 2,
-    justifyContent: "center", 
+    backgroundColor: "#2196f3",
+    borderRadius: 22,
     alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: "5%",
+    elevation: 10,
   },
   hideCatFilter: {
     display: "none"
+  },
+  productsContainer: {
   }
 });

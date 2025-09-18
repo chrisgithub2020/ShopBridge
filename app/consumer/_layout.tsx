@@ -1,11 +1,12 @@
 import { View, Text } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import Cart from './cart';
 import ConsumerCategory from './category';
 import ConsumerHome from './index';
 import ConsumerSettings from './settings';
+import NetInfo from "@react-native-community/netinfo"
 
 const Tabs = createBottomTabNavigator()
 

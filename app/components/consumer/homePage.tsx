@@ -2,21 +2,9 @@ import { Text, Image, TouchableOpacity, View, StyleSheet } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useState } from "react";
 import React from "react";
-interface ProductData {
-  id: string;
-  name: string;
-  price: string;
-  store_name: string;
-  photo: string;
-}
+import { ProductData } from "@/constants/types";
 
-interface ComponentProp {
-  product: ProductData;
-  onClick: () => void;
-  addToCart: () => void;
-}
-
-const ProductComponent: React.FC<ComponentProp> = ({ product, onClick, addToCart}) => {
+const ProductComponent = ({ product, onClick, addToCart}: {product: ProductData, onClick: ()=> void, addToCart: ()=>void}) => {
   const [cartButtonText, setCartButtonText] = useState<any>({"action":"Add To Cart", "icon":"shopping-cart"})
   let removeOrAdd = "add"
   return (
@@ -24,6 +12,7 @@ const ProductComponent: React.FC<ComponentProp> = ({ product, onClick, addToCart
       <View style={styles.product_image_container}>
         <Image
           style={styles.product_image}
+          // source={require("../../../resources/no_internet.png")}
           source={{uri:`data:image/png;base64,${product.photo}`}}
         />
       </View>
@@ -42,13 +31,11 @@ const ProductComponent: React.FC<ComponentProp> = ({ product, onClick, addToCart
         }
         addToCart()
       }}>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View style={{ flexDirection: "row", justifyContent: "space-between"}}>
           <Text
             style={{
-              justifyContent: "center",
+              flex: 0.65,
               flexDirection: "row",
-              alignSelf: "center",
-              paddingBottom: 2,
               color: "white",
               fontWeight: "bold",
             }}
@@ -56,7 +43,7 @@ const ProductComponent: React.FC<ComponentProp> = ({ product, onClick, addToCart
             {cartButtonText["action"]}
           </Text>
           <MaterialIcons
-            style={{ color: "white", fontWeight: "bold", marginLeft: 5 }}
+            style={{color: "white", fontWeight: "bold"}}
             name={cartButtonText["icon"]}
             size={20}
           />
@@ -72,11 +59,10 @@ const styles = StyleSheet.create({
   product_container: {
     borderRadius: 7,
     padding: 5,
-    marginLeft: 10,
-    marginBottom: 10,
     backgroundColor: "white",
-    width: 170,
+    width: "45%",
     elevation: 3,
+    margin: 'auto',
   },
   product_image_container: {
     justifyContent: "center",

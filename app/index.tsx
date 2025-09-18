@@ -15,6 +15,7 @@ const LoadingScreen = ({navigation}: {navigation: any}) => {
   const [isLoading, setIsLoading] = useState(true);
   const {value, setState} = useContext(MyContext)
 
+
   useEffect(() => {
     const checkIfAccountExists = async () => {
       const result = await retreiveToken("acc");
@@ -59,7 +60,7 @@ const LoadingScreen = ({navigation}: {navigation: any}) => {
       } else if (userExist === "seller") {
         navigation.replace("seller")
       } else if (userExist === "index") {
-        navigation.replace("auth")
+        navigation.replace("consumer")
       }
     }
   },[isLoading, userExist])
