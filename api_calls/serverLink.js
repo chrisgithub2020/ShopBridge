@@ -1,5 +1,5 @@
 const Link = () => {
-    return "https://afc3-197-255-86-213.ngrok-free.app"
+    return "https://dzqwtv2f-8000.uks1.devtunnels.ms"
 }
 
 export default Link

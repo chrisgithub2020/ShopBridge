@@ -60,7 +60,7 @@ const LoadingScreen = ({navigation}: {navigation: any}) => {
       } else if (userExist === "seller") {
         navigation.replace("seller")
       } else if (userExist === "index") {
-        navigation.replace("consumer")
+        navigation.replace("auth")
       }
     }
   },[isLoading, userExist])

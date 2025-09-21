@@ -9,7 +9,8 @@ import {
   NativeSyntheticEvent,
   TextInputChangeEventData,
   Dimensions,
-  View
+  View,
+  ActivityIndicator
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -29,6 +30,7 @@ const appHeight = Dimensions.get("window").height
 
 const CreateConsumer = ({navigation}: {navigation: any}) => {
   const [focus, setFocusedInput] = useState("0");
+  const [submit, setSubmit] = useState<boolean>(false)
 
   const handleTextChange = (
     event: NativeSyntheticEvent<TextInputChangeEventData>
@@ -64,6 +66,7 @@ const CreateConsumer = ({navigation}: {navigation: any}) => {
 
   
   const submitDetails = async () => {
+    setSubmit(true)
     if (
       DataSkeletons.consumerUserData.address === "" ||
       DataSkeletons.consumerUserData.email === "" ||
@@ -91,6 +94,7 @@ const CreateConsumer = ({navigation}: {navigation: any}) => {
         ToastAndroid.show("Password does not match", ToastAndroid.SHORT);
       }
     }
+    setSubmit(false)
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -180,8 +184,8 @@ const CreateConsumer = ({navigation}: {navigation: any}) => {
         </View>
       </ScrollView>
       <View style={styles.inputContainer}>
-        <TouchableOpacity style={styles.button} onPress={submitDetails}>
-          <Text style={styles.button_text}>Submit</Text>
+        <TouchableOpacity disabled={submit} style={styles.button} onPress={submitDetails}>
+        {submit?<ActivityIndicator style={{ flex: 1 }} size="small" color="black" />:  <Text style={styles.button_text}>Submit</Text>}
         </TouchableOpacity>
       </View>
     </SafeAreaView>

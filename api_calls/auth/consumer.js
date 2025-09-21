@@ -3,7 +3,7 @@ import Link from "../serverLink"
 
 const SubmitConsumerDetails = async (formData) => {
     try {
-        const result = await fetch(`${Link()}/sign_up_consumer`,{
+        const result = await fetch(`${Link()}/auth/consumer`,{
             method: "POST",
             headers: {
                 'Content-Type': "application/json"
@@ -14,9 +14,7 @@ const SubmitConsumerDetails = async (formData) => {
 
         const resp = await result.json()
         if (resp["success"] === true) {
-            delete formData.password
-            formData.id = resp["id"]
-            const token = await saveToken(JSON.stringify(formData));
+            const token = await saveToken(resp["a_token"], resp["r_token"]);
             if (token === true) {
                 return resp["success"]
             }

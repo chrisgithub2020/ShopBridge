@@ -2,7 +2,7 @@ import Link from "../serverLink"
 
 const getProductDetails = async (ProductID) => {
   try {
-    const response = await fetch(`${Link()}/getProductDetails/${ProductID}`);
+    const response = await fetch(`${Link()}/consumer/getProductDetails/${ProductID}`);
     if (response.ok) {
       const result = await response.json();
 

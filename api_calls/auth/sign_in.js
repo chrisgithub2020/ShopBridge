@@ -4,7 +4,7 @@ import Link from "../serverLink"
 
 const SubmitSignINDetails = async (formData) => {
     try {
-        const result = await fetch(`${Link()}/signIN`,{
+        const result = await fetch(`${Link()}/auth/signIN`,{
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -14,7 +14,7 @@ const SubmitSignINDetails = async (formData) => {
         
         const resp = await result.json()
         if (resp["success"] === true) {
-            const token = await saveToken(JSON.stringify(resp["data"]));
+            const token = await saveToken(resp["a_token"], resp["r_token"]);
             if (token === true) {
                 return resp
             }
@@ -24,6 +24,7 @@ const SubmitSignINDetails = async (formData) => {
         
 
     } catch (err) {
+        console.log(err)
         return "!issue"
     }
 }

@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Text, StyleSheet, Image, TextInput, TouchableOpacity, ToastAndroid, View } from "react-native";
+import { Text, StyleSheet, Image, TextInput, TouchableOpacity, ToastAndroid, View, ActivityIndicator } from "react-native";
+import CheckBox from "react-native-check-box"
 import DataSkeletons from "../../api_calls/dataSkeletons";
 import SubmitSignINDetails from "../../api_calls/auth/sign_in"
 import { MyContext } from "../../context/myContext";
@@ -9,6 +10,9 @@ import { MyContext } from "../../context/myContext";
 const SignIn = ({ navigation }: { navigation: any }) => {
   const [focus, setFocusedInput] = useState("0");
   const {value, setState} = useContext(MyContext)
+  const [sellerCheck, setSellerCheck] = useState<boolean>(false)
+  const [consumerCheck, setConsumerCheck] = useState<boolean>(true)
+  const [submit, setSubmit] = useState<boolean>(false)
 
   const setDetails = (text: string) => {
     if (focus === "1") {
@@ -21,7 +25,13 @@ const SignIn = ({ navigation }: { navigation: any }) => {
   }
 
   const sendSignInDetails = async () => {
+    setSubmit(true)
     if (DataSkeletons.signIN.identifier != "" && DataSkeletons.signIN.password != "") {
+      if (sellerCheck == true){
+        DataSkeletons.signIN.acc_type = "seller"
+      } else {
+        DataSkeletons.signIN.acc_type = "consumer"
+      }
         const resp = await SubmitSignINDetails(DataSkeletons.signIN)
         if (resp == "!issue") {
           ToastAndroid.show("An issue was encountered", ToastAndroid.SHORT)
@@ -40,6 +50,7 @@ const SignIn = ({ navigation }: { navigation: any }) => {
     } else {
         ToastAndroid.show("Every Field is required", ToastAndroid.SHORT)
     }
+    setSubmit(false)
   }
 
   return (
@@ -66,9 +77,19 @@ const SignIn = ({ navigation }: { navigation: any }) => {
         placeholderTextColor={"white"}
         style={[styles.input, focus === "2" && styles.inputFocus]}
       />
-
+      <View style={{padding: 5, justifyContent: "center", marginBottom: 3}}>
+        <Text style={{color: "white", fontWeight: "bold", margin: 5}}>Who are you?</Text>
+        <CheckBox checkBoxColor="white" rightTextStyle={styles.checkBoxText} isChecked={sellerCheck} rightText="Seller" onClick={()=>{
+          setConsumerCheck(!consumerCheck)
+          setSellerCheck(!sellerCheck)
+        }}/>
+        <CheckBox checkBoxColor="white" rightTextStyle={styles.checkBoxText} isChecked={consumerCheck} rightText="Consumer" onClick={()=>{
+          setSellerCheck(!sellerCheck)
+          setConsumerCheck(!consumerCheck)
+        }}/>
+      </View>
       <TouchableOpacity style={styles.button} onPress={sendSignInDetails}>
-        <Text style={{alignSelf: "center"}}>Sign In</Text>
+        {submit? <ActivityIndicator style={{ flex: 1 }} size="small" color="black" />:<Text style={{alignSelf: "center"}}>Sign In</Text>}
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -100,5 +121,8 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 5,
     justifyContent: "center",
+  },
+  checkBoxText: {
+    color: "white"
   }
 });

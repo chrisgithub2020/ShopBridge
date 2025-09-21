@@ -1,9 +1,14 @@
 import Link from "../serverLink"
 
 
-const getCartContent = async (urls) => {
+const getCartContent = async (urls, token) => {
   try {
-    const response = await fetch(`${Link()}/get_cart_content/${urls}`)
+    const response = await fetch(`${Link()}/consumer/get_cart_content/${urls}`, {
+      method: "GET",
+      headers: {
+        "access-token":token,
+      }
+    })
     if (response.ok) {
       const result = await response.json()
       if (response.ok){

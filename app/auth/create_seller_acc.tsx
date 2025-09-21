@@ -6,9 +6,8 @@ import {
   TouchableOpacity,
   ScrollView,
   View,
-  NativeSyntheticEvent,
+  ActivityIndicator,
   ToastAndroid,
-  TextInputChangeEventData,
 } from "react-native";
 import React, { useState, useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -33,6 +32,7 @@ let verify_pass: boolean = false;
 
 const CreateSeller = ({navigation}: {navigation: any}) => {
   const {value, setState} = useContext(MyContext)
+  const [submit, setSubmit] = useState<boolean>(false)
   const handleTextChange = (text: string) => {
     if (focus === "1") {
       firstName = text;
@@ -85,6 +85,7 @@ const CreateSeller = ({navigation}: {navigation: any}) => {
 
 
   const handleSubmit = async () => {
+    setSubmit(true)
     if ( DataSkeletons.sellerUserData.firstName === "" ||  DataSkeletons.sellerUserData.lastName === "" ||  DataSkeletons.sellerUserData.email === "" ||  DataSkeletons.sellerUserData.phoneNumber === "" ||  DataSkeletons.sellerUserData.address === "" ||  DataSkeletons.sellerUserData.password === "" ||  DataSkeletons.sellerUserData.store_photo.length === 0 ||  DataSkeletons.sellerUserData.store_name === ""){
       ToastAndroid.show("Every field is required", ToastAndroid.SHORT)
     } else {
@@ -102,6 +103,7 @@ const CreateSeller = ({navigation}: {navigation: any}) => {
         ToastAndroid.show("enter the right details", ToastAndroid.SHORT)
       }
     }
+    setSubmit(false)
   }
 
   const [focus, setFocusedInput] = useState("0");
@@ -221,11 +223,11 @@ const CreateSeller = ({navigation}: {navigation: any}) => {
         </View>
       </ScrollView>
       <View style={styles.inputContainer}>
-        <TouchableOpacity
+        <TouchableOpacity disabled={submit}
           style={styles.button}
           onPress={handleSubmit}
         >
-          <Text style={styles.button_text}>Submit</Text>
+          {submit ? <ActivityIndicator style={{ flex: 1 }} size="small" color="black" />:<Text style={styles.button_text}>Submit</Text>}
         </TouchableOpacity>
       </View>
     </SafeAreaView>

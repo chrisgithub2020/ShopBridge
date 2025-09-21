@@ -111,6 +111,7 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
         setTodayProducts(_i)
       })
     }
+    
     if (filter.mainCat != "" && filter.subCat.length != 0){
       getCatItems()
     }

@@ -26,6 +26,7 @@ const DataSkeletons = {
   signIN: {
     identifier: String(),
     password: String(),
+    acc_type: String(),
   },
 
   restockItemDetails: {
@@ -45,7 +46,6 @@ const DataSkeletons = {
   },
 
   orderDetails: {
-    consumer: String(),
     product: String(),
     amountPaid: Number(),
     address: String(),
