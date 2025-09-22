@@ -162,7 +162,7 @@ const CreateConsumer = ({navigation}: {navigation: any}) => {
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.text}>Password:</Text>
-          <TextInput
+          <TextInput secureTextEntry={true}
             onChange={handleTextChange}
             onFocus={() => setFocusedInput("6")}
             onBlur={() => setFocusedInput("0")}
@@ -173,7 +173,7 @@ const CreateConsumer = ({navigation}: {navigation: any}) => {
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.text}>Confirm Password:</Text>
-          <TextInput
+          <TextInput secureTextEntry={true}
             onChange={handleTextChange}
             onFocus={() => setFocusedInput("7")}
             onBlur={() => setFocusedInput("0")}

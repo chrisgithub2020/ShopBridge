@@ -14,7 +14,7 @@ import getHomepageProducts from "../../api_calls/consumer/getHompageProducts"
 import { Modalize } from "react-native-modalize";
 import ProductComponent from "../components/consumer/homePage"
 import ProductDetailsModal from "../components/consumer/productDetailsModal"
-import { MyContext } from "../../context/myContext";
+import { MyContext, ProvideContext } from "../../context/myContext";
 import saveCartToken from "../../storage/saveToCart"
 import getProductDetails from "../../api_calls/consumer/getProductDetails"
 import getCategoryProducts from "../../api_calls/consumer/category"
@@ -31,7 +31,7 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
   const numColumns = Math.floor(screenWidth / 170);
   const modalRef = useRef<Modalize>(null)
   
-  const { value, setState, filter, setFilter } = useContext(MyContext)
+  const { cart, filter, setFilter } = ProvideContext()
   const [todayProducts, setTodayProducts] = useState<any>()
   const [productDetails, setProductDetails] = useState<any>({"name":"","photos":""})
   const [checkProductDetails, setCheckProductDetails] = useState<boolean>(false)
@@ -41,7 +41,7 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
     const res = await getHomepageProducts()
     Products.length = 0
     res.forEach((item: any)=>{
-      let _i = {"name":item[1], "price":item[2],"id":item[0], "store_name":item[3], "photo":Array(item[4])[0]}
+      let _i = {"name":item["itemName"], "price":item["itemPrice"],"id":item["id"], "store_name":item["storeName"], "photo":Array(item[4])[0]}
       Products.push(_i)
       setTodayProducts(_i)
     })
@@ -83,7 +83,7 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
   const ProductDetails = async (ProductID: String) => {
     const detail = await getProductDetails(ProductID)
     for (let h in detail){
-      let _i = {"name":detail[h][1], "price":detail[h][2], "description":detail[h][3], "photos":Array(detail[h][0])}
+      let _i = {"name":detail["itemName"], "price":detail["itemPrice"], "description":detail["itemDesc"], "photos":Array(detail[h][0])}
       setProductDetails(_i)
     }
   }
@@ -98,28 +98,28 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
 
   useEffect(()=> {
     const getCatItems = async () => {
-      const result =  await getCategoryProducts(filter.mainCat, filter.subCat)
+      const result =  await getCategoryProducts(filter?.mainCat, filter?.subCat)
       if (result.length === 0){
         ToastAndroid.show("We have no Products in this category", ToastAndroid.SHORT)
         return false
       }
-      setShowCat(CatDict[filter.subCat.toString()])
+      setShowCat(CatDict[filter!.subCat.toString()])
       result.forEach((item: any)=>{
-        let _i = {"name":item[1], "price":item[2],"id":item[0], "store_name":item[3], "photo":Array(item[4])[0]}
+        let _i:ProductData = {"name":item["itemName"], "price":item["itemPrice"],"id":item["id"], "store_name":item["storeName"], "photo":""}
         Products.length = 0
         Products.push(_i)
         setTodayProducts(_i)
       })
     }
     
-    if (filter.mainCat != "" && filter.subCat.length != 0){
+    if (filter!.mainCat != "" && filter!.subCat.length != 0){
       getCatItems()
     }
   },[filter])
 
   useEffect(()=>{
     getTodayProducts()
-  },[value])
+  },[])
   
 
   return (
@@ -150,19 +150,16 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
           keyExtractor={(item) => item.id}
           numColumns={numColumns}
           contentContainerStyle={styles.productsContainer}
-          renderItem={({ item }) => <ProductComponent  addToCart={() => {
-            if (!value.cart.includes(item.id)) {
-              value.cart.push(item.id);
-              setState(value);
-              saveCartToken(value.cart);
+          renderItem={({ item }) => <ProductComponent inCart={cart.current!.includes(item.id)}  addToCart={() => {
+            if (!cart.current?.includes(item.id)) {
+              cart.current?.push(item.id);
+              saveCartToken(cart.current);
               ToastAndroid.show("Item Addedd to Cart", ToastAndroid.SHORT);
             } else {
-              const index = value.cart.indexOf(item.id)
-              value.cart.splice(index, 1)
-              setState(value)
-              saveCartToken(value.cart)
+              const index = cart.current.indexOf(item.id)
+              cart.current.splice(index, 1)
+              saveCartToken(cart.current)
               ToastAndroid.show("Item Removed From Cart", ToastAndroid.SHORT)
-              console.log("Cart updated")
             }
           } } product={item} onClick={() => {
             console.log(item.id);

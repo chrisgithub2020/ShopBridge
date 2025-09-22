@@ -4,8 +4,8 @@ import { useState } from "react";
 import React from "react";
 import { ProductData } from "@/constants/types";
 
-const ProductComponent = ({ product, onClick, addToCart}: {product: ProductData, onClick: ()=> void, addToCart: ()=>void}) => {
-  const [cartButtonText, setCartButtonText] = useState<any>({"action":"Add To Cart", "icon":"shopping-cart"})
+const ProductComponent = ({ product, onClick, addToCart, inCart}: {product: ProductData, onClick: ()=> void, addToCart: ()=>void, inCart: boolean}) => {
+  const [cartButtonText, setCartButtonText] = useState<any>(inCart? {"action":"Remove", "icon":"delete"}:{"action":"Add To Cart", "icon":"shopping-cart"})
   let removeOrAdd = "add"
   return (
     <TouchableOpacity style={styles.product_container} onPress={onClick}>

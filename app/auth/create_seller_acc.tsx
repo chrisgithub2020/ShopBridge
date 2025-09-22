@@ -201,7 +201,7 @@ const CreateSeller = ({navigation}: {navigation: any}) => {
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.text}>Password:</Text>
-          <TextInput
+          <TextInput secureTextEntry={true}
             onChangeText={handleTextChange}
             onFocus={() => setFocusedInput("6")}
             onBlur={() => setFocusedInput("0")}
@@ -212,7 +212,7 @@ const CreateSeller = ({navigation}: {navigation: any}) => {
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.text}>Confirm Password:</Text>
-          <TextInput
+          <TextInput secureTextEntry={true}
             onChangeText={handleTextChange}
             onFocus={() => setFocusedInput("7")}
             onBlur={() => setFocusedInput("0")}

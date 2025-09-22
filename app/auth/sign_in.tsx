@@ -70,7 +70,7 @@ const SignIn = ({ navigation }: { navigation: any }) => {
         style={[styles.input, focus === "1" && styles.inputFocus]}
       />
       <Text style={{color: "white", fontWeight: "bold", margin: 5}}>Password</Text>
-      <TextInput onChangeText={setDetails}
+      <TextInput onChangeText={setDetails} secureTextEntry={true}
         onFocus={() => setFocusedInput("2")}
         onBlur={() => setFocusedInput("0")}
         placeholder="password"

@@ -2,7 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import retreiveToken from "../storage/retrieveToken"
 import { ActivityIndicator } from "react-native";
-import { MyContext } from "../context/myContext";
+import { ProvideContext } from "../context/myContext";
+import fetchData from "../api_calls/auth/fetchAccountData"
 
 
 interface valueContent {
@@ -13,32 +14,31 @@ interface valueContent {
 const LoadingScreen = ({navigation}: {navigation: any}) => {
   const [userExist, setUserExist] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const {value, setState} = useContext(MyContext)
+  const {a_token, r_token, cart} = ProvideContext()
 
 
   useEffect(() => {
     const checkIfAccountExists = async () => {
-      const result = await retreiveToken("acc");
-      if (result) {
-        const accountJson = JSON.parse(String(result));         
-        
-        if (accountJson.type === "c") {
+      const access_token = await retreiveToken("a_token");
+      const refresh_token = await retreiveToken("r_token");
+      const cartString = await retreiveToken("cart")
 
+      if (access_token) {
+        const accType = await fetchData(access_token);    
+        a_token.current = access_token    
+        r_token.current = refresh_token ? refresh_token : ""
+        
+        if (accType === "consumer") {
           setUserExist("consumer");
-          const cart = await retreiveToken("cart")
-          if (cart){
-            let cartItems = cart.split(",")
-            accountJson["cart"]= cartItems
-          } else {
-            accountJson["cart"] = [];
-          }
+          let cartItems = cartString ? cartString.split(",") : []
+
+          cart.current?.push(...cartItems)
           setIsLoading(false)
-        } else {
+        } else if (accType == "seller"){
 
           setUserExist("seller");
           setIsLoading(false)
         }
-        setState(accountJson)
 
         
       } else {
@@ -50,8 +50,6 @@ const LoadingScreen = ({navigation}: {navigation: any}) => {
     checkIfAccountExists();
   }, []);
 
-  useEffect(()=>{
-  },[value])
 
   useEffect(()=>{
     if (isLoading === false) {

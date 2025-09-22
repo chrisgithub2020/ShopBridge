@@ -12,7 +12,7 @@ import React, { useState, useRef, useContext, useEffect, useCallback,} from "rea
 import { useFocusEffect } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context"
 import CardItemComponent from "../components/consumer/cartItems"
-import { MyContext } from "../../context/myContext";
+import { MyContext, ProvideContext } from "../../context/myContext";
 import { Modalize } from "react-native-modalize";
 import { Paystack, paystackProps,  } from "react-native-paystack-webview"
 import CompleteOrderModal from "../components/consumer/completeOrderModal"
@@ -39,7 +39,7 @@ interface orderObj {
 
 
 const Cart = () => {
-  const { value, setState } = useContext(MyContext)
+  const { a_token,cart } = ProvideContext()
   const completeOrderModal = useRef<Modalize>(null)
   const [cartExtraData, setCartExtraData] = useState<any>()
   const [orderToCompleteDetails, setOrderToCompleteDetails] = useState<orderObj>({"id":"", "ProductName": "sdfjasdf", "quantity": "3", "address": "Tabora", "price": "78", "deliveryFees": "9.5", "photo":""});
@@ -54,13 +54,12 @@ const Cart = () => {
 
 
   const getCartCont = async () => {
-    if (value) {
-      if (value.cart.length > 0) {
-        let content = await getCartContent(value.cart.toString())
+    if (cart.current) {
+      if (cart.current.length > 0) {
+        let items = await getCartContent(cart.current.toString(), a_token.current)
         CartItemsData.length = 0
-        console.log(content)
-        for (let _t in content) {
-          let _i = { "id": content[_t][2], "name": content[_t][1], "price": content[_t][3], "quantity": "1", "photo":Array(content[_t][0])[0]}
+        for (let i in items) {
+          let _i = { "id": items[i]["id"], "name": items[i]["itemName"], "price": items[i]["itemPrice"], "quantity": "1", "photo":Array(items[i][0])[0]}
         
           CartItemsData.push(_i)
           setCartExtraData(_i)
@@ -84,19 +83,18 @@ const Cart = () => {
   }
 
   const completeOrder = async () => {
-    DataSkeletons.orderDetails.address = value.address
-    DataSkeletons.orderDetails.consumer = value.id
+    DataSkeletons.orderDetails.address = ""
     DataSkeletons.orderDetails.product = orderToCompleteDetails.id
     DataSkeletons.orderDetails.quantity = orderToCompleteDetails.quantity
     DataSkeletons.orderDetails.amountPaid = (Number(orderToCompleteDetails.price)*Number(orderToCompleteDetails.quantity)) + Number(orderToCompleteDetails.deliveryFees)
     const response = await CompleteOrder(DataSkeletons.orderDetails)
     if (response){
       ToastAndroid.show("Order Completed", ToastAndroid.SHORT)
-      let itemIndex = value.cart.indexOf(orderToCompleteDetails.id)
-      value.cart.splice(itemIndex,1)
+      let itemIndex = cart.current!.indexOf(orderToCompleteDetails.id)
+      cart.current?.splice(itemIndex,1)
       removeItemFromFlatlist(orderToCompleteDetails.id)
       closeCompleteOrderModal()
-      saveCartToken(value.cart)
+      saveCartToken(cart.current)
     }
     console.log(response)
   }
@@ -123,12 +121,11 @@ const Cart = () => {
       }} billingEmail="agyemanchris0@gmail.com" billingName="ShopBridge" paystackKey={paystackKey} amount={(Number(orderToCompleteDetails.price)*Number(orderToCompleteDetails.quantity)) + Number(orderToCompleteDetails.deliveryFees)}/>
       <CompleteOrderModal orderObject={orderToCompleteDetails} refObject={completeOrderModal} order={() => payStackRef.current?.startTransaction()} />
       <FlatList extraData={cartExtraData} refreshControl={<RefreshControl refreshing={refresh} onRefresh={getCartCont}/>} contentContainerStyle={styles.items_scroll} data={CartItemsData} keyExtractor={(item) => item.id} renderItem={({ item }) => <CardItemComponent removeFromCart={()=>{
-        if (value.cart.includes(item.id)){
-          let index = value.cart.indexOf(item.id)
-          value.cart.splice(index,1)
-          removeItemFromFlatlist(item.id)          
-          setState(value)
-          saveCartToken(value.cart)
+        if (cart.current?.includes(item.id)){
+          let index = cart.current.indexOf(item.id)
+          cart.current.splice(index,1)
+          removeItemFromFlatlist(item.id)  
+          saveCartToken(cart.current)
         }
       }} item={item} openCompleteOrderModal={()=>{
         checkOut(item.id)
