@@ -14,6 +14,15 @@ export type CartItem = {
   quantity: string;
 }
 
+export type OrderObject = {
+  ProductName: string;
+  quantity: string;
+  price: string;
+  deliveryFees: string;
+  photo: string;
+  id: string;
+}
+
 export type StoreProduct = {
   photo: string;
   id: string;

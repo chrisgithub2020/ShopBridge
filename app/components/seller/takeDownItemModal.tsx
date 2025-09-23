@@ -1,5 +1,5 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, KeyboardAvoidingView} from "react-native";
+import { ActivityIndicator, Text, TouchableOpacity, StyleSheet, TextInput, KeyboardAvoidingView} from "react-native";
 import {Modalize} from "react-native-modalize"
 import React, {useRef} from "react"
 
@@ -7,9 +7,10 @@ interface modalProp {
     takeDown: () => void;
     refObject: React.RefObject<Modalize>;
     setStoreName: (text: String) => void;
+    loading: boolean;
 }
 
-const TakeDownItemModal = ({takeDown,  refObject, setStoreName}: modalProp) => {
+const TakeDownItemModal = ({takeDown,  refObject, setStoreName, loading}: modalProp) => {
 
     
     return (
@@ -19,7 +20,7 @@ const TakeDownItemModal = ({takeDown,  refObject, setStoreName}: modalProp) => {
                 <Text style={{padding:7, fontWeight: "condensedBold"}}>Enter Store name to confirm take down:</Text>
                 <TextInput onChangeText={setStoreName} style={styles.modalInput} placeholder="Store name"/>
                 <TouchableOpacity onPress={takeDown} style={styles.modalButton}>
-                    <Text style={{justifyContent: 'center', alignSelf:"center", fontWeight: "bold"}}>Confirm</Text>
+                    {loading ? <ActivityIndicator style={{ flex: 1 }} size="small" color="black" />:<Text style={{justifyContent: 'center', alignSelf:"center", fontWeight: "bold"}}>Confirm</Text>}
                 </TouchableOpacity>
             </KeyboardAvoidingView>
 

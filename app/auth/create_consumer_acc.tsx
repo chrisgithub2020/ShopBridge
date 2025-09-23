@@ -86,7 +86,7 @@ const CreateConsumer = ({navigation}: {navigation: any}) => {
         }
 
         if (resp === true) {
-          navigation.replace("consumer");
+          navigation.replace("index");
         } else {
           ToastAndroid.show("Error! Please try again later", ToastAndroid.SHORT)
         }

@@ -2,20 +2,13 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { View, Text, TouchableOpacity, StyleSheet, Image, KeyboardAvoidingView } from "react-native";
 import { Modalize } from "react-native-modalize"
 import React, { useRef } from "react"
+import { OrderObject } from "@/constants/types";
 
-interface orderObj {
-  ProductName: string;
-  quantity: String;
-  address: string;
-  price: string;
-  deliveryFees: string;
-  photo: string;
-  id: string;
-}
+
 interface modalProp {
   order: () => void;
   refObject: React.RefObject<Modalize>;
-  orderObject: orderObj;
+  orderObject: OrderObject;
 }
 
 
@@ -58,7 +51,7 @@ const CompleteOrderModal = ({ order, refObject, orderObject }: modalProp) => {
             <TouchableOpacity><Text style={{ color: "#2196f3" }}>Change Address</Text></TouchableOpacity>
           </View>
           <View style={{padding: 4}}>
-            <Text style={{padding: 3}}>{orderObject.address}</Text>
+            <Text style={{padding: 3}}></Text>
           </View>
         </View>
         <View style={{marginBottom: 6,marginRight: 6, marginLeft: 6,borderBottomWidth: 2, borderColor: "#e6e1e1", backgroundColor: "#e6e1e1", borderRadius:3,  }}>

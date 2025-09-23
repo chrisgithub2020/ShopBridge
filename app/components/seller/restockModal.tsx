@@ -1,5 +1,5 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, KeyboardAvoidingView} from "react-native";
+import { ActivityIndicator, Text, TouchableOpacity, StyleSheet, TextInput, KeyboardAvoidingView} from "react-native";
 import {Modalize} from "react-native-modalize"
 import React, {useRef} from "react"
 
@@ -7,9 +7,10 @@ interface modalProp {
     restock: () => void;
     refObject: React.RefObject<Modalize>;
     setAmountToRestock: (text: String) => void;
+    loading: any;
 }
 
-const RestockModal = ({restock,  refObject, setAmountToRestock}: modalProp) => {
+const RestockModal = ({restock,  refObject, setAmountToRestock, loading}: modalProp) => {
 
     
     return (
@@ -19,7 +20,7 @@ const RestockModal = ({restock,  refObject, setAmountToRestock}: modalProp) => {
                 <Text style={{padding:7, fontWeight: "condensedBold"}}>Enter quantity to restock:</Text>
                 <TextInput onChangeText={setAmountToRestock} keyboardType="numeric" style={styles.modalInput} placeholder="Quantity"/>
                 <TouchableOpacity onPress={restock} style={styles.modalButton}>
-                    <Text style={{justifyContent: 'center', alignSelf:"center", fontWeight: "bold"}}>Restock</Text>
+                    {loading ? <ActivityIndicator style={{ flex: 1 }} size="small" color="black" />:<Text style={{justifyContent: 'center', alignSelf:"center", fontWeight: "bold"}}>Restock</Text>}
                 </TouchableOpacity>
             </KeyboardAvoidingView>
 

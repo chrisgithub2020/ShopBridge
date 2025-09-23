@@ -4,12 +4,12 @@ import { Text, StyleSheet, Image, TextInput, TouchableOpacity, ToastAndroid, Vie
 import CheckBox from "react-native-check-box"
 import DataSkeletons from "../../api_calls/dataSkeletons";
 import SubmitSignINDetails from "../../api_calls/auth/sign_in"
-import { MyContext } from "../../context/myContext";
+import { ProvideContext } from "../../context/myContext";
 
 
 const SignIn = ({ navigation }: { navigation: any }) => {
   const [focus, setFocusedInput] = useState("0");
-  const {value, setState} = useContext(MyContext)
+  const {a_token, r_token} = ProvideContext()
   const [sellerCheck, setSellerCheck] = useState<boolean>(false)
   const [consumerCheck, setConsumerCheck] = useState<boolean>(true)
   const [submit, setSubmit] = useState<boolean>(false)
@@ -38,12 +38,7 @@ const SignIn = ({ navigation }: { navigation: any }) => {
           return
         }
         if (resp["success"] == true) {
-          if (resp["type"] === "c") {
-            navigation.replace("consumer")
-          } else {
-            navigation.replace("seller")
-          }
-          setState(resp)
+          navigation.replace("index")
         } else {
           ToastAndroid.show("User does not exist. Make sure detail are correct.", ToastAndroid.SHORT)
         }

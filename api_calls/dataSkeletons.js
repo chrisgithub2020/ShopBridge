@@ -18,7 +18,7 @@ const DataSkeletons = {
     phoneNumber: String(),
     address: String(),
     password: String(),
-    store_photo: Array(),
+    store_photo: String(),
     store_name: String(),
     type: "s",
   },
@@ -35,7 +35,6 @@ const DataSkeletons = {
   },
 
   itemDetails: {
-    itemSeller: String(),
     itemImages: Array(),
     itemName: String(),
     itemDescription: String(),
@@ -48,7 +47,6 @@ const DataSkeletons = {
   orderDetails: {
     product: String(),
     amountPaid: Number(),
-    address: String(),
     quantity: String(),
   }
 };

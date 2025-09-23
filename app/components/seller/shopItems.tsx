@@ -1,6 +1,6 @@
-import React from "react";
-import { View, Text, TouchableOpacity, Image, StyleSheet, NativeSyntheticEvent } from "react-native";
-
+import React, { useState } from "react";
+import { View, Text, TouchableOpacity, Image, StyleSheet, ActivityIndicator } from "react-native";
+import getItemImage from "@/api_calls/consumer/fetchImage";
 interface StoreProduct {
   id: string;
   name: string;
@@ -15,7 +15,16 @@ interface StoreProductProp {
   onRestock: () => void;
   onTakeDown: () => void;
 }
-const ProductComponent: React.FC<StoreProductProp> = ({ product, onRestock, onTakeDown }) => {
+const ProductComponent = ({ product, onRestock, onTakeDown }: StoreProductProp) => {
+  const [imageLoading, setImageLoading] = useState<boolean>(true)
+  
+  if (imageLoading) {
+    // this gets the images asynchronously without delaying main process
+    getItemImage(product.photo).then((images)=>{
+      product.photo = images
+      setImageLoading(false)
+    })
+  }
   return (
     <View style={styles.supplies_container}>
       <View style={{ flexDirection: "row", padding: 5}}>
@@ -24,6 +33,7 @@ const ProductComponent: React.FC<StoreProductProp> = ({ product, onRestock, onTa
             style={styles.image}
             source={{uri:`data:image/png;base64,${product.photo}`}}
           />
+          {imageLoading && <ActivityIndicator style={{ flex: 1, position: "absolute", top: "40%", left: "40%" }} size="small" color="black" />}
         </View>
         <View style={styles.abt_container}>
           <Text style={{fontWeight: "bold"}}>{product.name}</Text>

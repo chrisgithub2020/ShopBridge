@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, TextInput, ToastAndroid, RefreshControl, BackHandler} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import React, {useContext, useEffect, useState, useRef,} from 'react'
-import { MyContext } from '../../context/myContext'
+import { MyContext, ProvideContext } from '../../context/myContext'
 import getStoreOrders from "../../api_calls/seller/getStoreOrders"
 import { useFocusEffect } from 'expo-router'
 import { Modalize } from 'react-native-modalize'
@@ -84,11 +84,11 @@ BackHandler.addEventListener("hardwareBackPress", ()=>{
 })
 
 const Order = ({navigation}: {navigation: any}) => {
-  const {value, setState, storeProducts} = useContext(MyContext)
   const [storeOrders, setStoreOrders] = useState<any>();
   const orderActionsModal = useRef<Modalize>(null);
   const [actionID, setActionID] = useState<string>()
   const [refreshing, setRefreshing] = useState<boolean>(false)
+  const {storeItems,} = ProvideContext()
 
   const openModal = ()=>{
     orderActionsModal.current?.open();
@@ -119,7 +119,7 @@ const Order = ({navigation}: {navigation: any}) => {
   }
 
   const onRefresh = () => {
-    if (Boolean(storeProducts)){
+    if (Boolean(storeItems)){
       getStoreOrd()
     }
   }
@@ -165,7 +165,7 @@ const Order = ({navigation}: {navigation: any}) => {
         renderItem={({ item }) => <OrderComponent onClick={()=>{
           setActionID(item.id)
           orderStatus(item.id)
-        }} storeProducts={storeProducts} order={item} />}
+        }} storeProducts={storeItems ? storeItems:[]} order={item} />}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}
       />      
     </SafeAreaView>

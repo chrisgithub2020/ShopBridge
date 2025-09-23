@@ -1,14 +1,15 @@
 import Link from "../serverLink"
-const restockItem = async (data) => {
+const restockItem = async (data, a_token) => {
     try {
-        const response = await fetch(`${Link()}/restock_item`, {
+        const response = await fetch(`${Link()}/seller/restock_item`, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "access-token": a_token,
             },
             body: JSON.stringify(data)
         })
-        console.log(response)
+        return await response.json()
     } catch (err) {
         console.error(err)
     }

@@ -22,7 +22,9 @@ import { MaterialIcons } from "@expo/vector-icons";
 import CatDict from "../../api_calls/Categories"
 import searchProductInDB from "../../api_calls/consumer/searchProduct"
 import { ProductData } from "@/constants/types";
+import getItemImages from "../../api_calls/consumer/fetchImages"
 
+let detailsImage: string
 
 let Products: ProductData[] = [];
 
@@ -33,7 +35,8 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
   
   const { cart, filter, setFilter } = ProvideContext()
   const [todayProducts, setTodayProducts] = useState<any>()
-  const [productDetails, setProductDetails] = useState<any>({"name":"","photos":""})
+  const [itemDetails, setItemDetails] = useState<any>({"name":"","photos":""})
+  const [itemDetailsImageId, setItemDetailsImageId] = useState<string | null>(null)
   const [checkProductDetails, setCheckProductDetails] = useState<boolean>(false)
   const [showCat, setShowCat] = useState<string>("hide")
 
@@ -41,10 +44,11 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
     const res = await getHomepageProducts()
     Products.length = 0
     res.forEach((item: any)=>{
-      let _i = {"name":item["itemName"], "price":item["itemPrice"],"id":item["id"], "store_name":item["storeName"], "photo":Array(item[4])[0]}
+      let _i = {"name":item["itemName"], "price":item["itemPrice"],"id":item["id"], "store_name":item["storeName"], "photo":item["itemImages"]}
       Products.push(_i)
       setTodayProducts(_i)
     })
+
   }
 
   const searchProduct = async (text: string) => {
@@ -59,6 +63,7 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
       if (result.length > 0){
 
       } else {
+        console.log("online result")
         ToastAndroid.show("We have no such product. Will get one soon", ToastAndroid.SHORT)
       }
     } else {
@@ -82,19 +87,19 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
 
   const ProductDetails = async (ProductID: String) => {
     const detail = await getProductDetails(ProductID)
-    for (let h in detail){
-      let _i = {"name":detail["itemName"], "price":detail["itemPrice"], "description":detail["itemDesc"], "photos":Array(detail[h][0])}
-      setProductDetails(_i)
-    }
+    let _i = {"name":detail["itemName"], "price":detail["itemPrice"], "description":detail["itemDesc"], "photos":""}
+    setItemDetails(_i)
+    detailsImage = detail["itemImages"]
   }
 
   useEffect(()=>{
     if (checkProductDetails) {
-      if (productDetails){
+      if (itemDetails){
         openModal()
+        setItemDetailsImageId(detailsImage)
       }
     }
-  },[productDetails, checkProductDetails])
+  },[itemDetails, checkProductDetails])
 
   useEffect(()=> {
     const getCatItems = async () => {
@@ -142,7 +147,7 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
             <MaterialIcons style={{color: "white", fontWeight: "bold", marginLeft: 5}} name="close" size={20}/>
           </TouchableOpacity>
         </View>
-        <ProductDetailsModal onClose={()=>{setCheckProductDetails(false)}} product={productDetails} refObject={modalRef} addToCart={() => console.log("adding to cart")} />
+        <ProductDetailsModal imageId={itemDetailsImageId} onClose={()=>{setCheckProductDetails(false)}} product={itemDetails} refObject={modalRef} addToCart={() => console.log("adding to cart")} />
         
         <FlatList style={styles.flatContainer}
           data={Products}
@@ -156,6 +161,7 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
               saveCartToken(cart.current);
               ToastAndroid.show("Item Addedd to Cart", ToastAndroid.SHORT);
             } else {
+              console.log(cart.current)
               const index = cart.current.indexOf(item.id)
               cart.current.splice(index, 1)
               saveCartToken(cart.current)

@@ -1,18 +1,13 @@
 import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
   StyleSheet,
   FlatList,
   ToastAndroid,
   RefreshControl
 } from "react-native";
-import React, { useState, useRef, useContext, useEffect, useCallback,} from "react";
-import { useFocusEffect } from "@react-navigation/native";
+import React, { useState, useRef, useEffect,} from "react";
 import { SafeAreaView } from "react-native-safe-area-context"
 import CardItemComponent from "../components/consumer/cartItems"
-import { MyContext, ProvideContext } from "../../context/myContext";
+import {  ProvideContext } from "../../context/myContext";
 import { Modalize } from "react-native-modalize";
 import { Paystack, paystackProps,  } from "react-native-paystack-webview"
 import CompleteOrderModal from "../components/consumer/completeOrderModal"
@@ -20,29 +15,22 @@ import getCartContent from "../../api_calls/consumer/getCartContent"
 import saveCartToken from "@/storage/saveToCart";
 import DataSkeletons from "@/api_calls/dataSkeletons";
 import CompleteOrder from "../../api_calls/consumer/CompleteOrder";
-import { CartItem } from "@/constants/types";
+import { CartItem, OrderObject } from "@/constants/types";
+import getItemImages from "@/api_calls/consumer/fetchImages";
 
 import KEYS from "../../api_calls/Keys"
 const constants = KEYS()
 
 let CartItemsData: CartItem[] = [];
 const paystackKey = constants.PAYSTACK_KEY
-interface orderObj {
-  ProductName: string;
-  quantity: string;
-  address: string;
-  price: string;
-  deliveryFees: string;
-  photo: string;
-  id: string;
-}
+
 
 
 const Cart = () => {
   const { a_token,cart } = ProvideContext()
   const completeOrderModal = useRef<Modalize>(null)
   const [cartExtraData, setCartExtraData] = useState<any>()
-  const [orderToCompleteDetails, setOrderToCompleteDetails] = useState<orderObj>({"id":"", "ProductName": "sdfjasdf", "quantity": "3", "address": "Tabora", "price": "78", "deliveryFees": "9.5", "photo":""});
+  const [orderToCompleteDetails, setOrderToCompleteDetails] = useState<OrderObject>({"id":"", "ProductName": "sdfjasdf", "quantity": "3",  "price": "78", "deliveryFees": "9.5", "photo":""});
   const payStackRef = useRef<paystackProps.PayStackRef>(null)
   const [refresh, setRefresh] = useState<boolean>(false)
 
@@ -52,18 +40,28 @@ const Cart = () => {
     setCartExtraData(CartItemsData)
   }
 
-
   const getCartCont = async () => {
     if (cart.current) {
       if (cart.current.length > 0) {
         let items = await getCartContent(cart.current.toString(), a_token.current)
         CartItemsData.length = 0
         for (let i in items) {
-          let _i = { "id": items[i]["id"], "name": items[i]["itemName"], "price": items[i]["itemPrice"], "quantity": "1", "photo":Array(items[i][0])[0]}
+          let _i = { "id": items[i]["id"], "name": items[i]["itemName"], "price": items[i]["itemPrice"], "quantity": "1", "photo":""}
         
           CartItemsData.push(_i)
           setCartExtraData(_i)
         }
+
+        for (let i in items) {
+          getItemImages(items[Number(i)]["itemImages"]).then((images)=>{
+            CartItemsData[Number(i)]["photo"]  = images[0]
+            setCartExtraData({})
+          })
+        }
+        
+      }else {
+        CartItemsData.length = 0
+        setCartExtraData({})
       }
     }
   }
@@ -83,7 +81,6 @@ const Cart = () => {
   }
 
   const completeOrder = async () => {
-    DataSkeletons.orderDetails.address = ""
     DataSkeletons.orderDetails.product = orderToCompleteDetails.id
     DataSkeletons.orderDetails.quantity = orderToCompleteDetails.quantity
     DataSkeletons.orderDetails.amountPaid = (Number(orderToCompleteDetails.price)*Number(orderToCompleteDetails.quantity)) + Number(orderToCompleteDetails.deliveryFees)
@@ -100,17 +97,16 @@ const Cart = () => {
   }
 
   const checkOut = (id: string) => {
-    let details: orderObj = {"id":"", "ProductName": "sdfjasdf", "quantity": "3", "address": "Tabora", "price": "78", "deliveryFees": "9.5", "photo":""}
+    let details: OrderObject = {"id":"", "ProductName": "sdfjasdf", "quantity": "3", "price": "78", "deliveryFees": "9.5", "photo":""}
     for (let orderItemIndex in CartItemsData){
       if (CartItemsData[orderItemIndex]["id"] === id){
-        details = {"id":id, "ProductName":CartItemsData[orderItemIndex]["name"], "photo":CartItemsData[orderItemIndex]["photo"], "price":CartItemsData[orderItemIndex]["price"], "address":String(value.address), "quantity":CartItemsData[orderItemIndex]["quantity"], "deliveryFees":"9.5"}
+        details = {"id":id, "ProductName":CartItemsData[orderItemIndex]["name"], "photo":CartItemsData[orderItemIndex]["photo"], "price":CartItemsData[orderItemIndex]["price"], "quantity":CartItemsData[orderItemIndex]["quantity"], "deliveryFees":"9.5"}
       }
       setOrderToCompleteDetails(details)
     }
     openCompleteOrderModal()
   }
 
-  const oh: orderObj = {"id":"", "ProductName": "sdfjasdf", "quantity": "3", "address": "Tabora", "price": "78", "deliveryFees": "9.5", "photo":""}
   return (
     <SafeAreaView style={styles.container}>
       <Paystack channels={['mobile_money']} currency="GHS" ref={payStackRef} activityIndicatorColor="green" onSuccess={()=>{

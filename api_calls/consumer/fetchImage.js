@@ -1,14 +1,12 @@
 import Link from "../serverLink"
 
-const searchProductInDB = async (text) => {
+const getItemImage = async (image_id) => {
   try {
-    const response = await fetch(`${Link()}/consumer/searchProduct/${text}`);
+    const response = await fetch(`${Link()}/get_image/${image_id}`);
     if (response.ok) {
       const result = await response.json();
-      console.log(result)
 
       if (result["success"] === true){
-        console.log(result["data"])
         return result["data"]
       }
     }
@@ -17,4 +15,4 @@ const searchProductInDB = async (text) => {
   }
 };
 
-export default searchProductInDB;
+export default getItemImage;

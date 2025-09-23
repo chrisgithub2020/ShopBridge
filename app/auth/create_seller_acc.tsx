@@ -31,7 +31,6 @@ let verify_pass: boolean = false;
 
 
 const CreateSeller = ({navigation}: {navigation: any}) => {
-  const {value, setState} = useContext(MyContext)
   const [submit, setSubmit] = useState<boolean>(false)
   const handleTextChange = (text: string) => {
     if (focus === "1") {
@@ -68,7 +67,7 @@ const CreateSeller = ({navigation}: {navigation: any}) => {
     });
 
     if (!image_obj.canceled) {
-      DataSkeletons.sellerUserData.store_photo.push(image_obj.assets[0].base64?.toString())
+      DataSkeletons.sellerUserData.store_photo = image_obj.assets[0].base64?.toString()!
       setImage(image_obj.assets[0].base64?.toString());
     } else {
       setImage("");
@@ -95,10 +94,7 @@ const CreateSeller = ({navigation}: {navigation: any}) => {
         return
       }
       if (resp) {        
-        let context_copy: any = {"id":resp, "firstName":DataSkeletons.sellerUserData.firstName, "lastName":DataSkeletons.sellerUserData.lastName, "email":DataSkeletons.sellerUserData.email, "address":DataSkeletons.sellerUserData.address, "phoneNumber":DataSkeletons.sellerUserData.phoneNumber, "store_name":DataSkeletons.sellerUserData.store_name, "type":"s"}
-  
-        setState(context_copy)
-        navigation.replace("seller")
+        navigation.replace("index")
       } else {
         ToastAndroid.show("enter the right details", ToastAndroid.SHORT)
       }

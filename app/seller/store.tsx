@@ -1,13 +1,13 @@
 import {
   View,
-  Text,
   FlatList,
   StyleSheet,
   TouchableOpacity,
   TextInput,
   ToastAndroid,
   BackHandler,
-  RefreshControl
+  RefreshControl,
+  ActivityIndicator
 } from "react-native";
 import React, { useState, useRef, useContext, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -20,10 +20,11 @@ import DataSkeletons from "@/api_calls/dataSkeletons";
 import RestockModal from "../components/seller/restockModal";
 import AddItemModal from "../components/seller/addItemModal";
 import { Modalize } from "react-native-modalize";
-import { MyContext } from "../../context/myContext";
+import { MyContext, ProvideContext } from "../../context/myContext";
 import TakeDownItemModal from "../components/seller/takeDownItemModal";
 import getStoreItems from "../../api_calls/seller/getStoreItems";
 import takeItemDown from "../../api_calls/seller/takeDown"
+import getItemImage from "@/api_calls/consumer/fetchImage";
 
 let itemImages: Array<String | null | undefined> = [];
 
@@ -45,20 +46,13 @@ DataSkeletons.itemDetails.itemImages = itemImages;
 
 let Products: StoreProduct[] = [
 ];
-const RestockItem = async (id: String, amount: String) => {
-  const formData = {
-    itemID:id,
-    restockNumber:amount,
-  }
-
-
-  await restockItem(formData)
-}
 
 const Store = ({navigation}: {navigation: any}) => {
   let itemToRestockID = "";
   let amountToRestock: String = "";
   let takeDown: boolean = false;
+  const [restockLoading, setRestockLoading] = useState<boolean>(false)
+  const [takeDownLoading, setTakeDownLoading] = useState<boolean>(false)
   const [selectedValue, setCurrentValue] = useState("e");
   const [storeProductsSearch, setStoreProductsSearch] = useState<any>();
   const [subCat, setSubCat] = useState<string>("cp");
@@ -68,26 +62,37 @@ const Store = ({navigation}: {navigation: any}) => {
   const [itemQuantity, setItemQuantity] = useState("");
   const [itemPrice, setItemPrice] = useState("");
   const [refreshing, serRefreshing] = useState<boolean>(false)
-  const {value, setState, setStoreProducts, storeProducts} = useContext(MyContext);
+  const {a_token, r_token, storeItems, setStoreItems} = ProvideContext();
   const modalRef = useRef<Modalize>(null);
   const addItemModal = useRef<Modalize>(null);
   const takeDownItemModal = useRef<Modalize>(null)
 
+  
+const RestockItem = async (id: String, amount: String) => {
+  setRestockLoading(true)
+  const formData = {
+    itemID:id,
+    restockNumber:amount,
+  }
+
+  await restockItem(formData, a_token)
+  setRestockLoading(false)
+}
+
   const getStoreIt = async ()=>{
-    const res = await getStoreItems(value.id)
+    const res = await getStoreItems(a_token.current)
     Products.length = 0
     res.forEach((item: any)=>{
-      let _i = {"photo":item[1], "name":item[2], "price":item[5], "quantity": item[4], "description":item[3], "id":item[0]}
+      let _i = {"photo":item["itemImages"], "name":item["itemName"], "price":item["itemPrice"], "quantity": item["stockQuantity"], "description":item["itemDesc"], "id":item["id"]}
       Products.push(_i)
     })
-    setStoreProducts(Products)
+    setStoreItems(Products)
     setStoreProductsSearch(Products)
   }
   
-
   useEffect(()=>{
     getStoreIt()
-  },[value])
+  }, [])
 
   const openModal = () => {
     modalRef.current?.open()
@@ -126,7 +131,6 @@ const Store = ({navigation}: {navigation: any}) => {
   }
 
   const submititemDetails = async () => {
-    DataSkeletons.itemDetails.itemSeller = String(value.id);
     DataSkeletons.itemDetails.itemMainCat = selectedValue;
     DataSkeletons.itemDetails.itemSubCat = subCat;
     DataSkeletons.itemDetails.itemDescription = descText;
@@ -142,11 +146,10 @@ const Store = ({navigation}: {navigation: any}) => {
     ) {
       ToastAndroid.show("All fields are required", ToastAndroid.SHORT);
     } else {
-      console.log(DataSkeletons.itemDetails);
-      const _i = await sendData(DataSkeletons.itemDetails);
+      const _i = await sendData(DataSkeletons.itemDetails, a_token.current);
       let item: StoreProduct = {"photo": Object(_i)["photo"], "id":Object(_i)["id"], "name":Object(_i)["name"],  "price":Object(_i)["price"], "quantity":Object(_i)["quantity"], "description": _i["description"]}
       Products.push(item)
-      setStoreProducts(_i)
+      setStoreItems(_i)
       DataSkeletons.itemDetails.itemImages.length = 0
     }
   };
@@ -213,8 +216,8 @@ const Store = ({navigation}: {navigation: any}) => {
             <MaterialIcons style={{ color: "#e6e1e1" }} size={30} name="add" />
           </TouchableOpacity>
         </View>
-        <TakeDownItemModal setStoreName={(text: String)=>{
-          if (text === value.store_name){
+        <TakeDownItemModal loading={takeDownLoading} setStoreName={(text: String)=>{
+          if (text === text){
             takeDown = true
           }
         }} refObject={takeDownItemModal} takeDown={()=>{
@@ -225,7 +228,7 @@ const Store = ({navigation}: {navigation: any}) => {
             ToastAndroid.show("Store Name does not match!!", ToastAndroid.SHORT)
           }
         }}/>
-        <RestockModal setAmountToRestock={(text: String)=> amountToRestock = text}
+        <RestockModal loading={restockLoading} setAmountToRestock={(text: String)=> amountToRestock = text}
           refObject={modalRef}
           restock={()=> RestockItem(itemToRestockID,amountToRestock)}
         />
@@ -234,7 +237,7 @@ const Store = ({navigation}: {navigation: any}) => {
           style={styles.flatContainer}
           data={Products}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={getStoreIt} />}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <ProductComponent onTakeDown={() => {
               itemToRestockID = item.id;

@@ -15,7 +15,7 @@ const Stack = createNativeStackNavigator()
 const AuthLayout = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen component={About} name="index" options={{headerShown: false}}/>
+      <Stack.Screen component={About} name="about" options={{headerShown: false}}/>
       <Stack.Screen component={Index} name="choose" options={{headerShown: false}}/>
       <Stack.Screen component={CreateConsumer} name="create_consumer_acc" options={{headerShown: false}}/>
       <Stack.Screen component={CreateSeller} name="create_seller_acc" options={{headerShown: false}}/>

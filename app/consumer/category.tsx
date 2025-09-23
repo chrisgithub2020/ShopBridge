@@ -3,12 +3,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useState, useContext } from "react";
 import { useNavigation } from '@react-navigation/native';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
-import { MyContext } from "@/context/myContext";
+import { MyContext, ProvideContext } from "@/context/myContext";
 
 
 
 const ConsumerCategory = ({navigation}: {navigation: any}) => {
-  const {filter, setFilter} = useContext(MyContext)
+  const {filter, setFilter} = ProvideContext()
   const [currentView, setCurrentView] = useState<string>("e");
 
   const viewCategory = (subCategory: string[]=[]) => {
