@@ -52,7 +52,6 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
   }
 
   const searchProduct = async (text: string) => {
-    console.log(text)
     if (text.length === 0){
       Products.length = 0
       getTodayProducts()
@@ -63,7 +62,6 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
       if (result.length > 0){
 
       } else {
-        console.log("online result")
         ToastAndroid.show("We have no such product. Will get one soon", ToastAndroid.SHORT)
       }
     } else {
@@ -96,7 +94,9 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
     if (checkProductDetails) {
       if (itemDetails){
         openModal()
-        setItemDetailsImageId(detailsImage)
+        if (itemDetailsImageId != detailsImage){
+          setItemDetailsImageId(detailsImage)
+        }
       }
     }
   },[itemDetails, checkProductDetails])
@@ -138,13 +138,13 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
             <MaterialIcons style={{fontWeight: "bold", color: "white"}} name="filter-list" size={20}/>
             <Text style={{color: "white", fontWeight: "bold", fontSize: 15, textAlign: "center"}}>  {showCat}</Text>
           </View>
-          <TouchableOpacity style={{flex: 1.5, borderLeftWidth:1.5, borderLeftColor: "white"}} onPress={()=>{
+          <TouchableOpacity style={{flex: 2.5,zIndex:20000, borderLeftWidth:1.5, borderLeftColor: "white",height: "50%", marginVertical: 30, justifyContent: "center", alignItems: "center"}} onPress={()=>{
             setShowCat("hide")
             setFilter({mainCat: "", subCat: []})
             Products.length = 0
             getTodayProducts()
           }}>
-            <MaterialIcons style={{color: "white", fontWeight: "bold", marginLeft: 5}} name="close" size={20}/>
+            <MaterialIcons style={{color: "white", fontWeight: "bold"}} name="close" size={20}/>
           </TouchableOpacity>
         </View>
         <ProductDetailsModal imageId={itemDetailsImageId} onClose={()=>{setCheckProductDetails(false)}} product={itemDetails} refObject={modalRef} addToCart={() => console.log("adding to cart")} />
@@ -202,18 +202,17 @@ const styles = StyleSheet.create({
     paddingTop: 8,
   },
   catFilter: {
-    height: "6%",
+    height: "7%",
     width: "60%",
     position: "absolute",
-    left: "20%",
-    top: "91%",
+    alignSelf: "center",
+    top: "90%",
     flexDirection: "row",
     backgroundColor: "#2196f3",
     borderRadius: 22,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: "5%",
-    elevation: 10,
   },
   hideCatFilter: {
     display: "none"

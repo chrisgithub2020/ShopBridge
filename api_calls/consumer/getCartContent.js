@@ -9,7 +9,6 @@ const getCartContent = async (urls, token) => {
         "access-token":token,
       }
     })
-    console.log(response.status)
     if (response.ok) {
       const result = await response.json()
       if (response.ok){

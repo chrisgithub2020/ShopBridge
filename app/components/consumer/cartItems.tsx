@@ -1,9 +1,10 @@
-import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, Image, StyleSheet, ActivityIndicator} from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { TextInput } from "react-native-gesture-handler";
 import { SetStateAction, useState } from "react";
 import React from "react";
 import { CartItem } from "@/constants/types";
+import getItemImage from "@/api_calls/consumer/fetchImage";
 
 interface CardItemComponentProp {
   item: CartItem;
@@ -13,18 +14,27 @@ interface CardItemComponentProp {
 
 const CardItemComponent: React.FC<CardItemComponentProp> = ({ item, openCompleteOrderModal, removeFromCart }) => {
   const [quantityDefaultValue, setQuantityDefaultValue] = useState("1")
+  const [image, setImage] = useState<string>("")
+  const [imageLoading, setImageLoading] = useState<boolean>(true)
+
+  getItemImage(item.photoId).then((image)=>{
+      setImage(image)
+      setImageLoading(false)
+  })
+
   return (
     <TouchableOpacity onPress={() => {
       console.log(item.quantity)
       openCompleteOrderModal()
     }} style={styles.item_container}>
       <View style={{ flexDirection: "row", flex: 1, justifyContent: "space-around", padding: 4}}>
-        <View style={{flex: 0.5}}>
+        <View style={{flex: 0.5, justifyContent: "center", alignItems: "center"}}>
           <Image resizeMode="contain"
             style={styles.image}
             // source={require("../../../resources/no_internet.png")}
-            source={{ uri: `data:image/png;base64,${item.photo}` }}
+            source={{ uri: `data:image/png;base64,${image}` }}
           />
+          {imageLoading && <ActivityIndicator style={{ flex: 1, position: "absolute"}} size="small" color="black" />}
         </View>
         <View style={{flex: 1, }}>
           <Text

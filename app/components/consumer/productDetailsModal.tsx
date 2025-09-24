@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, KeyboardAvoidingView, 
 import {Modalize} from "react-native-modalize"
 import React, {useEffect, useRef, useState} from "react"
 import getItemImages from "../../../api_calls/consumer/fetchImages"
+import { ScrollView } from "react-native-gesture-handler";
 
 interface itemDetail {
     name: string;
@@ -22,9 +23,7 @@ interface modalProp {
 
 
 const ProductDetailsModal = ({addToCart,  refObject, product, onClose, imageId}: modalProp) => {
-    let currentImageIndex = 0
-    const modalRef = useRef<Modalize>(null);
-    const [currentPhoto, setCurrentPhoto] = useState<string>();
+    const [photos, setPhotos] = useState<Array<string>>();
     const [imageLoading, setImageLoading] = useState<boolean>(true)
 
     useEffect(()=>{
@@ -32,45 +31,28 @@ const ProductDetailsModal = ({addToCart,  refObject, product, onClose, imageId}:
             // this gets the images asynchronously without delaying main process
             getItemImages(imageId).then((images)=>{
                 console.log(images.length)
-                product.photos = images
+                setPhotos(images)
                 setImageLoading(false)
             })
         }
     }, [imageId])
 
 
-    const switchProductPhotoForward = () => {
-        if (currentImageIndex === product.photos.length -1) {
-            console.log("Reached Limit")
-        } else {
-            currentImageIndex ++;
-        }
-        setCurrentPhoto(product.photos[currentImageIndex])
-    }
-
-    const switchProductPhotoBackward = () => {
-        if (currentImageIndex === product.photos.length -1) {
-            console.log("Reached Limit")
-        } else {
-            currentImageIndex --;
-        }
-        setCurrentPhoto(product.photos[currentImageIndex])
+    const displayImages = ()=>{        
+        return (
+            <ScrollView style={{flex: 1, backgroundColor: "black", height: 300, width: "auto"}} horizontal={true} pagingEnabled={true}>{photos?.map((val, ind)=>{
+            return <Image key={ind} source={{uri:`data:image/png;base64,${val}`}} style={styles.product_images}/>
+        })}</ScrollView>
+        )
     }
 
     
     return (
         <Modalize onClose={onClose} modalStyle={{zIndex: 1000}} overlayStyle={{zIndex: 999}} adjustToContentHeight={true} ref={refObject}>
             <KeyboardAvoidingView style={{padding: 8}}>
-                <View style={{flex:1, padding:5,}}>                    
-                    <View style={styles.product_images_container}>
-                        <TouchableOpacity disabled={imageLoading} onPress={switchProductPhotoBackward} style={styles.change_image_button}>
-                            <MaterialIcons name="arrow-back" size={25}/>
-                        </TouchableOpacity>
-                        <Image source={(currentImageIndex === 0 ) ? {uri:`data:image/png;base64,${product.photos[0]}`}: {uri:`data:image/png;base64,${currentPhoto}`}} style={styles.product_images}/>
-                        <TouchableOpacity disabled={imageLoading} onPress={switchProductPhotoForward} style={styles.change_image_button}>
-                            <MaterialIcons name="arrow-forward" size={25}/>
-                        </TouchableOpacity>
-                        {imageLoading && <ActivityIndicator style={{ flex: 1, position: "absolute", top: "40%", left: "40%" }} size="small" color="black" />}
+                <View style={{flex:1}}>                    
+                    <View style={styles.product_images_container}>                        
+                        {imageLoading ? <ActivityIndicator style={{ flex: 1}} size="large" color="black" />:displayImages()}
                     </View>
                     <View style={styles.product_details}>
                         <Text adjustsFontSizeToFit style={{elevation: 4, padding:5, fontWeight:"bold", fontSize:18}}>{product.name}</Text>
@@ -95,11 +77,14 @@ const styles = StyleSheet.create({
     product_images_container: {
       flexDirection: "row",
       padding:5,
-      backgroundColor: "white",
+      alignItems: "center",
+      justifyContent: "center",
+      height: 300
     },
     product_images: {
+      flex: 1,
       height: 300,
-      width: "85%",
+      width: 300,
     },
     change_image_button: {
       height: "100%",
@@ -111,5 +96,6 @@ const styles = StyleSheet.create({
       borderTopColor: "#e6e1e1",
       backgroundColor: "white",
       padding:3,
+      margin: 5,
     }
 })

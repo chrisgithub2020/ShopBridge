@@ -8,6 +8,7 @@ import getItemImage from "@/api_calls/consumer/fetchImage";
 const ProductComponent = ({ product, onClick, addToCart, inCart}: {product: ProductData, onClick: ()=> void, addToCart: ()=>void, inCart: boolean}) => {
   const [cartButtonText, setCartButtonText] = useState<any>(inCart? {"action":"Remove", "icon":"delete"}:{"action":"Add To Cart", "icon":"shopping-cart"})
   const [imageLoading, setImageLoading] = useState<boolean>(true)
+  const [image, setImage] = useState<string>("")
 
   if (imageLoading) {
     getItemImage(product.photo).then((image)=>{
@@ -15,14 +16,15 @@ const ProductComponent = ({ product, onClick, addToCart, inCart}: {product: Prod
       setImageLoading(false)
     })
   }
+
   return (
     <TouchableOpacity style={styles.product_container} onPress={onClick}>
       <View style={styles.product_image_container}>
         <Image
           style={styles.product_image}
-          source={{uri:`data:image/png;base64,${product.photo}`}}
+          source={{uri:`data:image/png;base64,${image}`}}
         />
-        {imageLoading && <ActivityIndicator style={{ flex: 1, position: "absolute", top: "40%", left: "40%" }} size="small" color="black" />}
+        {imageLoading && <ActivityIndicator style={{ flex: 1, position: "absolute"}} size="small" color="black" />}
       </View>
       <View style={styles.product_desc_container}>
         <Text style={styles.store_name}>{product.store_name}</Text>

@@ -30,7 +30,7 @@ const Cart = () => {
   const { a_token,cart } = ProvideContext()
   const completeOrderModal = useRef<Modalize>(null)
   const [cartExtraData, setCartExtraData] = useState<any>()
-  const [orderToCompleteDetails, setOrderToCompleteDetails] = useState<OrderObject>({"id":"", "ProductName": "sdfjasdf", "quantity": "3",  "price": "78", "deliveryFees": "9.5", "photo":""});
+  const [orderToCompleteDetails, setOrderToCompleteDetails] = useState<OrderObject>({"id":"", "ProductName": "sdfjasdf", "quantity": "3",  "price": "78", "deliveryFees": "9.5"});
   const payStackRef = useRef<paystackProps.PayStackRef>(null)
   const [refresh, setRefresh] = useState<boolean>(false)
 
@@ -46,19 +46,11 @@ const Cart = () => {
         let items = await getCartContent(cart.current.toString(), a_token.current)
         CartItemsData.length = 0
         for (let i in items) {
-          let _i = { "id": items[i]["id"], "name": items[i]["itemName"], "price": items[i]["itemPrice"], "quantity": "1", "photo":""}
+          let _i = { "id": items[i]["id"], "name": items[i]["itemName"], "price": items[i]["itemPrice"], "quantity": "1", "photoId":items[i]["itemImages"]}
         
           CartItemsData.push(_i)
           setCartExtraData(_i)
         }
-
-        for (let i in items) {
-          getItemImages(items[Number(i)]["itemImages"]).then((images)=>{
-            CartItemsData[Number(i)]["photo"]  = images[0]
-            setCartExtraData({})
-          })
-        }
-        
       }else {
         CartItemsData.length = 0
         setCartExtraData({})
@@ -97,10 +89,10 @@ const Cart = () => {
   }
 
   const checkOut = (id: string) => {
-    let details: OrderObject = {"id":"", "ProductName": "sdfjasdf", "quantity": "3", "price": "78", "deliveryFees": "9.5", "photo":""}
+    let details: OrderObject = {"id":"", "ProductName": "sdfjasdf", "quantity": "3", "price": "78", "deliveryFees": "9.5"}
     for (let orderItemIndex in CartItemsData){
       if (CartItemsData[orderItemIndex]["id"] === id){
-        details = {"id":id, "ProductName":CartItemsData[orderItemIndex]["name"], "photo":CartItemsData[orderItemIndex]["photo"], "price":CartItemsData[orderItemIndex]["price"], "quantity":CartItemsData[orderItemIndex]["quantity"], "deliveryFees":"9.5"}
+        details = {"id":id, "ProductName":CartItemsData[orderItemIndex]["name"], "price":CartItemsData[orderItemIndex]["price"], "quantity":CartItemsData[orderItemIndex]["quantity"], "deliveryFees":"9.5"}
       }
       setOrderToCompleteDetails(details)
     }

@@ -7,7 +7,7 @@ export type ProductData = {
 }
 
 export type CartItem = {
-  photo: string;
+  photoId: string;
   id: string;
   name: string;
   price: string;
@@ -19,7 +19,6 @@ export type OrderObject = {
   quantity: string;
   price: string;
   deliveryFees: string;
-  photo: string;
   id: string;
 }
 
