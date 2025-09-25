@@ -28,7 +28,6 @@ const LoadingScreen = ({navigation}: {navigation: any}) => {
         if (accType === null){
           setUserExist("index")
         } 
-
         if ("refresh" in accType) {
           a_token.current = accType["refresh"]["a_token"]
           r_token.current = accType["refresh"]["r_token"]
