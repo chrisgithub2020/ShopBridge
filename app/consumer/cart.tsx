@@ -46,7 +46,6 @@ const Cart = ({navigation}: {navigation: any}) => {
         if (items === null) {
           navigation.replace("auth")
         }
-        console.log(items)
 
         if ("refresh" in items) {
           a_token.current = items["refresh"]["a_token"]
