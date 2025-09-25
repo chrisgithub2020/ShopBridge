@@ -8,13 +8,13 @@ import {
    Text,
    TouchableOpacity,
 } from "react-native";
-import React, { useState, useRef, useContext, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context"
 import getHomepageProducts from "../../api_calls/consumer/getHompageProducts"
 import { Modalize } from "react-native-modalize";
 import ProductComponent from "../components/consumer/homePage"
 import ProductDetailsModal from "../components/consumer/productDetailsModal"
-import { MyContext, ProvideContext } from "../../context/myContext";
+import { ProvideContext } from "../../context/myContext";
 import saveCartToken from "../../storage/saveToCart"
 import getProductDetails from "../../api_calls/consumer/getProductDetails"
 import getCategoryProducts from "../../api_calls/consumer/category"
@@ -22,7 +22,6 @@ import { MaterialIcons } from "@expo/vector-icons";
 import CatDict from "../../api_calls/Categories"
 import searchProductInDB from "../../api_calls/consumer/searchProduct"
 import { ProductData } from "@/constants/types";
-import getItemImages from "../../api_calls/consumer/fetchImages"
 
 let detailsImage: string
 
@@ -33,7 +32,7 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
   const numColumns = Math.floor(screenWidth / 170);
   const modalRef = useRef<Modalize>(null)
   
-  const { cart, filter, setFilter } = ProvideContext()
+  const { cart, filter, setFilter, storeItems } = ProvideContext()
   const [todayProducts, setTodayProducts] = useState<any>()
   const [itemDetails, setItemDetails] = useState<any>({"name":"","photos":""})
   const [itemDetailsImageId, setItemDetailsImageId] = useState<string | null>(null)
@@ -70,9 +69,6 @@ const ConsumerHome = ({navigation}: {navigation: any}) => {
     }
 
   }
-
-
-
   const openModal = () => {
     modalRef.current?.open()
   }

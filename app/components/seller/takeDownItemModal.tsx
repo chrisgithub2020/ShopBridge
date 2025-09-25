@@ -6,7 +6,7 @@ import React, {useRef} from "react"
 interface modalProp {
     takeDown: () => void;
     refObject: React.RefObject<Modalize>;
-    setStoreName: (text: String) => void;
+    setStoreName: (text: string) => void;
     loading: boolean;
 }
 

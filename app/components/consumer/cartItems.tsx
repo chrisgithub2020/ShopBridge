@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, Image, StyleSheet, ActivityIndicator} from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { TextInput } from "react-native-gesture-handler";
-import { SetStateAction, useState } from "react";
+import { useState } from "react";
 import React from "react";
 import { CartItem } from "@/constants/types";
 import getItemImage from "@/api_calls/consumer/fetchImage";
@@ -12,7 +12,7 @@ interface CardItemComponentProp {
   removeFromCart: () => void;
 }
 
-const CardItemComponent: React.FC<CardItemComponentProp> = ({ item, openCompleteOrderModal, removeFromCart }) => {
+const CardItemComponent = ({ item, openCompleteOrderModal, removeFromCart}:CardItemComponentProp) => {
   const [quantityDefaultValue, setQuantityDefaultValue] = useState("1")
   const [image, setImage] = useState<string>("")
   const [imageLoading, setImageLoading] = useState<boolean>(true)
@@ -24,7 +24,6 @@ const CardItemComponent: React.FC<CardItemComponentProp> = ({ item, openComplete
 
   return (
     <TouchableOpacity onPress={() => {
-      console.log(item.quantity)
       openCompleteOrderModal()
     }} style={styles.item_container}>
       <View style={{ flexDirection: "row", flex: 1, justifyContent: "space-around", padding: 4}}>

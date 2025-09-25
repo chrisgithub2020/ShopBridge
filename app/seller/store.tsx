@@ -24,8 +24,7 @@ import { MyContext, ProvideContext } from "../../context/myContext";
 import TakeDownItemModal from "../components/seller/takeDownItemModal";
 import getStoreItems from "../../api_calls/seller/getStoreItems";
 import takeItemDown from "../../api_calls/seller/takeDown"
-import getItemImage from "@/api_calls/consumer/fetchImage";
-
+import { StoreProduct } from "@/constants/types";
 let itemImages: Array<String | null | undefined> = [];
 
 BackHandler.addEventListener("hardwareBackPress", ()=>{
@@ -33,14 +32,6 @@ BackHandler.addEventListener("hardwareBackPress", ()=>{
   return true
 })
 
-interface StoreProduct {
-  photo: string;
-  id: string;
-  name: string;
-  quantity: string;
-  price: string;
-  description: string;
-}
 
 DataSkeletons.itemDetails.itemImages = itemImages;
 
@@ -50,7 +41,8 @@ let Products: StoreProduct[] = [
 const Store = ({navigation}: {navigation: any}) => {
   let itemToRestockID = "";
   let amountToRestock: String = "";
-  let takeDown: boolean = false;
+  const [storeNmae, setStoreName] = useState<string>()
+  const [takeDownItemId, setTakeDownItemId] = useState<string>()
   const [restockLoading, setRestockLoading] = useState<boolean>(false)
   const [takeDownLoading, setTakeDownLoading] = useState<boolean>(false)
   const [selectedValue, setCurrentValue] = useState("e");
@@ -88,6 +80,21 @@ const RestockItem = async (id: String, amount: String) => {
     })
     setStoreItems(Products)
     setStoreProductsSearch(Products)
+  }
+
+  const removeItem = async (itemId: string, storeName: string)=>{
+    if (storeName.length < 1){
+      return
+    }
+    setTakeDownLoading(true)
+    const response = await takeItemDown(itemId, storeName, a_token.current)
+    if (response === true){
+      ToastAndroid.show("Item was removed Successfully", ToastAndroid.SHORT)
+      getStoreIt()
+    } else {
+      ToastAndroid.show("There was a problem. Please try with the appropriate name", ToastAndroid.SHORT)
+    }
+    setTakeDownLoading(false)
   }
   
   useEffect(()=>{
@@ -216,17 +223,8 @@ const RestockItem = async (id: String, amount: String) => {
             <MaterialIcons style={{ color: "#e6e1e1" }} size={30} name="add" />
           </TouchableOpacity>
         </View>
-        <TakeDownItemModal loading={takeDownLoading} setStoreName={(text: String)=>{
-          if (text === text){
-            takeDown = true
-          }
-        }} refObject={takeDownItemModal} takeDown={()=>{
-            console.log(takeDown)
-          if (takeDown){
-            takeItemDown("dsfd")
-          } else {
-            ToastAndroid.show("Store Name does not match!!", ToastAndroid.SHORT)
-          }
+        <TakeDownItemModal loading={takeDownLoading} setStoreName={(text: string)=>{setStoreName(text)}} refObject={takeDownItemModal} takeDown={()=>{
+          removeItem(takeDownItemId!, storeNmae!)
         }}/>
         <RestockModal loading={restockLoading} setAmountToRestock={(text: String)=> amountToRestock = text}
           refObject={modalRef}
@@ -240,7 +238,7 @@ const RestockItem = async (id: String, amount: String) => {
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <ProductComponent onTakeDown={() => {
-              itemToRestockID = item.id;
+              setTakeDownItemId(item.id);
               openTakeDownItemModal()
             }} product={item} onRestock={() => {
               itemToRestockID = item.id;

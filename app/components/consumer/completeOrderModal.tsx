@@ -1,9 +1,9 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { View, Text, TouchableOpacity, StyleSheet, Image, KeyboardAvoidingView } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image, KeyboardAvoidingView, ActivityIndicator } from "react-native";
 import { Modalize } from "react-native-modalize"
-import React, { useRef } from "react"
+import React, { useRef, useState } from "react"
 import { OrderObject } from "@/constants/types";
-
+import getItemImage from "@/api_calls/consumer/fetchImage";
 
 interface modalProp {
   order: () => void;
@@ -14,25 +14,11 @@ interface modalProp {
 
 interface StoreProduct {
   name: string;
-  photo: string;
+  photo?: string;
 }
 
 
 
-const ProductComponent = ({name, photo}: StoreProduct) => {
-  return (
-    <View style={styles.supplies_container}>
-      <View style={{ flexDirection: "row" }}>
-        <View>
-          <Image resizeMode="contain" style={styles.image} source={{uri:`data:image/png;base64,${photo}`}} />
-        </View>
-        <View style={styles.abt_container}>
-          <Text style={{ height: "40%" }}>{name}</Text>
-        </View>
-      </View>
-    </View>
-  )
-}
 
 
 const CompleteOrderModal = ({ order, refObject, orderObject }: modalProp) => {
@@ -43,7 +29,6 @@ const CompleteOrderModal = ({ order, refObject, orderObject }: modalProp) => {
     <Modalize modalStyle={{ zIndex: 1000 }} overlayStyle={{ zIndex: 999 }} adjustToContentHeight={true} ref={refObject}>
       <KeyboardAvoidingView style={{ padding: 8, }}>
         <View style={{margin: 3}}>
-          <ProductComponent photo={orderObject.photo} name={orderObject.ProductName} />
         </View>
         <View style={{marginBottom: 6,marginRight: 6, marginLeft: 6,borderBottomWidth: 2,  borderColor: "#e6e1e1", backgroundColor: "#e6e1e1", borderRadius:3,  }}>
           <View style={{flexDirection: "row", borderBottomWidth: 1, borderColor: "white", padding: 4}}>

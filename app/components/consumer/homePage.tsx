@@ -1,21 +1,23 @@
 import { Text, Image, TouchableOpacity, View, StyleSheet, ActivityIndicator } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import React from "react";
 import { ProductData } from "@/constants/types";
 import getItemImage from "@/api_calls/consumer/fetchImage";
 
-const ProductComponent = ({ product, onClick, addToCart, inCart}: {product: ProductData, onClick: ()=> void, addToCart: ()=>void, inCart: boolean}) => {
+const ProductComponent = ({ product, onClick, addToCart, inCart} : {product: ProductData, onClick: ()=> void, addToCart: ()=>void, inCart: boolean}) => {
   const [cartButtonText, setCartButtonText] = useState<any>(inCart? {"action":"Remove", "icon":"delete"}:{"action":"Add To Cart", "icon":"shopping-cart"})
   const [imageLoading, setImageLoading] = useState<boolean>(true)
   const [image, setImage] = useState<string>("")
 
-  if (imageLoading) {
-    getItemImage(product.photo).then((image)=>{
-      product.photo = image
-      setImageLoading(false)
-    })
-  }
+  useMemo(()=>{
+      if (imageLoading) {
+        getItemImage(product.photo).then((image)=>{
+          setImage(image)
+          setImageLoading(false)
+        })
+      }
+    }, [product.photo])
 
   return (
     <TouchableOpacity style={styles.product_container} onPress={onClick}>

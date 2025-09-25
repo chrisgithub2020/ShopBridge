@@ -16,7 +16,6 @@ import saveCartToken from "@/storage/saveToCart";
 import DataSkeletons from "@/api_calls/dataSkeletons";
 import CompleteOrder from "../../api_calls/consumer/CompleteOrder";
 import { CartItem, OrderObject } from "@/constants/types";
-import getItemImages from "@/api_calls/consumer/fetchImages";
 
 import KEYS from "../../api_calls/Keys"
 const constants = KEYS()
@@ -27,7 +26,7 @@ const paystackKey = constants.PAYSTACK_KEY
 
 
 const Cart = () => {
-  const { a_token,cart } = ProvideContext()
+  const { a_token,cart, setStoreItems} = ProvideContext()
   const completeOrderModal = useRef<Modalize>(null)
   const [cartExtraData, setCartExtraData] = useState<any>()
   const [orderToCompleteDetails, setOrderToCompleteDetails] = useState<OrderObject>({"id":"", "ProductName": "sdfjasdf", "quantity": "3",  "price": "78", "deliveryFees": "9.5"});
@@ -92,7 +91,7 @@ const Cart = () => {
     let details: OrderObject = {"id":"", "ProductName": "sdfjasdf", "quantity": "3", "price": "78", "deliveryFees": "9.5"}
     for (let orderItemIndex in CartItemsData){
       if (CartItemsData[orderItemIndex]["id"] === id){
-        details = {"id":id, "ProductName":CartItemsData[orderItemIndex]["name"], "price":CartItemsData[orderItemIndex]["price"], "quantity":CartItemsData[orderItemIndex]["quantity"], "deliveryFees":"9.5"}
+        details = {"id":id, "ProductName":CartItemsData[Number(orderItemIndex)]["name"], "price":CartItemsData[Number(orderItemIndex)]["price"], "quantity":CartItemsData[Number(orderItemIndex)]["quantity"], "deliveryFees":"9.5"}
       }
       setOrderToCompleteDetails(details)
     }

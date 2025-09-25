@@ -1,15 +1,20 @@
 import Link from "../serverLink"
-const takeItemDown = async (itemID) => {
+const takeItemDown = async (itemID, storeName, a_token) => {
     try {
-        const response = await fetch(`${Link()}/take_down/${itemID}`, {
-            method: "GET",
+        const response = await fetch(`${Link()}/seller/take_down`, {
+            method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "access-token": a_token
             },
+            body: JSON.stringify({"itemId":itemID, "storeName": storeName})
         })
-        console.log(response)
+        if (response.ok){
+            return await response.json()
+        }
     } catch (err) {
         console.error(err)
+        return false
     }
 }
 
