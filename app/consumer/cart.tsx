@@ -25,8 +25,8 @@ const paystackKey = constants.PAYSTACK_KEY
 
 
 
-const Cart = () => {
-  const { a_token,cart, setStoreItems} = ProvideContext()
+const Cart = ({navigation}: {navigation: any}) => {
+  const { a_token,cart, setStoreItems, r_token} = ProvideContext()
   const completeOrderModal = useRef<Modalize>(null)
   const [cartExtraData, setCartExtraData] = useState<any>()
   const [orderToCompleteDetails, setOrderToCompleteDetails] = useState<OrderObject>({"id":"", "ProductName": "sdfjasdf", "quantity": "3",  "price": "78", "deliveryFees": "9.5"});
@@ -42,10 +42,19 @@ const Cart = () => {
   const getCartCont = async () => {
     if (cart.current) {
       if (cart.current.length > 0) {
-        let items = await getCartContent(cart.current.toString(), a_token.current)
+        let items: any = await getCartContent(cart.current.toString(), a_token.current, r_token.current)
+        if (items === null) {
+          navigation.replace("auth")
+        }
+        console.log(items)
+
+        if ("refresh" in items) {
+          a_token.current = items["refresh"]["a_token"]
+          r_token.current = items["refresh"]["r_token"]
+        }
         CartItemsData.length = 0
-        for (let i in items) {
-          let _i = { "id": items[i]["id"], "name": items[i]["itemName"], "price": items[i]["itemPrice"], "quantity": "1", "photoId":items[i]["itemImages"]}
+        for (let i in items["data"]) {
+          let _i = { "id": items["data"][i]["id"], "name": items["data"][i]["itemName"], "price": items["data"][i]["itemPrice"], "quantity": "1", "photoId":items["data"][i]["itemImages"]}
         
           CartItemsData.push(_i)
           setCartExtraData(_i)
@@ -75,7 +84,15 @@ const Cart = () => {
     DataSkeletons.orderDetails.product = orderToCompleteDetails.id
     DataSkeletons.orderDetails.quantity = orderToCompleteDetails.quantity
     DataSkeletons.orderDetails.amountPaid = (Number(orderToCompleteDetails.price)*Number(orderToCompleteDetails.quantity)) + Number(orderToCompleteDetails.deliveryFees)
-    const response = await CompleteOrder(DataSkeletons.orderDetails)
+    const response = await CompleteOrder(DataSkeletons.orderDetails, a_token.current, r_token.current)
+    if (response === null) {
+      navigation.replace("auth")
+    }
+
+    if ("refresh" in response) {
+      a_token.current = response["refresh"]["a_token"]
+      r_token.current = response["refresh"]["r_token"]
+    }
     if (response){
       ToastAndroid.show("Order Completed", ToastAndroid.SHORT)
       let itemIndex = cart.current!.indexOf(orderToCompleteDetails.id)
@@ -87,7 +104,7 @@ const Cart = () => {
     console.log(response)
   }
 
-  const checkOut = (id: string) => {
+  const prepareCheckOut = (id: string) => {
     let details: OrderObject = {"id":"", "ProductName": "sdfjasdf", "quantity": "3", "price": "78", "deliveryFees": "9.5"}
     for (let orderItemIndex in CartItemsData){
       if (CartItemsData[orderItemIndex]["id"] === id){
@@ -115,7 +132,7 @@ const Cart = () => {
           saveCartToken(cart.current)
         }
       }} item={item} openCompleteOrderModal={()=>{
-        checkOut(item.id)
+        prepareCheckOut(item.id)
         
         }} />} />
     </SafeAreaView>

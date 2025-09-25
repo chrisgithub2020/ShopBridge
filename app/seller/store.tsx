@@ -67,19 +67,32 @@ const RestockItem = async (id: String, amount: String) => {
     restockNumber:amount,
   }
 
-  await restockItem(formData, a_token)
+  const result = await restockItem(formData, a_token, r_token.current)
+  if (result === null) {
+    navigation.replace("auth")
+  }
+  if ("refresh" in result) {
+    a_token.current = result["refresh"]["a_token"]
+    r_token.current = result["refresh"]["r_token"]
+  }
   setRestockLoading(false)
 }
 
   const getStoreIt = async ()=>{
-    const res = await getStoreItems(a_token.current)
+    const res = await getStoreItems(a_token.current, r_token.current)
+    if (res === null) {
+      navigation.replace("auth")
+    }
     Products.length = 0
-    res.forEach((item: any)=>{
+    if ("refresh" in res) {
+      a_token.current = res["refresh"]["a_token"]
+      r_token.current = res["refresh"]["r_token"]
+    }
+    res["data"].forEach((item: any)=>{
       let _i = {"photo":item["itemImages"], "name":item["itemName"], "price":item["itemPrice"], "quantity": item["stockQuantity"], "description":item["itemDesc"], "id":item["id"]}
       Products.push(_i)
     })
     setStoreItems(Products)
-    console.log(storeItems)
     setStoreProductsSearch(Products)
   }
 
@@ -88,8 +101,15 @@ const RestockItem = async (id: String, amount: String) => {
       return
     }
     setTakeDownLoading(true)
-    const response = await takeItemDown(itemId, storeName, a_token.current)
-    if (response === true){
+    const response = await takeItemDown(itemId, storeName, a_token.current, r_token.current)
+    if (response === null) {
+      navigation.replace("auth")
+    }
+    if ("refresh" in response) {
+      a_token.current = response["refresh"]["a_token"]
+      r_token.current = response["refresh"]["r_token"]
+    }
+    if (response["success"] === true){
       ToastAndroid.show("Item was removed Successfully", ToastAndroid.SHORT)
       getStoreIt()
     } else {
@@ -155,10 +175,17 @@ const RestockItem = async (id: String, amount: String) => {
     ) {
       ToastAndroid.show("All fields are required", ToastAndroid.SHORT);
     } else {
-      const _i = await sendData(DataSkeletons.itemDetails, a_token.current);
-      let item: StoreProduct = {"photo": Object(_i)["photo"], "id":Object(_i)["id"], "name":Object(_i)["name"],  "price":Object(_i)["price"], "quantity":Object(_i)["quantity"], "description": _i["description"]}
+      const item_resp = await sendData(DataSkeletons.itemDetails, a_token.current, r_token.current);
+      if (item_resp === null) {
+        navigation.replace("auth")
+      }
+      if ("refresh" in item_resp) {
+        a_token.current = item_resp["refresh"]["a_token"]
+        r_token.current = item_resp["refresh"]["r_token"]
+      }
+      let item: StoreProduct = {"photo": Object(item_resp["data"])["photo"], "id":Object(item_resp["data"])["id"], "name":Object(item_resp["data"])["name"],  "price":Object(item_resp["data"])["price"], "quantity":Object(item_resp["data"])["quantity"], "description": item_resp["data"]["description"]}
       Products.push(item)
-      setStoreItems(_i)
+      setStoreItems(item_resp["data"])
       DataSkeletons.itemDetails.itemImages.length = 0
     }
     setAddItemLoading(false)

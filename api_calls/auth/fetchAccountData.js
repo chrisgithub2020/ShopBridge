@@ -1,21 +1,23 @@
 import Link from "../serverLink"
-
-const fetchData = async (a_token) => {
+import saveToken from "@/storage/saveToken"
+const fetchData = async (a_token, r_token) => {
     try {
         const result = await fetch(`${Link()}/loading`, {
             method: "GET",
             headers: {
                 "access-token": a_token,
+                "refresh-token": r_token
             }
         })
-        if (result.status == 200) {
+        if (result.ok) {
             const response = await result.json()
-            console.log(response)
+            if ("refresh" in result){
+                saveToken(result["a_token"], result["r_token"])
+            }
             return response
-        } else if (result.status == 401){
-            console.log("refresh")
         } else {
             console.log("login")
+            return null
         }
         
     } catch (err) {

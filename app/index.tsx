@@ -24,17 +24,25 @@ const LoadingScreen = ({navigation}: {navigation: any}) => {
       const cartString = await retreiveToken("cart")
 
       if (access_token) {
-        const accType = await fetchData(access_token);    
+        const accType = await fetchData(access_token);
+        if (accType === null){
+          setUserExist("index")
+        } 
+
+        if ("refresh" in accType) {
+          a_token.current = accType["refresh"]["a_token"]
+          r_token.current = accType["refresh"]["r_token"]
+        }
         a_token.current = access_token    
         r_token.current = refresh_token ? refresh_token : ""
         
-        if (accType === "consumer") {
+        if (accType["data"] === "consumer") {
           setUserExist("consumer");
           let cartItems = cartString ? cartString.split(",") : []
 
           cart.current?.push(...cartItems)
           setIsLoading(false)
-        } else if (accType == "seller"){
+        } else if (accType["data"] == "seller"){
 
           setUserExist("seller");
           setIsLoading(false)

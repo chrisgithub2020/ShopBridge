@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, TextInput, ToastAndroid, RefreshControl, BackHandler} from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, ActivityIndicator, ToastAndroid, RefreshControl, BackHandler} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import React, {useContext, useEffect, useState, useRef,} from 'react'
 import { MyContext, ProvideContext } from '../../context/myContext'
@@ -10,6 +10,7 @@ import orderState from "../../api_calls/seller/orderAction"
 import checkOrderStatus from "../../api_calls/seller/orderStatus"
 import { store } from 'expo-router/build/global-state/router-store'
 import { StoreProduct } from '@/constants/types'
+import getItemImage from '@/api_calls/consumer/fetchImage'
 interface Order {
   id: string;
   recipient: string;
@@ -34,11 +35,22 @@ const Orders: Order[] = [
 
 
 const ProductComponent = ({ name, price, photo }: { name: string, photo: string, price: string}) => {
+  const [image, setImage] = useState<string>()
+  const [imageLoading, setImageLoading] = useState<boolean>(true)
+
+  if (imageLoading) {
+    // this gets the images asynchronously without delaying main process
+    getItemImage(photo).then((images)=>{
+      setImage(images)
+      setImageLoading(false)
+    })
+  }
   return (
     <View style={styles.supplies_container}>
           <View style={{flexDirection:"row"}}>
-            <View>
-              <Image resizeMode="contain" style={styles.image} source={{uri:`data:image/png;base64,${photo}`}}/>
+            <View style={{justifyContent: "center", alignItems: "center"}}>
+              <Image resizeMode="contain" style={styles.image} source={{uri:`data:image/png;base64,${image}`}}/>
+              {imageLoading && <ActivityIndicator style={{ flex: 1, position: "absolute"}} size="small" color="black" />}
             </View>
             <View style={styles.abt_container}>
               <Text style={{height:"40%", marginTop:10,}}>{name}</Text>
@@ -92,8 +104,15 @@ const Order = ({navigation}: {navigation: any}) => {
 
   const cancelOrder = async () => {
     setCancelLoading(true)
-    const result = await orderState({id:orderId, action:"cancelled"}, a_token.current)
-    if (result){
+    const result = await orderState({id:orderId, action:"cancelled"}, a_token.current, r_token.current)
+    if (result === null) {
+      navigation.replace('auth')
+    }
+    if ("refresh" in result) {
+      a_token.current = result["refresh"]["a_token"]
+      r_token.current = result["refresh"]["r_token"]
+    }
+    if (result["success"]){
       ToastAndroid.show("Order Dispatched. User has been notified", ToastAndroid.SHORT)
       closeModal()
     }
@@ -102,8 +121,15 @@ const Order = ({navigation}: {navigation: any}) => {
 
   const dispatchOrder = async () => {
     setDispatchLoading(true)
-    const result = await orderState({id:orderId, action:"dispatched"}, a_token.current)
-    if (result){
+    const result = await orderState({id:orderId, action:"dispatched"}, a_token.current, r_token.current)
+    if (result === null) {
+      navigation.replace("auth")
+    }
+    if ("refresh" in result) {
+      a_token.current = result["refresh"]["a_token"]
+      r_token.current = result["refresh"]["r_token"]
+    }
+    if (result["success"]){
       ToastAndroid.show("Order Dispatched. User has been notified", ToastAndroid.SHORT)
       closeModal()
     }
@@ -121,10 +147,17 @@ const Order = ({navigation}: {navigation: any}) => {
   }
 
   const orderStatus = async (id: string)=>{
-    const result = await checkOrderStatus(id, a_token.current)
-    if (result === "cancelled"){
+    const result = await checkOrderStatus(id, a_token.current, r_token.current)
+    if (result === null ){
+      navigation.replace("auth")
+    }
+    if ("refresh" in result) {
+      a_token.current = result["refresh"]["a_token"]
+      r_token.current = result["refresh"]["r_token"]
+    }
+    if (result["data"] === "cancelled"){
       ToastAndroid.show("Order was cancelled", ToastAndroid.SHORT)
-    } else if (result === "dispatch") {
+    } else if (result["data"] === "dispatch") {
       ToastAndroid.show("Order was dispatched", ToastAndroid.SHORT)
     } else {
       openModal()
@@ -132,9 +165,16 @@ const Order = ({navigation}: {navigation: any}) => {
   }
 
   const getStoreOrd = async () => {
-    let result = await getStoreOrders(a_token.current)
+    let result = await getStoreOrders(a_token.current, r_token.current)
+    if (result === null) {
+      navigation.replace("auth")
+    }
     Orders.length = 0
-    result.forEach((element: any) => {
+    if ("refresh" in result) {
+      a_token.current = result["refresh"]["a_token"]
+      r_token.current = result["refresh"]["r_token"]
+    }
+    result["data"].forEach((element: any) => {
       let _i = {"id":element["id"],"product":element["item"], "recipient":element["firstName"]+" "+element["lastName"], "contacts":element["phoneNumber"], "address":element["address"], "amount":element["amount"], "quantity":element["quatity"] }      
       Orders.push(_i)
       setStoreOrders(Orders)
