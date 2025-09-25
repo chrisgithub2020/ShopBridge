@@ -6,10 +6,10 @@ import getStoreOrders from "../../api_calls/seller/getStoreOrders"
 import { useFocusEffect } from 'expo-router'
 import { Modalize } from 'react-native-modalize'
 import OrderActionsMOdal from "../components/seller/orderModal"
-import orderAction from "../../api_calls/seller/orderAction"
+import orderState from "../../api_calls/seller/orderAction"
 import checkOrderStatus from "../../api_calls/seller/orderStatus"
 import { store } from 'expo-router/build/global-state/router-store'
-
+import { StoreProduct } from '@/constants/types'
 interface Order {
   id: string;
   recipient: string;
@@ -30,20 +30,10 @@ const Orders: Order[] = [
 ]
 
 
-interface StoreProduct {
-  id: string;
-  name: string;
-  quantity: string;
-  price: string;
-  photo: string;
-}
-
-interface StoreProductProp {
-  product: StoreProduct
-}
 
 
-const ProductComponent: React.FC<StoreProduct> = ({ name, quantity,price, photo }) => {
+
+const ProductComponent = ({ name, price, photo }: { name: string, photo: string, price: string}) => {
   return (
     <View style={styles.supplies_container}>
           <View style={{flexDirection:"row"}}>
@@ -66,7 +56,7 @@ const OrderComponent: React.FC<OrderProp> = ({order, storeProducts, onClick}) =>
         <View>
           <View>
             <Text>Order: {order.id}</Text>
-            <ProductComponent photo={orderProduct.photo} price={orderProduct.price} quantity='4' name={orderProduct.name} id={order.product}/>
+            <ProductComponent photo={orderProduct.photo} price={orderProduct.price} name={orderProduct.name}/>
           </View>
           <Text style={styles.details_text}>Recipient: {order.recipient}</Text>
           <Text style={styles.details_text}>Contact: {order.contacts}</Text>
@@ -86,9 +76,11 @@ BackHandler.addEventListener("hardwareBackPress", ()=>{
 const Order = ({navigation}: {navigation: any}) => {
   const [storeOrders, setStoreOrders] = useState<any>();
   const orderActionsModal = useRef<Modalize>(null);
-  const [actionID, setActionID] = useState<string>()
+  const [orderId, setOrderId] = useState<string>()
   const [refreshing, setRefreshing] = useState<boolean>(false)
-  const {storeItems,} = ProvideContext()
+  const {storeItems, a_token, r_token} = ProvideContext()
+  const [dispatchLoading, setDispatchLoading] = useState<boolean>(false)
+  const [cancelLoading, setCancelLoading] = useState<boolean>(false)
 
   const openModal = ()=>{
     orderActionsModal.current?.open();
@@ -99,19 +91,23 @@ const Order = ({navigation}: {navigation: any}) => {
   }
 
   const cancelOrder = async () => {
-    console.log("order cancelled",actionID);
-    const result = await orderAction({id:actionID, action:"cancel"})
-    ToastAndroid.show("Order Cancelled. User has been notified", ToastAndroid.SHORT)
-    closeModal()
-  }
-
-  const dispatchOrder = async () => {
-    console.log("order dispatched", actionID);
-    const result = await orderAction({id:actionID, action:"dispatch"})
+    setCancelLoading(true)
+    const result = await orderState({id:orderId, action:"cancelled"}, a_token.current)
     if (result){
       ToastAndroid.show("Order Dispatched. User has been notified", ToastAndroid.SHORT)
       closeModal()
     }
+    setCancelLoading(false)
+  }
+
+  const dispatchOrder = async () => {
+    setDispatchLoading(true)
+    const result = await orderState({id:orderId, action:"dispatched"}, a_token.current)
+    if (result){
+      ToastAndroid.show("Order Dispatched. User has been notified", ToastAndroid.SHORT)
+      closeModal()
+    }
+    setDispatchLoading(false)
   }
 
   const searchStore = (text: string) => {
@@ -125,24 +121,21 @@ const Order = ({navigation}: {navigation: any}) => {
   }
 
   const orderStatus = async (id: string)=>{
-    const result = await checkOrderStatus(id)
-    console.log(result)
+    const result = await checkOrderStatus(id, a_token.current)
     if (result === "cancelled"){
-      console.log("order cancelled")
       ToastAndroid.show("Order was cancelled", ToastAndroid.SHORT)
     } else if (result === "dispatch") {
       ToastAndroid.show("Order was dispatched", ToastAndroid.SHORT)
-      console.log("order dispatched")
     } else {
       openModal()
     }
   }
 
   const getStoreOrd = async () => {
-    let result = await getStoreOrders(value.id)
+    let result = await getStoreOrders(a_token.current)
     Orders.length = 0
     result.forEach((element: any) => {
-      let _i = {"id":element[0],"product":element[3], "recipient":(element[1]+" " +element[2]), "contacts":element[4], "address":element[5], "amount":element[6], "quantity":element[7] }      
+      let _i = {"id":element["id"],"product":element["item"], "recipient":element["firstName"]+" "+element["lastName"], "contacts":element["phoneNumber"], "address":element["address"], "amount":element["amount"], "quantity":element["quatity"] }      
       Orders.push(_i)
       setStoreOrders(Orders)
       
@@ -157,15 +150,15 @@ const Order = ({navigation}: {navigation: any}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <OrderActionsMOdal dispatchOrder={dispatchOrder} refObject={orderActionsModal} cancelOrder={cancelOrder}/>
+      <OrderActionsMOdal dispatchLoading={dispatchLoading} cancelLoading={cancelLoading} dispatchOrder={dispatchOrder} refObject={orderActionsModal} cancelOrder={cancelOrder}/>
       <FlatList 
         data={Orders}
         extraData={storeOrders}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => <OrderComponent onClick={()=>{
-          setActionID(item.id)
+          setOrderId(item.id)
           orderStatus(item.id)
-        }} storeProducts={storeItems ? storeItems:[]} order={item} />}
+        }} storeProducts={storeItems!=undefined ? storeItems:[]} order={item} />}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}
       />      
     </SafeAreaView>

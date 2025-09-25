@@ -6,7 +6,7 @@ import {
   StyleSheet,
   TextInput,
   KeyboardAvoidingView,
-  Pressable,
+  ActivityIndicator,
 } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { Picker } from "@react-native-picker/picker";
@@ -29,10 +29,11 @@ interface modalProp {
   refObject: React.RefObject<Modalize>;
   chooseItemImages: () => void;
   formDetails: additemData;
+  loading: boolean;
 }
 
 
-const AddItemModal = ({ onSubmit, refObject, chooseItemImages, formDetails }: modalProp) => {
+const AddItemModal = ({ onSubmit, refObject, chooseItemImages, formDetails, loading}: modalProp) => {
   const [height, setItemDescHeight] = useState(40);
   const [numberOfImages, setNumberOfImages] = useState(0);
   const changeSubCat = () => {
@@ -298,19 +299,8 @@ const AddItemModal = ({ onSubmit, refObject, chooseItemImages, formDetails }: mo
             placeholder="Price of Item"
           />
         </View>
-        <TouchableOpacity
-              onPress={onSubmit}
-              style={styles.modalButton}
-            >
-              <Text
-                style={{
-                  alignSelf: "center",
-                  fontWeight: "bold",
-                  color: "white",
-                }}
-              >
-                Add Item
-              </Text>
+        <TouchableOpacity disabled={loading} onPress={onSubmit} style={styles.modalButton}>
+              {loading ? <ActivityIndicator style={{ flex: 1 }} size="small" color="black" />:<Text style={{alignSelf: "center",fontWeight: "bold", color: "white",}}>Add Item</Text>}
         </TouchableOpacity>
       </KeyboardAvoidingView>
     </Modalize>

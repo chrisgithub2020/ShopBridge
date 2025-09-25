@@ -19,7 +19,7 @@ const RestockModal = ({restock,  refObject, setAmountToRestock, loading}: modalP
                 <Text style={styles.modalHeader}>Restock</Text>
                 <Text style={{padding:7, fontWeight: "condensedBold"}}>Enter quantity to restock:</Text>
                 <TextInput onChangeText={setAmountToRestock} keyboardType="numeric" style={styles.modalInput} placeholder="Quantity"/>
-                <TouchableOpacity onPress={restock} style={styles.modalButton}>
+                <TouchableOpacity disabled={loading} onPress={restock} style={styles.modalButton}>
                     {loading ? <ActivityIndicator style={{ flex: 1 }} size="small" color="black" />:<Text style={{justifyContent: 'center', alignSelf:"center", fontWeight: "bold"}}>Restock</Text>}
                 </TouchableOpacity>
             </KeyboardAvoidingView>

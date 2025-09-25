@@ -1,11 +1,12 @@
 import Link from "../serverLink"
 
-const orderAction = async (data) => {
+const orderState = async (data, a_token) => {
     try {
         const response = await fetch(`${Link()}/order_actions`, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "access-token": a_token,
             },
             body: JSON.stringify(data)
         })
@@ -19,4 +20,4 @@ const orderAction = async (data) => {
     }
 }
 
-export default orderAction
+export default orderState

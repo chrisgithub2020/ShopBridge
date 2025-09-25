@@ -17,11 +17,12 @@ interface StoreProductProp {
 }
 const ProductComponent = ({ product, onRestock, onTakeDown }: StoreProductProp) => {
   const [imageLoading, setImageLoading] = useState<boolean>(true)
+  const [image, setImage] = useState<string>()
   
   if (imageLoading) {
     // this gets the images asynchronously without delaying main process
     getItemImage(product.photo).then((images)=>{
-      product.photo = images
+      setImage(images)
       setImageLoading(false)
     })
   }
@@ -31,7 +32,7 @@ const ProductComponent = ({ product, onRestock, onTakeDown }: StoreProductProp) 
         <View>
           <Image
             style={styles.image}
-            source={{uri:`data:image/png;base64,${product.photo}`}}
+            source={{uri:`data:image/png;base64,${image}`}}
           />
           {imageLoading && <ActivityIndicator style={{ flex: 1, position: "absolute", top: "40%", left: "40%" }} size="small" color="black" />}
         </View>

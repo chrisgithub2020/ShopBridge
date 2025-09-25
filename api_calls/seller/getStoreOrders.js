@@ -1,11 +1,12 @@
 import Link from "../serverLink";
 
-const getStoreOrders = async (storeId) => {
+const getStoreOrders = async (a_token) => {
     try {
-        const result = await fetch(`${Link()}/store_orders/${storeId}`,{
+        const result = await fetch(`${Link()}/seller/store_orders`,{
             method: "GET",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "access-token": a_token
             },
         })
 

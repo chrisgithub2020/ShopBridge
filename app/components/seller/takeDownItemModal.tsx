@@ -19,7 +19,7 @@ const TakeDownItemModal = ({takeDown,  refObject, setStoreName, loading}: modalP
                 <Text style={styles.modalHeader}>Take Down</Text>
                 <Text style={{padding:7, fontWeight: "condensedBold"}}>Enter Store name to confirm take down:</Text>
                 <TextInput onChangeText={setStoreName} style={styles.modalInput} placeholder="Store name"/>
-                <TouchableOpacity onPress={takeDown} style={styles.modalButton}>
+                <TouchableOpacity disabled={loading} onPress={takeDown} style={styles.modalButton}>
                     {loading ? <ActivityIndicator style={{ flex: 1 }} size="small" color="black" />:<Text style={{justifyContent: 'center', alignSelf:"center", fontWeight: "bold"}}>Confirm</Text>}
                 </TouchableOpacity>
             </KeyboardAvoidingView>

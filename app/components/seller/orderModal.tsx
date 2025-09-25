@@ -1,5 +1,5 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, KeyboardAvoidingView} from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, KeyboardAvoidingView} from "react-native";
 import {Modalize} from "react-native-modalize"
 import React, {useRef} from "react"
 
@@ -7,9 +7,11 @@ interface modalProp {
     cancelOrder: () => void;
     refObject: React.RefObject<Modalize>;
     dispatchOrder: () => void;
+    cancelLoading: boolean;
+    dispatchLoading: boolean;
 }
 
-const OrderActionsMOdal = ({cancelOrder,  refObject, dispatchOrder}: modalProp) => {
+const OrderActionsMOdal = ({cancelOrder,  refObject, dispatchOrder, cancelLoading, dispatchLoading}: modalProp) => {
 
     
     return (
@@ -18,12 +20,12 @@ const OrderActionsMOdal = ({cancelOrder,  refObject, dispatchOrder}: modalProp) 
                 <Text style={styles.modalHeader}>Order Actions</Text>
                 <Text style={{color: "red",alignSelf:"center", marginBottom: 5}}>*Recipient will be notified of every action you take</Text>
                 <View style={{flexDirection: "row", flex: 1, justifyContent:"space-around", padding: 3}}>
-                    <TouchableOpacity onPress={cancelOrder} style={styles.modalButton}>
-                        <Text style={{justifyContent: 'center', alignSelf:"center", fontWeight: "bold"}}>Cancel</Text>
+                    <TouchableOpacity disabled={cancelLoading || dispatchLoading} onPress={cancelOrder} style={styles.modalButton}>
+                        {cancelLoading ? <ActivityIndicator style={{ flex: 1 }} size="small" color="black" />:<Text style={{justifyContent: 'center', alignSelf:"center", fontWeight: "bold"}}>Cancel</Text>}                           
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={dispatchOrder} style={styles.modalButton}>
-                        <Text style={{justifyContent: 'center', alignSelf:"center", fontWeight: "bold"}}>Dispatch</Text>
+                    <TouchableOpacity disabled={cancelLoading || dispatchLoading} onPress={dispatchOrder} style={styles.modalButton}>
+                        {dispatchLoading ? <ActivityIndicator style={{ flex: 1 }} size="small" color="black" />:<Text style={{justifyContent: 'center', alignSelf:"center", fontWeight: "bold"}}>Dispatch</Text>}                       
                     </TouchableOpacity>
                 </View>
             </KeyboardAvoidingView>

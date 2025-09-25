@@ -7,7 +7,6 @@ import {
   ToastAndroid,
   BackHandler,
   RefreshControl,
-  ActivityIndicator
 } from "react-native";
 import React, { useState, useRef, useContext, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -45,6 +44,7 @@ const Store = ({navigation}: {navigation: any}) => {
   const [takeDownItemId, setTakeDownItemId] = useState<string>()
   const [restockLoading, setRestockLoading] = useState<boolean>(false)
   const [takeDownLoading, setTakeDownLoading] = useState<boolean>(false)
+  const [addItemLoading, setAddItemLoading] = useState<boolean>(false)
   const [selectedValue, setCurrentValue] = useState("e");
   const [storeProductsSearch, setStoreProductsSearch] = useState<any>();
   const [subCat, setSubCat] = useState<string>("cp");
@@ -63,7 +63,7 @@ const Store = ({navigation}: {navigation: any}) => {
 const RestockItem = async (id: String, amount: String) => {
   setRestockLoading(true)
   const formData = {
-    itemID:id,
+    itemID:takeDownItemId,
     restockNumber:amount,
   }
 
@@ -79,6 +79,7 @@ const RestockItem = async (id: String, amount: String) => {
       Products.push(_i)
     })
     setStoreItems(Products)
+    console.log(storeItems)
     setStoreProductsSearch(Products)
   }
 
@@ -138,6 +139,7 @@ const RestockItem = async (id: String, amount: String) => {
   }
 
   const submititemDetails = async () => {
+    setAddItemLoading(true)
     DataSkeletons.itemDetails.itemMainCat = selectedValue;
     DataSkeletons.itemDetails.itemSubCat = subCat;
     DataSkeletons.itemDetails.itemDescription = descText;
@@ -159,6 +161,7 @@ const RestockItem = async (id: String, amount: String) => {
       setStoreItems(_i)
       DataSkeletons.itemDetails.itemImages.length = 0
     }
+    setAddItemLoading(false)
   };
 
   const chooseItemImagaes = async () => {
@@ -230,7 +233,7 @@ const RestockItem = async (id: String, amount: String) => {
           refObject={modalRef}
           restock={()=> RestockItem(itemToRestockID,amountToRestock)}
         />
-        <AddItemModal formDetails={formDetails} refObject={addItemModal} chooseItemImages={chooseItemImagaes} onSubmit={submititemDetails}/>
+        <AddItemModal loading={addItemLoading} formDetails={formDetails} refObject={addItemModal} chooseItemImages={chooseItemImagaes} onSubmit={submititemDetails}/>
         <FlatList extraData={storeProductsSearch}
           style={styles.flatContainer}
           data={Products}
@@ -241,7 +244,7 @@ const RestockItem = async (id: String, amount: String) => {
               setTakeDownItemId(item.id);
               openTakeDownItemModal()
             }} product={item} onRestock={() => {
-              itemToRestockID = item.id;
+              setTakeDownItemId(item.id);
               openModal()
             }} />
           )}
